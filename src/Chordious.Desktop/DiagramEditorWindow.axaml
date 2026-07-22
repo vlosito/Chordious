@@ -96,9 +96,9 @@
               <TextBlock FontWeight="SemiBold" Text="Disponível nesta fatia" />
               <TextBlock Text="✓ Criar e editar diagramas" />
               <TextBlock Text="✓ Título, cordas e casas" />
-              <TextBlock Text="✓ Preview, persistência, marcas e rótulos" />
+              <TextBlock Text="✓ Preview, persistência, marcas, rótulos e pestanas" />
               <TextBlock Opacity="0.65"
-                         Text="Selecione uma posição no diagrama e use os botões ou o menu de contexto. Pestanas e estilos serão adicionados nos próximos incrementos."
+                         Text="Selecione uma posição no diagrama e use os botões ou o menu de contexto. O editor completo de estilos será adicionado no próximo incremento."
                          TextWrapping="Wrap" />
             </StackPanel>
           </Border>
@@ -111,16 +111,78 @@
               BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
               BorderThickness="1"
               CornerRadius="10">
-        <Grid RowDefinitions="Auto,*,Auto" RowSpacing="12">
-          <StackPanel>
+        <DockPanel LastChildFill="True">
+          <StackPanel DockPanel.Dock="Top">
             <TextBlock Foreground="Black"
                        FontSize="18"
                        FontWeight="SemiBold"
                        Text="Preview" />
             <TextBlock Foreground="#6A6A6A"
-                       Text="Selecione uma posição para editar marcas ou rótulos" />
+                       Text="Selecione uma posição para editar marcas, rótulos ou pestanas" />
           </StackPanel>
-          <ScrollViewer Grid.Row="1"
+          <StackPanel DockPanel.Dock="Bottom" Margin="0,12,0,0" Spacing="8">
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="8">
+              <Button Command="{Binding ObservableDiagram.AddMark}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="Adicionar marca…"
+                      Foreground="#202020"
+                      IsEnabled="{Binding ObservableDiagram.CanAddMark}" />
+              <Button Command="{Binding ObservableDiagram.EditMark}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="Editar marca…"
+                      Foreground="#202020"
+                      IsEnabled="{Binding ObservableDiagram.CanEditMark}" />
+              <Button Command="{Binding ObservableDiagram.RemoveMark}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="Remover marca"
+                      Foreground="#202020"
+                      IsEnabled="{Binding ObservableDiagram.CanRemoveMark}" />
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="8">
+              <Button Command="{Binding ObservableDiagram.AddFretLabel}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="{Binding ObservableDiagram.AddFretLabelLabel}"
+                      Foreground="#202020"
+                      IsEnabled="{Binding ObservableDiagram.CanAddFretLabel}" />
+              <Button Command="{Binding ObservableDiagram.EditFretLabel}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="{Binding ObservableDiagram.EditFretLabelLabel}"
+                      Foreground="#202020"
+                      IsEnabled="{Binding ObservableDiagram.CanEditFretLabel}" />
+              <Button Command="{Binding ObservableDiagram.RemoveFretLabel}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="{Binding ObservableDiagram.RemoveFretLabelLabel}"
+                      Foreground="#202020"
+                      IsEnabled="{Binding ObservableDiagram.CanRemoveFretLabel}" />
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="8">
+              <Button Command="{Binding ObservableDiagram.AddBarre}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="Adicionar pestana…"
+                      Foreground="#202020"
+                      IsEnabled="{Binding ObservableDiagram.CanAddBarre}" />
+              <Button Command="{Binding ObservableDiagram.EditBarre}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="Editar pestana…"
+                      Foreground="#202020"
+                      IsEnabled="{Binding ObservableDiagram.CanEditBarre}" />
+              <Button Command="{Binding ObservableDiagram.RemoveBarre}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="Remover pestana"
+                      Foreground="#202020"
+                      IsEnabled="{Binding ObservableDiagram.CanRemoveBarre}" />
+            </StackPanel>
+          </StackPanel>
+          <ScrollViewer Margin="0,12,0,0"
                         HorizontalScrollBarVisibility="Auto"
                         VerticalScrollBarVisibility="Auto">
             <Image Name="DiagramImage"
@@ -154,35 +216,21 @@
                   <MenuItem Command="{Binding ObservableDiagram.RemoveFretLabel}"
                             Header="{Binding ObservableDiagram.RemoveFretLabelLabel}"
                             IsVisible="{Binding ObservableDiagram.CanRemoveFretLabel}" />
+                  <Separator />
+                  <MenuItem Command="{Binding ObservableDiagram.AddBarre}"
+                            Header="Adicionar pestana…"
+                            IsVisible="{Binding ObservableDiagram.CanAddBarre}" />
+                  <MenuItem Command="{Binding ObservableDiagram.EditBarre}"
+                            Header="Editar pestana…"
+                            IsVisible="{Binding ObservableDiagram.CanEditBarre}" />
+                  <MenuItem Command="{Binding ObservableDiagram.RemoveBarre}"
+                            Header="Remover pestana"
+                            IsVisible="{Binding ObservableDiagram.CanRemoveBarre}" />
                 </ContextMenu>
               </Image.ContextMenu>
             </Image>
           </ScrollViewer>
-          <StackPanel Grid.Row="2" Spacing="8">
-            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="8">
-              <Button Command="{Binding ObservableDiagram.AddMark}"
-                      Content="Adicionar marca…"
-                      IsEnabled="{Binding ObservableDiagram.CanAddMark}" />
-              <Button Command="{Binding ObservableDiagram.EditMark}"
-                      Content="Editar marca…"
-                      IsEnabled="{Binding ObservableDiagram.CanEditMark}" />
-              <Button Command="{Binding ObservableDiagram.RemoveMark}"
-                      Content="Remover marca"
-                      IsEnabled="{Binding ObservableDiagram.CanRemoveMark}" />
-            </StackPanel>
-            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="8">
-              <Button Command="{Binding ObservableDiagram.AddFretLabel}"
-                      Content="{Binding ObservableDiagram.AddFretLabelLabel}"
-                      IsEnabled="{Binding ObservableDiagram.CanAddFretLabel}" />
-              <Button Command="{Binding ObservableDiagram.EditFretLabel}"
-                      Content="{Binding ObservableDiagram.EditFretLabelLabel}"
-                      IsEnabled="{Binding ObservableDiagram.CanEditFretLabel}" />
-              <Button Command="{Binding ObservableDiagram.RemoveFretLabel}"
-                      Content="{Binding ObservableDiagram.RemoveFretLabelLabel}"
-                      IsEnabled="{Binding ObservableDiagram.CanRemoveFretLabel}" />
-            </StackPanel>
-          </StackPanel>
-        </Grid>
+        </DockPanel>
       </Border>
     </Grid>
 

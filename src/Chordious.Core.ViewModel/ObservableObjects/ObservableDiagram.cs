@@ -258,6 +258,7 @@ namespace Chordious.Core.ViewModel
                                     if (changed)
                                     {
                                         Refresh();
+                                        RefreshCursor();
                                     }
                                 }
                                 catch (Exception ex)
@@ -733,10 +734,12 @@ namespace Chordious.Core.ViewModel
                                         if (changed)
                                         {
                                             Refresh();
+                                            RefreshCursor();
                                         }
                                         else
                                         {
                                             Diagram.RemoveBarre(bp);
+                                            RefreshCursor();
                                         }
                                     }
                                     catch (Exception ex)
@@ -804,6 +807,7 @@ namespace Chordious.Core.ViewModel
                                 if (changed)
                                 {
                                     Refresh();
+                                    RefreshCursor();
                                 }
                             }
                             catch (Exception ex)
@@ -860,6 +864,7 @@ namespace Chordious.Core.ViewModel
                         BarrePosition bp = BarrePosition;
                         Diagram.RemoveBarre(bp);
                         Refresh();
+                        RefreshCursor();
                     }
                     catch (Exception ex)
                     {

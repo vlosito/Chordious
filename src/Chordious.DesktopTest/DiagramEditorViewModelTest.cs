@@ -170,6 +170,50 @@ public class DiagramEditorViewModelTest
         }
     }
 
+    [TestMethod]
+    public void AddBarre_RefreshesCommandsAfterEditorAccepts()
+    {
+        Diagram diagram = new(ConfigFile.DefaultConfig.DiagramStyle, 6, 5);
+        ObservableDiagram observable = new(diagram)
+        {
+            CursorX = diagram.GridLeftEdge(),
+            CursorY = diagram.GridTopEdge() + (diagram.Style.GridFretSpacing / 2)
+        };
+        object recipient = new();
+
+        StrongReferenceMessenger.Default.Register<PromptForTextMessage>(recipient, (_, message) =>
+        {
+            message.TextPromptVM.Text = "4";
+            message.TextPromptVM.Accept.Execute(null);
+        });
+        StrongReferenceMessenger.Default.Register<ShowDiagramBarreEditorMessage>(recipient, (_, message) =>
+        {
+            message.DiagramBarreEditorVM.Accept.Execute(null);
+            message.Process();
+        });
+
+        try
+        {
+            Assert.IsTrue(observable.CanAddBarre);
+
+            observable.AddBarre.Execute(null);
+
+            Assert.IsFalse(observable.CanAddBarre);
+            Assert.IsTrue(observable.CanEditBarre);
+            Assert.IsTrue(observable.CanRemoveBarre);
+
+            observable.RemoveBarre.Execute(null);
+
+            Assert.IsTrue(observable.CanAddBarre);
+            Assert.IsFalse(observable.CanEditBarre);
+            Assert.IsFalse(observable.CanRemoveBarre);
+        }
+        finally
+        {
+            StrongReferenceMessenger.Default.UnregisterAll(recipient);
+        }
+    }
+
     private static ObservableDiagram CreateDiagram(string title, int numStrings, int numFrets)
     {
         Diagram diagram = new(ConfigFile.DefaultConfig.DiagramStyle, numStrings, numFrets)
