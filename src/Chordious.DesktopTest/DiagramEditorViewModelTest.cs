@@ -5,6 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
+using Avalonia;
+
+using CommunityToolkit.Mvvm.Messaging;
+
 using Chordious.Core;
 using Chordious.Core.ViewModel;
 using Chordious.Desktop;
@@ -78,6 +82,52 @@ public class DiagramEditorViewModelTest
         editor.Accept.Execute(null);
 
         Assert.IsFalse(DiagramEditorWindow.RequiresUnsavedChangesConfirmation(editor, closeApproved: false));
+    }
+
+    [TestMethod]
+    public void MapCursorPosition_MapsScaledPreviewToDiagramCoordinates()
+    {
+        Point mapped = DiagramEditorWindow.MapCursorPosition(
+            new Point(150, 200),
+            new Size(300, 400),
+            new Size(600, 800));
+
+        Assert.AreEqual(300, mapped.X, 0.001);
+        Assert.AreEqual(400, mapped.Y, 0.001);
+    }
+
+    [TestMethod]
+    public void AddMark_RefreshesCommandsAfterEditorAccepts()
+    {
+        Diagram diagram = new(ConfigFile.DefaultConfig.DiagramStyle, 6, 5);
+        ObservableDiagram observable = new(diagram)
+        {
+            CursorX = diagram.GridLeftEdge(),
+            CursorY = diagram.GridTopEdge() + (diagram.Style.GridFretSpacing / 2)
+        };
+        object recipient = new();
+
+        StrongReferenceMessenger.Default.Register<ShowDiagramMarkEditorMessage>(recipient, (_, message) =>
+        {
+            message.DiagramMarkEditorVM.Text = "M";
+            message.DiagramMarkEditorVM.Accept.Execute(null);
+            message.Process();
+        });
+
+        try
+        {
+            Assert.IsTrue(observable.CanAddMark);
+
+            observable.AddMark.Execute(null);
+
+            Assert.IsFalse(observable.CanAddMark);
+            Assert.IsTrue(observable.CanEditMark);
+            Assert.IsTrue(observable.CanRemoveMark);
+        }
+        finally
+        {
+            StrongReferenceMessenger.Default.UnregisterAll(recipient);
+        }
     }
 
     private static ObservableDiagram CreateDiagram(string title, int numStrings, int numFrets)

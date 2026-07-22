@@ -16,11 +16,13 @@ namespace Chordious.Desktop.Services;
 internal sealed class DesktopMessageHandlers : IDisposable
 {
     private readonly Window _owner;
+    private Window _dialogOwner;
     private bool _disposed;
 
     public DesktopMessageHandlers(Window owner)
     {
         _owner = owner ?? throw new ArgumentNullException(nameof(owner));
+        _dialogOwner = _owner;
 
         StrongReferenceMessenger.Default.Register<ChordiousMessage>(this, (_, message) =>
             _ = ShowInformationAsync(message));
@@ -32,6 +34,8 @@ internal sealed class DesktopMessageHandlers : IDisposable
             _ = ShowTextPromptAsync(message));
         StrongReferenceMessenger.Default.Register<ShowDiagramEditorMessage>(this, (_, message) =>
             _ = ShowDiagramEditorAsync(message));
+        StrongReferenceMessenger.Default.Register<ShowDiagramMarkEditorMessage>(this, (_, message) =>
+            _ = ShowDiagramMarkEditorAsync(message));
     }
 
     public void Dispose()
@@ -58,7 +62,7 @@ internal sealed class DesktopMessageHandlers : IDisposable
         accept.Click += (_, _) => dialog.Close();
         AddButtons(dialog, accept);
 
-        await dialog.ShowDialog(_owner);
+        await ShowDialogAsync(dialog);
         message.Process();
     }
 
@@ -85,7 +89,7 @@ internal sealed class DesktopMessageHandlers : IDisposable
         accept.Click += (_, _) => dialog.Close();
         AddButtons(dialog, accept);
 
-        await dialog.ShowDialog(_owner);
+        await ShowDialogAsync(dialog);
     }
 
     private async Task ShowConfirmationAsync(ConfirmationMessage message)
@@ -122,7 +126,7 @@ internal sealed class DesktopMessageHandlers : IDisposable
             AddButtons(dialog, reject, accept);
         }
 
-        await dialog.ShowDialog(_owner);
+        await ShowDialogAsync(dialog);
         vm.RequestClose -= dialog.Close;
         message.Process();
         PersistUserConfig();
@@ -163,7 +167,7 @@ internal sealed class DesktopMessageHandlers : IDisposable
         AddButtons(dialog, cancel, accept);
         dialog.Opened += (_, _) => textBox.Focus();
 
-        await dialog.ShowDialog(_owner);
+        await ShowDialogAsync(dialog);
         vm.RequestClose -= dialog.Close;
         PersistUserConfig();
     }
@@ -179,11 +183,41 @@ internal sealed class DesktopMessageHandlers : IDisposable
         };
         vm.RequestClose += dialog.Close;
 
-        await dialog.ShowDialog(_owner);
+        await ShowDialogAsync(dialog);
 
         vm.RequestClose -= dialog.Close;
         message.Process();
         PersistUserConfig();
+    }
+
+    private async Task ShowDiagramMarkEditorAsync(ShowDiagramMarkEditorMessage message)
+    {
+        DiagramMarkEditorViewModel vm = message.DiagramMarkEditorVM;
+        DiagramMarkEditorWindow dialog = new()
+        {
+            DataContext = vm
+        };
+        vm.RequestClose += dialog.Close;
+
+        await ShowDialogAsync(dialog);
+
+        vm.RequestClose -= dialog.Close;
+        message.Process();
+        PersistUserConfig();
+    }
+
+    private async Task ShowDialogAsync(Window dialog)
+    {
+        Window previousOwner = _dialogOwner;
+        _dialogOwner = dialog;
+        try
+        {
+            await dialog.ShowDialog(previousOwner);
+        }
+        finally
+        {
+            _dialogOwner = previousOwner;
+        }
     }
 
     private static Window CreateDialog(string title, Control content, double width = 460)

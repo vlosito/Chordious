@@ -239,6 +239,7 @@ namespace Chordious.Core.ViewModel
                                     if (changed)
                                     {
                                         Refresh();
+                                        RefreshCursor();
                                     }
                                 }
                                 catch (Exception ex)
@@ -334,10 +335,12 @@ namespace Chordious.Core.ViewModel
                                 if (changed)
                                 {
                                     Refresh();
+                                    RefreshCursor();
                                 }
                                 else
                                 {
                                     Diagram.RemoveMark(mp);
+                                    RefreshCursor();
                                 }
                             }
                             catch (Exception ex)
@@ -399,6 +402,7 @@ namespace Chordious.Core.ViewModel
                                 if (changed)
                                 {
                                     Refresh();
+                                    RefreshCursor();
                                 }
                             }
                             catch (Exception ex)
@@ -455,6 +459,7 @@ namespace Chordious.Core.ViewModel
                         MarkPosition mp = MarkPosition;
                         Diagram.RemoveMark(mp);
                         Refresh();
+                        RefreshCursor();
                     }
                     catch (Exception ex)
                     {

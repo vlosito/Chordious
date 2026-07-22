@@ -1,0 +1,260 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:coreVm="using:Chordious.Core.ViewModel"
+        x:Class="Chordious.Desktop.DiagramMarkEditorWindow"
+        x:DataType="coreVm:DiagramMarkEditorViewModel"
+        mc:Ignorable="d"
+        d:DesignWidth="860"
+        d:DesignHeight="700"
+        Width="860"
+        Height="700"
+        MinWidth="720"
+        MinHeight="560"
+        CanResize="True"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding Title}">
+  <Grid RowDefinitions="Auto,*,Auto"
+        Background="{DynamicResource SystemControlBackgroundBaseLowBrush}">
+    <Border Padding="22,16" Background="{DynamicResource AccentColor100}">
+      <StackPanel Spacing="2">
+        <TextBlock FontSize="22" FontWeight="SemiBold" Text="Editor de marca" />
+        <TextBlock Opacity="0.75"
+                   Text="Conteúdo, forma, borda e tipografia usando o ViewModel compartilhado" />
+      </StackPanel>
+    </Border>
+
+    <ScrollViewer Grid.Row="1">
+      <StackPanel Margin="20" Spacing="16">
+        <Border Padding="14"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                BorderThickness="1"
+                CornerRadius="8">
+          <Grid RowDefinitions="Auto,Auto"
+                ColumnDefinitions="140,*,140,*"
+                RowSpacing="10"
+                ColumnSpacing="10">
+            <TextBlock Grid.ColumnSpan="4"
+                       FontSize="17"
+                       FontWeight="SemiBold"
+                       Text="Propriedades" />
+            <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="Texto" />
+            <TextBox Grid.Row="1"
+                     Grid.Column="1"
+                     Text="{Binding Text, Mode=TwoWay}" />
+            <TextBlock Grid.Row="1"
+                       Grid.Column="2"
+                       VerticalAlignment="Center"
+                       Text="Tipo" />
+            <ComboBox Grid.Row="1"
+                      Grid.Column="3"
+                      ItemsSource="{Binding MarkTypes}"
+                      SelectedIndex="{Binding SelectedMarkTypeIndex, Mode=TwoWay}" />
+          </Grid>
+        </Border>
+
+        <Grid ColumnDefinitions="*,*" ColumnSpacing="16" IsEnabled="{Binding Style.IsEditable}">
+          <StackPanel Spacing="16">
+            <Border Padding="14"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8">
+              <StackPanel Spacing="12">
+                <TextBlock FontSize="17" FontWeight="SemiBold" Text="Fundo" />
+
+                <Grid ColumnDefinitions="140,90,*" ColumnSpacing="8">
+                  <CheckBox Content="Visibilidade local"
+                            IsChecked="{Binding Style.MarkVisibleIsLocal, Mode=TwoWay}" />
+                  <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Visível" />
+                  <CheckBox Grid.Column="2"
+                            IsChecked="{Binding Style.MarkVisible, Mode=TwoWay}"
+                            IsEnabled="{Binding Style.MarkVisibleIsLocal}" />
+                </Grid>
+
+                <Grid ColumnDefinitions="140,90,*" ColumnSpacing="8">
+                  <CheckBox Content="Forma local"
+                            IsChecked="{Binding Style.MarkShapeIsLocal, Mode=TwoWay}" />
+                  <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Forma" />
+                  <ComboBox Grid.Column="2"
+                            ItemsSource="{Binding Style.MarkShapes}"
+                            SelectedIndex="{Binding Style.SelectedMarkShapeIndex, Mode=TwoWay}"
+                            IsEnabled="{Binding Style.MarkShapeIsLocal}" />
+                </Grid>
+
+                <Grid ColumnDefinitions="140,90,*" ColumnSpacing="8">
+                  <CheckBox Content="Cor local"
+                            IsChecked="{Binding Style.MarkColorIsLocal, Mode=TwoWay}" />
+                  <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Cor" />
+                  <TextBox Grid.Column="2"
+                           PlaceholderText="#RRGGBB"
+                           Text="{Binding Style.MarkColor, Mode=TwoWay}"
+                           IsEnabled="{Binding Style.MarkColorIsLocal}" />
+                </Grid>
+
+                <Grid ColumnDefinitions="140,90,*" ColumnSpacing="8">
+                  <CheckBox Content="Opacidade local"
+                            IsChecked="{Binding Style.MarkOpacityIsLocal, Mode=TwoWay}" />
+                  <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Opacidade" />
+                  <NumericUpDown Grid.Column="2"
+                                 Minimum="0"
+                                 Maximum="1"
+                                 Increment="0.01"
+                                 FormatString="0.00"
+                                 Value="{Binding Style.MarkOpacity, Mode=TwoWay}"
+                                 IsEnabled="{Binding Style.MarkOpacityIsLocal}" />
+                </Grid>
+
+                <Grid ColumnDefinitions="140,90,*" ColumnSpacing="8">
+                  <CheckBox Content="Raio local"
+                            IsChecked="{Binding Style.MarkRadiusRatioIsLocal, Mode=TwoWay}" />
+                  <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Proporção" />
+                  <NumericUpDown Grid.Column="2"
+                                 Minimum="0"
+                                 Maximum="1"
+                                 Increment="0.01"
+                                 FormatString="0.00"
+                                 Value="{Binding Style.MarkRadiusRatio, Mode=TwoWay}"
+                                 IsEnabled="{Binding Style.MarkRadiusRatioIsLocal}" />
+                </Grid>
+              </StackPanel>
+            </Border>
+
+            <Border Padding="14"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8">
+              <StackPanel Spacing="12">
+                <TextBlock FontSize="17" FontWeight="SemiBold" Text="Borda" />
+
+                <Grid ColumnDefinitions="140,90,*" ColumnSpacing="8">
+                  <CheckBox Content="Cor local"
+                            IsChecked="{Binding Style.MarkBorderColorIsLocal, Mode=TwoWay}" />
+                  <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Cor" />
+                  <TextBox Grid.Column="2"
+                           PlaceholderText="#RRGGBB"
+                           Text="{Binding Style.MarkBorderColor, Mode=TwoWay}"
+                           IsEnabled="{Binding Style.MarkBorderColorIsLocal}" />
+                </Grid>
+
+                <Grid ColumnDefinitions="140,90,*" ColumnSpacing="8">
+                  <CheckBox Content="Espessura local"
+                            IsChecked="{Binding Style.MarkBorderThicknessIsLocal, Mode=TwoWay}" />
+                  <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Pixels" />
+                  <NumericUpDown Grid.Column="2"
+                                 Minimum="0"
+                                 Increment="0.25"
+                                 FormatString="0.00"
+                                 Value="{Binding Style.MarkBorderThickness, Mode=TwoWay}"
+                                 IsEnabled="{Binding Style.MarkBorderThicknessIsLocal}" />
+                </Grid>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+          <Border Grid.Column="1"
+                  Padding="14"
+                  BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                  BorderThickness="1"
+                  CornerRadius="8">
+            <StackPanel Spacing="12">
+              <TextBlock FontSize="17" FontWeight="SemiBold" Text="Texto da marca" />
+
+              <Grid ColumnDefinitions="140,90,*" ColumnSpacing="8">
+                <CheckBox Content="Visibilidade local"
+                          IsChecked="{Binding Style.MarkTextVisibleIsLocal, Mode=TwoWay}" />
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Visível" />
+                <CheckBox Grid.Column="2"
+                          IsChecked="{Binding Style.MarkTextVisible, Mode=TwoWay}"
+                          IsEnabled="{Binding Style.MarkTextVisibleIsLocal}" />
+              </Grid>
+
+              <Grid ColumnDefinitions="140,90,*" ColumnSpacing="8">
+                <CheckBox Content="Alinhamento local"
+                          IsChecked="{Binding Style.MarkTextAlignmentIsLocal, Mode=TwoWay}" />
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Alinhamento" />
+                <ComboBox Grid.Column="2"
+                          ItemsSource="{Binding Style.MarkTextAlignments}"
+                          SelectedIndex="{Binding Style.SelectedMarkTextAlignmentIndex, Mode=TwoWay}"
+                          IsEnabled="{Binding Style.MarkTextAlignmentIsLocal}" />
+              </Grid>
+
+              <Grid ColumnDefinitions="140,90,*" ColumnSpacing="8">
+                <CheckBox Content="Fonte local"
+                          IsChecked="{Binding Style.MarkFontFamilyIsLocal, Mode=TwoWay}" />
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Fonte" />
+                <TextBox Grid.Column="2"
+                         Text="{Binding Style.MarkFontFamily, Mode=TwoWay}"
+                         IsEnabled="{Binding Style.MarkFontFamilyIsLocal}" />
+              </Grid>
+
+              <Grid ColumnDefinitions="140,90,*" ColumnSpacing="8">
+                <CheckBox Content="Estilo local"
+                          IsChecked="{Binding Style.MarkTextStyleIsLocal, Mode=TwoWay}" />
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Estilo" />
+                <ComboBox Grid.Column="2"
+                          ItemsSource="{Binding Style.MarkTextStyles}"
+                          SelectedIndex="{Binding Style.SelectedMarkTextStyleIndex, Mode=TwoWay}"
+                          IsEnabled="{Binding Style.MarkTextStyleIsLocal}" />
+              </Grid>
+
+              <Grid ColumnDefinitions="140,90,*" ColumnSpacing="8">
+                <CheckBox Content="Cor local"
+                          IsChecked="{Binding Style.MarkTextColorIsLocal, Mode=TwoWay}" />
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Cor" />
+                <TextBox Grid.Column="2"
+                         PlaceholderText="#RRGGBB"
+                         Text="{Binding Style.MarkTextColor, Mode=TwoWay}"
+                         IsEnabled="{Binding Style.MarkTextColorIsLocal}" />
+              </Grid>
+
+              <Grid ColumnDefinitions="140,90,*" ColumnSpacing="8">
+                <CheckBox Content="Opacidade local"
+                          IsChecked="{Binding Style.MarkTextOpacityIsLocal, Mode=TwoWay}" />
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Opacidade" />
+                <NumericUpDown Grid.Column="2"
+                               Minimum="0"
+                               Maximum="1"
+                               Increment="0.01"
+                               FormatString="0.00"
+                               Value="{Binding Style.MarkTextOpacity, Mode=TwoWay}"
+                               IsEnabled="{Binding Style.MarkTextOpacityIsLocal}" />
+              </Grid>
+
+              <Grid ColumnDefinitions="140,90,*" ColumnSpacing="8">
+                <CheckBox Content="Tamanho local"
+                          IsChecked="{Binding Style.MarkTextSizeRatioIsLocal, Mode=TwoWay}" />
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Proporção" />
+                <NumericUpDown Grid.Column="2"
+                               Minimum="0"
+                               Maximum="1"
+                               Increment="0.01"
+                               FormatString="0.00"
+                               Value="{Binding Style.MarkTextSizeRatio, Mode=TwoWay}"
+                               IsEnabled="{Binding Style.MarkTextSizeRatioIsLocal}" />
+              </Grid>
+            </StackPanel>
+          </Border>
+        </Grid>
+      </StackPanel>
+    </ScrollViewer>
+
+    <Border Grid.Row="2"
+            Padding="20,12"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+            BorderThickness="0,1,0,0">
+      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+        <Button Command="{Binding Style.Reset}" Content="Restaurar estilo" />
+        <TextBlock Grid.Column="1"
+                   VerticalAlignment="Center"
+                   Opacity="0.65"
+                   Text="Alterações são aplicadas somente ao confirmar." />
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+          <Button MinWidth="90" Command="{Binding Apply}" Content="Aplicar" />
+          <Button MinWidth="90" Command="{Binding Cancel}" Content="Cancelar" />
+          <Button MinWidth="90" Command="{Binding Accept}" Content="Salvar" />
+        </StackPanel>
+      </Grid>
+    </Border>
+  </Grid>
+</Window>

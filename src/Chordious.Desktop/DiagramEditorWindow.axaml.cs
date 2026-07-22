@@ -1,10 +1,8 @@
 // Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
-using System;
-using System.Threading.Tasks;
-
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 
 using Chordious.Core.ViewModel;
@@ -14,66 +12,79 @@ namespace Chordious.Desktop;
 
 public partial class DiagramEditorWindow : Window
 {
-    private bool _closeApproved;
-    private bool _promptOpen;
+    private readonly UnsavedChangesCloseController _closeController;
 
     public DiagramEditorWindow()
     {
         AvaloniaXamlLoader.Load(this);
-        Closing += DiagramEditorWindow_Closing;
+        _closeController = new UnsavedChangesCloseController(
+            this,
+            () => (DataContext as DiagramEditorViewModel)?.Dirty == true,
+            () => (DataContext as DiagramEditorViewModel)?.ApplyChangesOnClose == true,
+            () => (DataContext as DiagramEditorViewModel)?.Accept.Execute(null));
     }
 
     internal static bool RequiresUnsavedChangesConfirmation(
         DiagramEditorViewModel? viewModel,
         bool closeApproved)
     {
-        return !closeApproved &&
-            viewModel is not null &&
-            viewModel.Dirty &&
-            !viewModel.ApplyChangesOnClose;
+        return viewModel is not null &&
+            UnsavedChangesCloseController.RequiresConfirmation(
+                viewModel.Dirty,
+                viewModel.ApplyChangesOnClose,
+                closeApproved);
     }
 
-    private void DiagramEditorWindow_Closing(object? sender, WindowClosingEventArgs e)
+    private void DiagramImage_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (!RequiresUnsavedChangesConfirmation(DataContext as DiagramEditorViewModel, _closeApproved))
+        if (sender is not Image image || DataContext is not DiagramEditorViewModel viewModel)
         {
             return;
         }
 
-        e.Cancel = true;
-        if (_promptOpen)
+        UpdateCursorPosition(image, e.GetPosition(image), viewModel.ObservableDiagram);
+    }
+
+    private void DiagramImage_DoubleTapped(object? sender, TappedEventArgs e)
+    {
+        if (sender is not Image image || DataContext is not DiagramEditorViewModel viewModel)
         {
             return;
         }
 
-        _promptOpen = true;
-        _ = ConfirmCloseAsync((DiagramEditorViewModel)DataContext!);
+        UpdateCursorPosition(image, e.GetPosition(image), viewModel.ObservableDiagram);
+        if (viewModel.ObservableDiagram.EditMark.CanExecute(null))
+        {
+            viewModel.ObservableDiagram.EditMark.Execute(null);
+        }
     }
 
-    private async Task ConfirmCloseAsync(DiagramEditorViewModel viewModel)
+    internal static void UpdateCursorPosition(
+        Image image,
+        Avalonia.Point position,
+        ObservableDiagram diagram)
     {
-        try
-        {
-            UnsavedChangesChoice choice = await UnsavedChangesDialog.ShowAsync(this);
-            switch (choice)
-            {
-                case UnsavedChangesChoice.Save:
-                    _closeApproved = true;
-                    viewModel.Accept.Execute(null);
-                    break;
-                case UnsavedChangesChoice.Discard:
-                    _closeApproved = true;
-                    Close();
-                    break;
-            }
-        }
-        catch (Exception ex)
-        {
-            ExceptionUtils.HandleException(ex);
-        }
-        finally
-        {
-            _promptOpen = false;
-        }
+        Avalonia.Point mapped = MapCursorPosition(
+            position,
+            image.Bounds.Size,
+            new Avalonia.Size(diagram.TotalWidth, diagram.TotalHeight));
+
+        diagram.CursorX = mapped.X;
+        diagram.CursorY = mapped.Y;
+    }
+
+    internal static Avalonia.Point MapCursorPosition(
+        Avalonia.Point position,
+        Avalonia.Size displayedSize,
+        Avalonia.Size diagramSize)
+    {
+        double widthScale = displayedSize.Width > 0
+            ? diagramSize.Width / displayedSize.Width
+            : 1;
+        double heightScale = displayedSize.Height > 0
+            ? diagramSize.Height / displayedSize.Height
+            : 1;
+
+        return new Avalonia.Point(position.X * widthScale, position.Y * heightScale);
     }
 }
