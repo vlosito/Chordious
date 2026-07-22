@@ -23,7 +23,7 @@ jobs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Create Release Notes
         run: ${{ env.ScriptDir }}/CreateReleaseNotes.ps1
@@ -49,14 +49,14 @@ jobs:
         target: [Unpacked, WinX86, WinX64, WinArm64]
     steps:
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: |
           8.0.x
           10.0.x
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Build ${{ matrix.target }}
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
@@ -80,14 +80,14 @@ jobs:
         target: [WinX86.Setup, WinX64.Setup, WinArm64.Setup]
     steps:
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: |
           8.0.x
           10.0.x
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Build ${{ matrix.target }}
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
@@ -114,7 +114,7 @@ jobs:
         target: [WinStore]
     steps:
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: |
           8.0.x
@@ -124,7 +124,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1.1
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Create Code Signing Certificate
       run: |
@@ -141,7 +141,7 @@ jobs:
         Remove-Item ${{ env.CertFile }}
 
     - name: Upload ${{ matrix.target }} Build Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: ${{ env.Product }}.${{ matrix.target }}
         path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}
@@ -155,12 +155,12 @@ jobs:
   #       target: [Linux]
   #   steps:
   #   - name: Setup .NET
-  #     uses: actions/setup-dotnet@v4
+  #     uses: actions/setup-dotnet@v5
   #     with:
   #       dotnet-version: '8.0.x'
 
   #   - name: Checkout
-  #     uses: actions/checkout@v4
+  #     uses: actions/checkout@v6
 
   #   - name: Build ${{ matrix.target }}
   #     run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
@@ -184,12 +184,12 @@ jobs:
   #       target: [MacOS]
   #   steps:
   #   - name: Setup .NET
-  #     uses: actions/setup-dotnet@v4
+  #     uses: actions/setup-dotnet@v5
   #     with:
   #       dotnet-version: '8.0.x'
 
   #   - name: Checkout
-  #     uses: actions/checkout@v4
+  #     uses: actions/checkout@v6
 
   #   - name: Build ${{ matrix.target }}
   #     run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
