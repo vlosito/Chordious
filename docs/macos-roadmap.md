@@ -18,7 +18,7 @@ fluxos.
 | macOS Apple Silicon | Concluído | Ambiente identificado como `osx-arm64` |
 | SDK exigido | Concluído | .NET SDK 10.0.302 arm64 instalado persistentemente e fixado por `global.json`; runtime 8 mantido para compatibilidade |
 | Domínio no macOS | Concluído | 8 testes de `Chordious.CoreTest` aprovados em Release |
-| UI multiplataforma | Em andamento | `Chordious.Desktop` em `net10.0` executa biblioteca, marcas, rótulos de casa e pestanas em Avalonia; 21 testes Desktop aprovados |
+| UI multiplataforma | Em andamento | `Chordious.Desktop` em `net10.0` executa biblioteca e os quatro editores elementares em Avalonia; 26 testes Desktop aprovados |
 | CI multiplataforma | Concluído | GitHub Actions valida Core, Desktop e publicação `osx-arm64` no macOS, além da solução e dos pacotes existentes no Windows |
 | Repositório e proveniência | Concluído | Fork público `vlosito/Chordious`, com `origin` apontando para o fork e `upstream` para `jonthysell/Chordious`; base validada em `main@b781057`, que contém `v2.8.0` e `2.8-official` |
 | Governança da `main` | Concluído | Branch protegida para exigir PR, checks Debug/Release/macOS e resolução de conversas; force-push e exclusão bloqueados inclusive para administradores |
@@ -62,8 +62,8 @@ Legenda: `CONCLUÍDO`, `PARCIAL`, `PENDENTE`.
 | Área WPF | Capacidades cobertas | Estado macOS |
 | --- | --- | --- |
 | Main | Inicialização, navegação, website, ajuda e licenças | PARCIAL — shell e ViewModel reais |
-| Diagram Library | Árvore, coleções, criar, editar, excluir, clonar, copiar, mover, mesclar e estilos | PARCIAL — navegação e CRUD de coleções reais; seleção, preview e exportação preparados para diagramas existentes |
-| Diagram Editor | Dimensões, título, marcas, pestanas, rótulos, estilos, preview e clipboard | PARCIAL — criar/editar, título, cordas, casas, preview, marcas, rótulos e pestanas reais; seleção no diagrama oferece adicionar/editar/remover e fechamento protege alterações não salvas |
+| Diagram Library | Árvore, coleções, criar, editar, excluir, clonar, copiar, mover, mesclar e estilos | PARCIAL — navegação, CRUD e edição hierárquica dos estilos de coleção reais; seleção, preview e exportação preparados para diagramas existentes |
+| Diagram Editor | Dimensões, título, marcas, pestanas, rótulos, estilos, preview e clipboard | PARCIAL — criar/editar, título, cordas, casas, preview, marcas, rótulos, pestanas e estilos reais; seleção no diagrama oferece adicionar/editar/remover e fechamento protege alterações não salvas |
 | Diagram Export | Escolha de caminho, SVG, PNG/JPG e escala | PARCIAL — exportação SVG nativa |
 | Chord Finder | Instrumento, afinação, qualidade, opções, busca assíncrona, cancelamento e resultados | PENDENTE |
 | Scale Finder | Instrumento, afinação, escala, opções, busca assíncrona, cancelamento e resultados | PENDENTE |
@@ -72,7 +72,7 @@ Legenda: `CONCLUÍDO`, `PARCIAL`, `PENDENTE`.
 | Scales | Gerenciador, editor e intervalos nomeados | PENDENTE |
 | Options | Preferências, estilo global, resets, diretório temporário e defaults dos finders | PENDENTE |
 | Configuration | Persistência, importação, exportação, seleção de partes e importação legada | PARCIAL — persistência do arquivo de usuário e round-trip de biblioteca testado |
-| Element editors | Mark, Barre, Fret Label e Style | PARCIAL — Mark Editor, Barre Editor e Fret Label Editor cobrem todas as propriedades existentes, estilos locais, aplicar/salvar/cancelar e proteção contra perda; somente Style permanece pendente |
+| Element editors | Mark, Barre, Fret Label e Style | CONCLUÍDO — os quatro editores cobrem todas as propriedades existentes, níveis de herança, estilos locais, aplicar/salvar/cancelar e proteção contra perda; o Style Editor cobre as 61 propriedades herdáveis da versão WPF |
 | Diálogos comuns | Confirmação persistente, informação, exceção, prompt e seleção de coleção | PARCIAL — confirmação persistente, informação, exceção e prompt nativos |
 | Integrações | Clipboard de texto/bitmap, arquivos/pastas, URLs, Finder, fontes e atualização | PARCIAL — texto/bitmap, fontes e save picker iniciais |
 | Distribuição | Bundle, ícone, assinatura, notarização, DMG e atualização | PENDENTE |
@@ -87,7 +87,7 @@ Legenda: `CONCLUÍDO`, `PARCIAL`, `PENDENTE`.
   [rastreador público do fork](https://github.com/vlosito/Chordious/issues), com
   link para a origem e preservação da autoria factual.
 - As issues `#8` a `#13` formaram o conjunto inicial de bloqueadores conhecidos
-  da versão estável para macOS; as `#9`, `#11` e `#13` estão resolvidas na PR
+  da versão estável para macOS; as `#9`, `#10`, `#11`, `#12` e `#13` estão resolvidas na PR
   draft `#1` e serão fechadas automaticamente após o merge.
 - As demais issues são melhorias herdadas. Elas serão tratadas sem impedir a
   paridade da versão 2.8 quando não representarem regressão ou funcionalidade já

@@ -139,6 +139,7 @@
                 <Button Command="{Binding Library.EditNode}" Content="Renomear" />
                 <Button Command="{Binding Library.CloneNode}" Content="Clonar" />
                 <Button Command="{Binding Library.DeleteNode}" Content="Excluir" />
+                <Button Command="{Binding Library.EditNodeStyle}" Content="Estilo…" />
               </WrapPanel>
             </Grid>
           </Border>
