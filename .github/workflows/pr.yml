@@ -39,7 +39,7 @@ jobs:
       uses: actions/upload-artifact@v6
       with:
         name:  ${{ matrix.configuration }}Binaries
-        path: ${{ env.BinDir }}/${{ matrix.configuration }}/net8.0
+        path: ${{ env.BinDir }}/${{ matrix.configuration }}/net8.0-windows
 
   pr_macos_build_and_test:
     name: PR macOS Build and Test
