@@ -51,7 +51,9 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: |
+          8.0.x
+          10.0.x
 
     - name: Checkout
       uses: actions/checkout@v4
@@ -80,7 +82,9 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: |
+          8.0.x
+          10.0.x
 
     - name: Checkout
       uses: actions/checkout@v4
@@ -102,6 +106,7 @@ jobs:
     name: Publish Windows WinStore Build
     runs-on: windows-latest
     needs: pub_create_github_release
+    if: ${{ github.repository == 'jonthysell/Chordious' || vars.ENABLE_WINSTORE_BUILD == 'true' }}
     env:
       CertFile: src\Chordious.WinStore\Chordious.WinStore_TemporaryKey.pfx
     strategy:
@@ -111,7 +116,9 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: |
+          8.0.x
+          10.0.x
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1

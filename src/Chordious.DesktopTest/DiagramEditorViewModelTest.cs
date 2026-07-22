@@ -7,6 +7,7 @@ using System.IO;
 
 using Chordious.Core;
 using Chordious.Core.ViewModel;
+using Chordious.Desktop;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -59,6 +60,24 @@ public class DiagramEditorViewModelTest
         Assert.IsFalse(changed);
         Assert.AreEqual("C", original.Title);
         Assert.AreEqual(5, original.NumFrets);
+    }
+
+    [TestMethod]
+    public void RequiresUnsavedChangesConfirmation_ProtectsDirtyDiscardFlow()
+    {
+        ObservableDiagram original = CreateDiagram("C", 6, 5);
+        DiagramEditorViewModel editor = new(original, isNew: false);
+
+        Assert.IsFalse(DiagramEditorWindow.RequiresUnsavedChangesConfirmation(editor, closeApproved: false));
+
+        editor.ObservableDiagram.Title = "Dm";
+
+        Assert.IsTrue(DiagramEditorWindow.RequiresUnsavedChangesConfirmation(editor, closeApproved: false));
+        Assert.IsFalse(DiagramEditorWindow.RequiresUnsavedChangesConfirmation(editor, closeApproved: true));
+
+        editor.Accept.Execute(null);
+
+        Assert.IsFalse(DiagramEditorWindow.RequiresUnsavedChangesConfirmation(editor, closeApproved: false));
     }
 
     private static ObservableDiagram CreateDiagram(string title, int numStrings, int numFrets)
