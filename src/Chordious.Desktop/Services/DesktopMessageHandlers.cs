@@ -36,6 +36,8 @@ internal sealed class DesktopMessageHandlers : IDisposable
             _ = ShowDiagramEditorAsync(message));
         StrongReferenceMessenger.Default.Register<ShowDiagramMarkEditorMessage>(this, (_, message) =>
             _ = ShowDiagramMarkEditorAsync(message));
+        StrongReferenceMessenger.Default.Register<ShowDiagramFretLabelEditorMessage>(this, (_, message) =>
+            _ = ShowDiagramFretLabelEditorAsync(message));
     }
 
     public void Dispose()
@@ -194,6 +196,22 @@ internal sealed class DesktopMessageHandlers : IDisposable
     {
         DiagramMarkEditorViewModel vm = message.DiagramMarkEditorVM;
         DiagramMarkEditorWindow dialog = new()
+        {
+            DataContext = vm
+        };
+        vm.RequestClose += dialog.Close;
+
+        await ShowDialogAsync(dialog);
+
+        vm.RequestClose -= dialog.Close;
+        message.Process();
+        PersistUserConfig();
+    }
+
+    private async Task ShowDiagramFretLabelEditorAsync(ShowDiagramFretLabelEditorMessage message)
+    {
+        DiagramFretLabelEditorViewModel vm = message.DiagramFretLabelEditorVM;
+        DiagramFretLabelEditorWindow dialog = new()
         {
             DataContext = vm
         };

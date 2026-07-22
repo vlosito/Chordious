@@ -96,9 +96,9 @@
               <TextBlock FontWeight="SemiBold" Text="Disponível nesta fatia" />
               <TextBlock Text="✓ Criar e editar diagramas" />
               <TextBlock Text="✓ Título, cordas e casas" />
-              <TextBlock Text="✓ Preview, persistência e marcas" />
+              <TextBlock Text="✓ Preview, persistência, marcas e rótulos" />
               <TextBlock Opacity="0.65"
-                         Text="Selecione uma posição no diagrama e use os botões de marca ou o menu de contexto. Pestanas, rótulos e estilos serão adicionados nos próximos incrementos."
+                         Text="Selecione uma posição no diagrama e use os botões ou o menu de contexto. Pestanas e estilos serão adicionados nos próximos incrementos."
                          TextWrapping="Wrap" />
             </StackPanel>
           </Border>
@@ -118,7 +118,7 @@
                        FontWeight="SemiBold"
                        Text="Preview" />
             <TextBlock Foreground="#6A6A6A"
-                       Text="Selecione uma posição para editar marcas" />
+                       Text="Selecione uma posição para editar marcas ou rótulos" />
           </StackPanel>
           <ScrollViewer Grid.Row="1"
                         HorizontalScrollBarVisibility="Auto"
@@ -144,23 +144,43 @@
                   <MenuItem Command="{Binding ObservableDiagram.RemoveMark}"
                             Header="Remover marca"
                             IsVisible="{Binding ObservableDiagram.CanRemoveMark}" />
+                  <Separator />
+                  <MenuItem Command="{Binding ObservableDiagram.AddFretLabel}"
+                            Header="{Binding ObservableDiagram.AddFretLabelLabel}"
+                            IsVisible="{Binding ObservableDiagram.CanAddFretLabel}" />
+                  <MenuItem Command="{Binding ObservableDiagram.EditFretLabel}"
+                            Header="{Binding ObservableDiagram.EditFretLabelLabel}"
+                            IsVisible="{Binding ObservableDiagram.CanEditFretLabel}" />
+                  <MenuItem Command="{Binding ObservableDiagram.RemoveFretLabel}"
+                            Header="{Binding ObservableDiagram.RemoveFretLabelLabel}"
+                            IsVisible="{Binding ObservableDiagram.CanRemoveFretLabel}" />
                 </ContextMenu>
               </Image.ContextMenu>
             </Image>
           </ScrollViewer>
-          <StackPanel Grid.Row="2"
-                      HorizontalAlignment="Center"
-                      Orientation="Horizontal"
-                      Spacing="8">
-            <Button Command="{Binding ObservableDiagram.AddMark}"
-                    Content="Adicionar marca…"
-                    IsEnabled="{Binding ObservableDiagram.CanAddMark}" />
-            <Button Command="{Binding ObservableDiagram.EditMark}"
-                    Content="Editar marca…"
-                    IsEnabled="{Binding ObservableDiagram.CanEditMark}" />
-            <Button Command="{Binding ObservableDiagram.RemoveMark}"
-                    Content="Remover marca"
-                    IsEnabled="{Binding ObservableDiagram.CanRemoveMark}" />
+          <StackPanel Grid.Row="2" Spacing="8">
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="8">
+              <Button Command="{Binding ObservableDiagram.AddMark}"
+                      Content="Adicionar marca…"
+                      IsEnabled="{Binding ObservableDiagram.CanAddMark}" />
+              <Button Command="{Binding ObservableDiagram.EditMark}"
+                      Content="Editar marca…"
+                      IsEnabled="{Binding ObservableDiagram.CanEditMark}" />
+              <Button Command="{Binding ObservableDiagram.RemoveMark}"
+                      Content="Remover marca"
+                      IsEnabled="{Binding ObservableDiagram.CanRemoveMark}" />
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="8">
+              <Button Command="{Binding ObservableDiagram.AddFretLabel}"
+                      Content="{Binding ObservableDiagram.AddFretLabelLabel}"
+                      IsEnabled="{Binding ObservableDiagram.CanAddFretLabel}" />
+              <Button Command="{Binding ObservableDiagram.EditFretLabel}"
+                      Content="{Binding ObservableDiagram.EditFretLabelLabel}"
+                      IsEnabled="{Binding ObservableDiagram.CanEditFretLabel}" />
+              <Button Command="{Binding ObservableDiagram.RemoveFretLabel}"
+                      Content="{Binding ObservableDiagram.RemoveFretLabelLabel}"
+                      IsEnabled="{Binding ObservableDiagram.CanRemoveFretLabel}" />
+            </StackPanel>
           </StackPanel>
         </Grid>
       </Border>

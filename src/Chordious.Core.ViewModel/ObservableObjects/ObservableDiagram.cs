@@ -276,6 +276,7 @@ namespace Chordious.Core.ViewModel
                                     if (changed)
                                     {
                                         Refresh();
+                                        RefreshCursor();
                                     }
                                 }
                                 catch (Exception ex)
@@ -529,10 +530,12 @@ namespace Chordious.Core.ViewModel
                                 if (changed)
                                 {
                                     Refresh();
+                                    RefreshCursor();
                                 }
                                 else
                                 {
                                     Diagram.RemoveFretLabel(flp);
+                                    RefreshCursor();
                                 }
                             }
                             catch (Exception ex)
@@ -596,6 +599,7 @@ namespace Chordious.Core.ViewModel
                                 if (changed)
                                 {
                                     Refresh();
+                                    RefreshCursor();
                                 }
                             }
                             catch (Exception ex)
@@ -654,6 +658,7 @@ namespace Chordious.Core.ViewModel
                         FretLabelPosition flp = FretLabelPosition;
                         Diagram.RemoveFretLabel(flp);
                         Refresh();
+                        RefreshCursor();
                     }
                     catch (Exception ex)
                     {

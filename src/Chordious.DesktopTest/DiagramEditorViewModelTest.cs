@@ -130,6 +130,46 @@ public class DiagramEditorViewModelTest
         }
     }
 
+    [TestMethod]
+    public void AddFretLabel_RefreshesCommandsAfterEditorAccepts()
+    {
+        Diagram diagram = new(ConfigFile.DefaultConfig.DiagramStyle, 6, 5);
+        ObservableDiagram observable = new(diagram)
+        {
+            CursorX = 0,
+            CursorY = diagram.GridTopEdge() + (diagram.Style.GridFretSpacing / 2)
+        };
+        object recipient = new();
+
+        StrongReferenceMessenger.Default.Register<ShowDiagramFretLabelEditorMessage>(recipient, (_, message) =>
+        {
+            message.DiagramFretLabelEditorVM.Text = "III";
+            message.DiagramFretLabelEditorVM.Accept.Execute(null);
+            message.Process();
+        });
+
+        try
+        {
+            Assert.IsTrue(observable.CanAddFretLabel);
+
+            observable.AddFretLabel.Execute(null);
+
+            Assert.IsFalse(observable.CanAddFretLabel);
+            Assert.IsTrue(observable.CanEditFretLabel);
+            Assert.IsTrue(observable.CanRemoveFretLabel);
+
+            observable.RemoveFretLabel.Execute(null);
+
+            Assert.IsTrue(observable.CanAddFretLabel);
+            Assert.IsFalse(observable.CanEditFretLabel);
+            Assert.IsFalse(observable.CanRemoveFretLabel);
+        }
+        finally
+        {
+            StrongReferenceMessenger.Default.UnregisterAll(recipient);
+        }
+    }
+
     private static ObservableDiagram CreateDiagram(string title, int numStrings, int numFrets)
     {
         Diagram diagram = new(ConfigFile.DefaultConfig.DiagramStyle, numStrings, numFrets)

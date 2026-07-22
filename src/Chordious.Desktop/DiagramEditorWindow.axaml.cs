@@ -53,9 +53,9 @@ public partial class DiagramEditorWindow : Window
         }
 
         UpdateCursorPosition(image, e.GetPosition(image), viewModel.ObservableDiagram);
-        if (viewModel.ObservableDiagram.EditMark.CanExecute(null))
+        if (viewModel.ObservableDiagram.EditElement.CanExecute(null))
         {
-            viewModel.ObservableDiagram.EditMark.Execute(null);
+            viewModel.ObservableDiagram.EditElement.Execute(null);
         }
     }
 
