@@ -96,11 +96,13 @@
       <Button Command="{Binding CancelOrClose}"
               Content="Cancelar/Fechar"
               MinWidth="96"
-              HorizontalContentAlignment="Center" />
+              HorizontalContentAlignment="Center"
+              IsCancel="True" />
       <Button Command="{Binding ExportAsync}"
               Content="Exportar"
               MinWidth="112"
-              HorizontalContentAlignment="Center" />
+              HorizontalContentAlignment="Center"
+              IsDefault="True" />
     </StackPanel>
   </Grid>
 </Window>

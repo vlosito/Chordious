@@ -43,6 +43,7 @@
             MinWidth="90"
             Command="{Binding Accept}"
             Content="{Binding AppVM.AcceptLabel}"
+            IsCancel="True"
             IsDefault="True" />
   </Grid>
 </Window>

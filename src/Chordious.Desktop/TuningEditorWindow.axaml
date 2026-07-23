@@ -85,14 +85,15 @@
                 Orientation="Horizontal"
                 Spacing="8">
       <Button MinWidth="90"
+              Command="{Binding Cancel}"
+              Content="{Binding AppVM.CancelLabel}"
+              HorizontalContentAlignment="Center"
+              IsCancel="True" />
+      <Button MinWidth="90"
               Command="{Binding Accept}"
               Content="{Binding AppVM.AcceptLabel}"
               HorizontalContentAlignment="Center"
               IsDefault="True" />
-      <Button MinWidth="90"
-              Command="{Binding Cancel}"
-              Content="{Binding AppVM.CancelLabel}"
-              HorizontalContentAlignment="Center" />
     </StackPanel>
   </Grid>
 </Window>

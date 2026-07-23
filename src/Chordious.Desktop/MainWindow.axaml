@@ -13,9 +13,74 @@
         Height="640"
         MinWidth="820"
         MinHeight="540"
+        Opened="Window_Opened"
         PointerMoved="Window_PointerMoved"
         PointerReleased="Window_PointerReleased"
         Title="Chordious">
+  <NativeMenu.Menu>
+    <NativeMenu>
+      <NativeMenuItem Header="Arquivo">
+        <NativeMenu>
+          <NativeMenuItem Header="Fechar janela"
+                          Click="CloseWindow_OnClick"
+                          Gesture="Meta+W" />
+        </NativeMenu>
+      </NativeMenuItem>
+      <NativeMenuItem Header="Editar">
+        <NativeMenu>
+          <NativeMenuItem Header="Copiar SVG do diagrama"
+                          Command="{Binding CopySelectedDiagramSvgCommand}"
+                          Gesture="Meta+Shift+C" />
+          <NativeMenuItem Header="Copiar imagem do diagrama"
+                          Command="{Binding CopySelectedDiagramImageCommand}"
+                          Gesture="Meta+Alt+C" />
+        </NativeMenu>
+      </NativeMenuItem>
+      <NativeMenuItem Header="Biblioteca">
+        <NativeMenu>
+          <NativeMenuItem Header="Novo diagrama"
+                          Command="{Binding SelectedLibraryNode.CreateDiagram}"
+                          Gesture="Meta+N" />
+          <NativeMenuItem Header="Editar diagrama selecionado"
+                          Command="{Binding SelectedLibraryNode.EditSelected}"
+                          Gesture="Meta+E" />
+          <NativeMenuItemSeparator />
+          <NativeMenuItem Header="Exportar diagrama selecionado…"
+                          Command="{Binding SelectedLibraryNode.ExportSelected}"
+                          Gesture="Meta+Shift+E" />
+        </NativeMenu>
+      </NativeMenuItem>
+      <NativeMenuItem Header="Ferramentas">
+        <NativeMenu>
+          <NativeMenuItem Header="Chord Finder"
+                          Command="{Binding ShowChordFinder}"
+                          Gesture="Meta+F" />
+          <NativeMenuItem Header="Scale Finder"
+                          Command="{Binding ShowScaleFinder}"
+                          Gesture="Meta+Shift+F" />
+          <NativeMenuItemSeparator />
+          <NativeMenuItem Header="Instrumentos e afinações…"
+                          Command="{Binding ShowInstrumentManager}" />
+          <NativeMenuItem Header="Qualidades de acordes…"
+                          Command="{Binding ShowChordQualityManager}" />
+          <NativeMenuItem Header="Escalas…"
+                          Command="{Binding ShowScaleManager}" />
+        </NativeMenu>
+      </NativeMenuItem>
+      <NativeMenuItem Header="Ajuda">
+        <NativeMenu>
+          <NativeMenuItem Header="Ajuda do Chordious"
+                          Command="{Binding ShowHelp}" />
+          <NativeMenuItem Header="Website do Chordious"
+                          Command="{Binding LaunchWebsite}" />
+          <NativeMenuItemSeparator />
+          <NativeMenuItem Header="Licenças…"
+                          Command="{Binding ShowLicenses}" />
+        </NativeMenu>
+      </NativeMenuItem>
+    </NativeMenu>
+  </NativeMenu.Menu>
+
   <Grid RowDefinitions="Auto,*" Background="{DynamicResource SystemControlBackgroundBaseLowBrush}">
     <Border Grid.Row="0"
             Padding="24,18"
@@ -23,9 +88,13 @@
       <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
         <Image Width="52"
                Height="52"
+               AutomationProperties.Name="Ícone do Chordious"
                Source="avares://Chordious.Desktop/Assets/chordious128.png" />
         <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-          <TextBlock FontSize="24" FontWeight="SemiBold" Text="Chordious para macOS" />
+          <TextBlock AutomationProperties.HeadingLevel="1"
+                     FontSize="24"
+                     FontWeight="SemiBold"
+                     Text="Chordious para macOS" />
           <TextBlock Opacity="0.75" Text="Core e ViewModels compartilhados com interface Avalonia nativa" />
         </StackPanel>
         <Border Grid.Column="2"
@@ -38,15 +107,24 @@
       </Grid>
     </Border>
 
-    <TabControl Grid.Row="1" Margin="18">
+    <TabControl x:Name="MainTabs"
+                Grid.Row="1"
+                Margin="18"
+                AutomationProperties.AutomationId="MainTabs"
+                AutomationProperties.Name="Áreas principais do Chordious"
+                TabIndex="0">
       <TabItem Header="Visão geral">
         <Grid Margin="6"
               ColumnDefinitions="340,*"
               ColumnSpacing="24">
           <ScrollViewer Grid.Column="0"
+                        AutomationProperties.LandmarkType="Navigation"
                         VerticalScrollBarVisibility="Auto">
           <StackPanel Spacing="14">
-            <TextBlock FontSize="18" FontWeight="SemiBold" Text="Baseline funcional" />
+            <TextBlock AutomationProperties.HeadingLevel="2"
+                       FontSize="18"
+                       FontWeight="SemiBold"
+                       Text="Baseline funcional" />
 
             <Border Padding="16"
                     BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
@@ -74,66 +152,110 @@
               </StackPanel>
             </Border>
 
-            <Button HorizontalAlignment="Stretch"
+            <Button x:Name="ShowChordFinderButton"
+                    HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    AutomationProperties.AcceleratorKey="Cmd+F"
+                    AutomationProperties.AutomationId="ShowChordFinderButton"
+                    AutomationProperties.HelpText="{Binding ShowChordFinderToolTip}"
+                    AutomationProperties.Name="Abrir Chord Finder"
                     Command="{Binding ShowChordFinder}"
                     Content="{Binding ShowChordFinderLabel}"
+                    TabIndex="1"
                     ToolTip.Tip="{Binding ShowChordFinderToolTip}" />
 
             <Button HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    AutomationProperties.AcceleratorKey="Cmd+Shift+F"
+                    AutomationProperties.AutomationId="ShowScaleFinderButton"
+                    AutomationProperties.HelpText="{Binding ShowScaleFinderToolTip}"
+                    AutomationProperties.Name="Abrir Scale Finder"
                     Command="{Binding ShowScaleFinder}"
                     Content="{Binding ShowScaleFinderLabel}"
+                    TabIndex="2"
                     ToolTip.Tip="{Binding ShowScaleFinderToolTip}" />
 
             <Button HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    AutomationProperties.AutomationId="ShowInstrumentManagerButton"
+                    AutomationProperties.HelpText="{Binding ShowInstrumentManagerToolTip}"
+                    AutomationProperties.Name="Gerenciar instrumentos e afinações"
                     Command="{Binding ShowInstrumentManager}"
                     Content="{Binding ShowInstrumentManagerLabel}"
+                    TabIndex="3"
                     ToolTip.Tip="{Binding ShowInstrumentManagerToolTip}" />
 
             <Button HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    AutomationProperties.AutomationId="ShowChordQualityManagerButton"
+                    AutomationProperties.HelpText="{Binding ShowChordQualityManagerToolTip}"
+                    AutomationProperties.Name="Gerenciar qualidades de acordes"
                     Command="{Binding ShowChordQualityManager}"
                     Content="{Binding ShowChordQualityManagerLabel}"
+                    TabIndex="4"
                     ToolTip.Tip="{Binding ShowChordQualityManagerToolTip}" />
 
             <Button HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    AutomationProperties.AutomationId="ShowScaleManagerButton"
+                    AutomationProperties.HelpText="{Binding ShowScaleManagerToolTip}"
+                    AutomationProperties.Name="Gerenciar escalas"
                     Command="{Binding ShowScaleManager}"
                     Content="{Binding ShowScaleManagerLabel}"
+                    TabIndex="5"
                     ToolTip.Tip="{Binding ShowScaleManagerToolTip}" />
 
             <Button HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    AutomationProperties.AcceleratorKey="Cmd+,"
+                    AutomationProperties.AutomationId="ShowOptionsButton"
+                    AutomationProperties.HelpText="{Binding ShowOptionsToolTip}"
+                    AutomationProperties.Name="Abrir ajustes do Chordious"
                     Command="{Binding ShowOptions}"
                     Content="{Binding ShowOptionsLabel}"
+                    TabIndex="6"
                     ToolTip.Tip="{Binding ShowOptionsToolTip}" />
 
             <Button HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    AutomationProperties.AutomationId="LaunchWebsiteButton"
+                    AutomationProperties.HelpText="{Binding LaunchWebsiteToolTip}"
+                    AutomationProperties.Name="Abrir website do Chordious"
                     Command="{Binding LaunchWebsite}"
                     Content="{Binding LaunchWebsiteLabel}"
+                    TabIndex="7"
                     ToolTip.Tip="{Binding LaunchWebsiteToolTip}" />
 
             <Button HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    AutomationProperties.AutomationId="ShowHelpButton"
+                    AutomationProperties.HelpText="{Binding ShowHelpToolTip}"
+                    AutomationProperties.Name="Abrir ajuda do Chordious"
                     Command="{Binding ShowHelp}"
                     Content="{Binding ShowHelpLabel}"
+                    TabIndex="8"
                     ToolTip.Tip="{Binding ShowHelpToolTip}" />
 
             <Button HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    AutomationProperties.AutomationId="ShowLicensesButton"
+                    AutomationProperties.HelpText="{Binding ShowLicensesToolTip}"
+                    AutomationProperties.Name="Exibir licenças"
                     Command="{Binding ShowLicenses}"
                     Content="{Binding ShowLicensesLabel}"
+                    TabIndex="9"
                     ToolTip.Tip="{Binding ShowLicensesToolTip}" />
 
             <Button HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    AutomationProperties.AutomationId="ExportPreviewSvgButton"
+                    AutomationProperties.Name="Exportar diagrama de exemplo como SVG"
                     Command="{Binding ExportPreviewSvgCommand}"
-                    Content="Exportar preview como SVG" />
+                    Content="Exportar preview como SVG"
+                    TabIndex="10" />
 
-            <TextBlock Text="{Binding ExportStatus}"
+            <TextBlock AutomationProperties.LiveSetting="Polite"
+                       Text="{Binding ExportStatus}"
                        TextWrapping="Wrap"
                        Opacity="0.8" />
 
@@ -168,6 +290,8 @@
               </StackPanel>
               <Image Grid.Row="1"
                      Margin="24"
+                     AutomationProperties.AutomationId="OverviewDiagramPreview"
+                     AutomationProperties.Name="Preview do diagrama de exemplo"
                      HorizontalAlignment="Stretch"
                      VerticalAlignment="Stretch"
                      Source="{Binding PreviewDiagram.ImageObject}"
@@ -191,12 +315,16 @@
                 <TextBlock Opacity="0.65" Text="Arquivo de usuário existente" />
               </StackPanel>
               <ListBox Grid.Row="1"
+                       AutomationProperties.AutomationId="LibraryCollectionsList"
+                       AutomationProperties.HelpText="Selecione uma coleção para listar e gerenciar seus diagramas."
+                       AutomationProperties.Name="Coleções da biblioteca"
                        ItemsSource="{Binding Library.Nodes}"
                        SelectionChanged="LibraryNodesListBox_SelectionChanged"
                        SelectedItem="{Binding SelectedLibraryNode, Mode=TwoWay}"
                        DragDrop.AllowDrop="True"
                        DragDrop.DragOver="LibraryDropTarget_DragOver"
-                       DragDrop.Drop="LibraryNodesListBox_Drop">
+                       DragDrop.Drop="LibraryNodesListBox_Drop"
+                       TabIndex="1">
                 <ListBox.ItemTemplate>
                   <DataTemplate x:DataType="coreVm:ObservableDiagramLibraryNode">
                     <StackPanel Margin="4"
@@ -235,12 +363,16 @@
               </StackPanel>
               <ListBox x:Name="DiagramsListBox"
                        Grid.Row="1"
+                       AutomationProperties.AutomationId="LibraryDiagramsList"
+                       AutomationProperties.HelpText="Selecione um ou mais diagramas para editar, copiar, mover ou exportar."
+                       AutomationProperties.Name="Diagramas da coleção selecionada"
                        ItemsSource="{Binding SelectedLibraryNode.Diagrams}"
                        SelectionChanged="DiagramsListBox_SelectionChanged"
                        SelectionMode="Multiple"
                        DragDrop.AllowDrop="True"
                        DragDrop.DragOver="LibraryDropTarget_DragOver"
-                       DragDrop.Drop="DiagramsListBox_Drop">
+                       DragDrop.Drop="DiagramsListBox_Drop"
+                       TabIndex="2">
                 <ListBox.ItemTemplate>
                   <DataTemplate x:DataType="coreVm:ObservableDiagram">
                     <Grid Margin="4" ColumnDefinitions="56,*" ColumnSpacing="8">
@@ -285,6 +417,8 @@
               </StackPanel>
               <Image Grid.Row="1"
                      Margin="16"
+                     AutomationProperties.AutomationId="LibraryDiagramPreview"
+                     AutomationProperties.Name="Preview do diagrama selecionado"
                      Source="{Binding PreviewDiagram.ImageObject}"
                      Stretch="Uniform" />
               <WrapPanel Grid.Row="2" ItemSpacing="8" LineSpacing="8">

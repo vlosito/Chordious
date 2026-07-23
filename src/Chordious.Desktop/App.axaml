@@ -3,6 +3,17 @@
              x:Class="Chordious.Desktop.App"
              Name="Chordious"
              RequestedThemeVariant="Default">
+  <NativeMenu.Menu>
+    <NativeMenu>
+      <NativeMenuItem Header="Licenças…"
+                      Click="AppLicenses_OnClick" />
+      <NativeMenuItemSeparator />
+      <NativeMenuItem Header="Ajustes…"
+                      Click="AppOptions_OnClick"
+                      Gesture="Meta+OemComma" />
+    </NativeMenu>
+  </NativeMenu.Menu>
+
   <Application.Styles>
     <FluentTheme />
   </Application.Styles>

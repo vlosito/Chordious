@@ -57,7 +57,8 @@
                 Spacing="8">
       <Button MinWidth="90"
               Command="{Binding Cancel}"
-              Content="{Binding AppVM.CancelLabel}" />
+              Content="{Binding AppVM.CancelLabel}"
+              IsCancel="True" />
       <Button MinWidth="90"
               Command="{Binding Accept}"
               Content="{Binding AppVM.AcceptLabel}"

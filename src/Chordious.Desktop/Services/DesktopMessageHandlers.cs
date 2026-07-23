@@ -109,6 +109,8 @@ internal sealed class DesktopMessageHandlers : IDisposable
         });
 
         Button accept = CreateButton("OK");
+        accept.IsCancel = true;
+        accept.IsDefault = true;
         accept.Click += (_, _) => dialog.Close();
         AddButtons(dialog, accept);
 
@@ -136,6 +138,8 @@ internal sealed class DesktopMessageHandlers : IDisposable
 
         Window dialog = CreateDialog(ExceptionViewModel.Title, content, 560);
         Button accept = CreateButton("OK");
+        accept.IsCancel = true;
+        accept.IsDefault = true;
         accept.Click += (_, _) => dialog.Close();
         AddButtons(dialog, accept);
 
@@ -162,8 +166,10 @@ internal sealed class DesktopMessageHandlers : IDisposable
 
         Button reject = CreateButton("Não");
         reject.Command = vm.Reject;
+        reject.IsCancel = true;
         Button accept = CreateButton("Sim");
         accept.Command = vm.Accept;
+        accept.IsDefault = true;
 
         if (vm.ShowAcceptAndRemember)
         {
@@ -204,9 +210,11 @@ internal sealed class DesktopMessageHandlers : IDisposable
 
         Button cancel = CreateButton("Cancelar");
         cancel.Command = vm.Cancel;
+        cancel.IsCancel = true;
         Button accept = CreateButton("OK");
         accept.Command = vm.Accept;
         accept.IsEnabled = vm.Accept.CanExecute(null);
+        accept.IsDefault = true;
 
         textBox.TextChanged += (_, _) =>
         {

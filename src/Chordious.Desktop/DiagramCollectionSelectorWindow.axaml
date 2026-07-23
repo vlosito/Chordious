@@ -37,7 +37,8 @@
       <Button MinWidth="88"
               HorizontalContentAlignment="Center"
               Command="{Binding Cancel}"
-              Content="Cancelar" />
+              Content="Cancelar"
+              IsCancel="True" />
       <Button MinWidth="88"
               HorizontalContentAlignment="Center"
               Command="{Binding Accept}"

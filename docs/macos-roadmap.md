@@ -18,7 +18,7 @@ fluxos.
 | macOS Apple Silicon | Concluído | Ambiente identificado como `osx-arm64` |
 | SDK exigido | Concluído | .NET SDK 10.0.302 arm64 instalado persistentemente e fixado por `global.json`; runtime 8 mantido para compatibilidade |
 | Domínio no macOS | Concluído | 8 testes de `Chordious.CoreTest` aprovados em Release |
-| UI multiplataforma | Em andamento | `Chordious.Desktop` em `net10.0` possui 24 das 25 janelas WPF concluídas, 1 parcial e nenhuma pendente; o Diagram Editor cobre estilos, clipboard, fundo, tipo de marca, F5 e arraste de saída; 73 testes Desktop aprovados |
+| UI multiplataforma | Em andamento | `Chordious.Desktop` em `net10.0` possui 24 das 25 janelas WPF concluídas, 1 parcial e nenhuma pendente; o Diagram Editor cobre estilos, clipboard, fundo, tipo de marca, F5 e arraste de saída; menus nativos e atalhos principais estão ativos; 77 testes Desktop aprovados |
 | CI multiplataforma | Concluído | GitHub Actions valida Core, Desktop e publicação `osx-arm64` no macOS, além da solução e dos pacotes existentes no Windows |
 | Repositório e proveniência | Concluído | Fork público `vlosito/Chordious`, com `origin` apontando para o fork e `upstream` para `jonthysell/Chordious`; base validada em `main@b781057`, que contém `v2.8.0` e `2.8-official` |
 | Governança da `main` | Concluído | Branch protegida para exigir PR, checks Debug/Release/macOS e resolução de conversas; force-push e exclusão bloqueados inclusive para administradores |
@@ -61,7 +61,7 @@ Legenda: `CONCLUÍDO`, `PARCIAL`, `PENDENTE`.
 
 | Área WPF | Capacidades cobertas | Estado macOS |
 | --- | --- | --- |
-| Main | Inicialização, navegação, website, ajuda, opções e licenças | CONCLUÍDO — shell e ViewModel reais; website, ajuda, Options e Licenses possuem handlers macOS; a consolidação em menus nativos permanece no gate transversal de plataforma |
+| Main | Inicialização, navegação, website, ajuda, opções e licenças | CONCLUÍDO — shell e ViewModel reais; menus nativos Chordious/Arquivo/Editar/Biblioteca/Ferramentas/Ajuda, `Cmd+F`, `Cmd+Shift+F`, `Cmd+,` e `Cmd+W`, website, ajuda, Options e Licenses foram validados no app real; a janela principal expõe nomes, ajuda e IDs estáveis ao NSAccessibility |
 | Diagram Library | Árvore, coleções, criar, editar, excluir, clonar, copiar, mover, mesclar e estilos | CONCLUÍDO — navegação, CRUD, estilos, seleção múltipla e cópia, movimentação e mesclagem por seletor ou drag-and-drop; `Ctrl` e `Option` copiam, o gesto sem modificador move, coleções são mescladas e recargas rejeitam seleções obsoletas |
 | Diagram Editor | Dimensões, título, marcas, pestanas, rótulos, estilos, preview e clipboard | CONCLUÍDO — criar/editar, título, cordas, casas, preview, marcas, rótulos, pestanas, reset, proteção contra perda, tipo padrão de marca, fundo do editor, F5/Esc, bitmap, bitmap escalado, SVG e arraste de saída estão funcionais; as 61 propriedades da janela WPF são acessadas pelo Style Editor Avalonia |
 | Diagram Export | Escolha de caminho, SVG, PNG/GIF/JPG, lote, nomes parametrizados, colisões, sobrescrita e escala | CONCLUÍDO — testes e smoke no `.app` validaram os quatro formatos, escala 2×, lote com nomes repetidos, resolução de colisão e restauração byte a byte da configuração |
@@ -73,8 +73,8 @@ Legenda: `CONCLUÍDO`, `PARCIAL`, `PENDENTE`.
 | Options | Preferências, estilo global, resets, diretório temporário e defaults dos finders | PARCIAL — Settings, Styles, Finders e Config, incluindo Apply/Accept/Cancel, fundos, resets e Finder, estão funcionais; falta somente o grupo Updates, dependente do mecanismo macOS de atualização |
 | Configuration | Persistência, importação, exportação, seleção de partes e importação legada | CONCLUÍDO — pickers nativos, seis partes selecionáveis, confirmação de sobrescrita, persistência, round-trip automatizado e real no `.app` e ChordLine automatizado estão funcionais |
 | Element editors | Mark, Barre, Fret Label e Style | CONCLUÍDO — os quatro editores cobrem todas as propriedades existentes, níveis de herança, estilos locais, aplicar/salvar/cancelar e proteção contra perda; o Style Editor cobre as 61 propriedades herdáveis da versão WPF |
-| Diálogos comuns | Confirmação persistente, informação, exceção, prompt e seleção de coleção | CONCLUÍDO — os cinco fluxos possuem equivalentes Avalonia e persistem as respostas aplicáveis |
-| Integrações | Clipboard de texto/bitmap, arquivos/pastas, URLs, Finder, fontes e atualização | PARCIAL — texto/bitmap, fontes, pickers nativos, navegador padrão e pasta temporária no Finder estão funcionais; Diagram Editor, Chord Finder e Scale Finder oferecem arraste de saída com SVG, bitmap e PNG opcional, e a Library implementa copy/move/merge interno; falta validar os gestos e a interoperabilidade em destinos macOS reais |
+| Diálogos comuns | Confirmação persistente, informação, exceção, prompt e seleção de coleção | CONCLUÍDO — os cinco fluxos possuem equivalentes Avalonia, persistem as respostas aplicáveis e declaram ações padrão/cancelamento para Enter/Escape; os demais diálogos seguem a ordem macOS com Cancelar à esquerda da ação principal |
+| Integrações | Clipboard de texto/bitmap, arquivos/pastas, URLs, Finder, fontes e atualização | PARCIAL — menus de aplicativo e janela, atalhos principais, texto/bitmap, fontes, pickers nativos, navegador padrão e pasta temporária no Finder estão funcionais; Diagram Editor, Chord Finder e Scale Finder oferecem arraste de saída com SVG, bitmap e PNG opcional, e a Library implementa copy/move/merge interno; falta validar os gestos e a interoperabilidade em destinos macOS reais |
 | Distribuição | Bundle, ícone, assinatura, notarização, DMG e atualização | PENDENTE |
 
 ## Pendências restantes para paridade de 100%
@@ -103,8 +103,10 @@ Das 25 janelas de referência, 24 estão concluídas e nenhuma está ausente. Re
    copiar com `Option`/`Ctrl`, mesclar coleções e receber SVG, bitmap e arquivo
    PNG em aplicativos externos. A automação atual seleciona e clica na UI, mas
    não sustenta o gesto nativo Avalonia; por isso esse aceite permanece aberto.
-4. Completar menus de aplicativo, atalhos, ordem de foco, labels acessíveis e
-    comportamento de diálogos conforme as convenções do macOS.
+4. Completar a auditoria de ordem de foco e labels acessíveis nas 24 janelas
+   secundárias. Os menus nativos de aplicativo e janela, os atalhos principais,
+   a ordem de foco e a árvore NSAccessibility da Main, e o comportamento
+   Enter/Escape dos diálogos já foram implementados e validados no app real.
 5. Validar clipboard de texto/SVG, bitmap e bitmap escalado contra aplicativos
     nativos do macOS, além dos testes automatizados existentes.
 6. Validar fontes, arquivos, pastas, recuperação de configuração inválida e

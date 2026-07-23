@@ -316,7 +316,8 @@
               Command="{Binding CancelOrClose}"
               Content="Cancelar busca / Fechar"
               MinWidth="150"
-              HorizontalContentAlignment="Center" />
+              HorizontalContentAlignment="Center"
+              IsCancel="True" />
     </Grid>
   </Grid>
 </Window>

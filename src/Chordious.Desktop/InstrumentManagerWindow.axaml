@@ -193,6 +193,7 @@
             MinWidth="100"
             Command="{Binding Close}"
             Content="Fechar"
-            HorizontalContentAlignment="Center" />
+            HorizontalContentAlignment="Center"
+            IsCancel="True" />
   </Grid>
 </Window>
