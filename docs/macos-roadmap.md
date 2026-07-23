@@ -18,7 +18,7 @@ fluxos.
 | macOS Apple Silicon | Concluído | Ambiente identificado como `osx-arm64` |
 | SDK exigido | Concluído | .NET SDK 10.0.302 arm64 instalado persistentemente e fixado por `global.json`; runtime 8 mantido para compatibilidade |
 | Domínio no macOS | Concluído | 8 testes de `Chordious.CoreTest` aprovados em Release |
-| UI multiplataforma | Em andamento | `Chordious.Desktop` em `net10.0` executa biblioteca e os quatro editores elementares em Avalonia; 26 testes Desktop aprovados |
+| UI multiplataforma | Em andamento | `Chordious.Desktop` em `net10.0` executa biblioteca e os quatro editores elementares em Avalonia; 30 testes Desktop aprovados |
 | CI multiplataforma | Concluído | GitHub Actions valida Core, Desktop e publicação `osx-arm64` no macOS, além da solução e dos pacotes existentes no Windows |
 | Repositório e proveniência | Concluído | Fork público `vlosito/Chordious`, com `origin` apontando para o fork e `upstream` para `jonthysell/Chordious`; base validada em `main@b781057`, que contém `v2.8.0` e `2.8-official` |
 | Governança da `main` | Concluído | Branch protegida para exigir PR, checks Debug/Release/macOS e resolução de conversas; force-push e exclusão bloqueados inclusive para administradores |
@@ -62,7 +62,7 @@ Legenda: `CONCLUÍDO`, `PARCIAL`, `PENDENTE`.
 | Área WPF | Capacidades cobertas | Estado macOS |
 | --- | --- | --- |
 | Main | Inicialização, navegação, website, ajuda e licenças | PARCIAL — shell e ViewModel reais |
-| Diagram Library | Árvore, coleções, criar, editar, excluir, clonar, copiar, mover, mesclar e estilos | PARCIAL — navegação, CRUD e edição hierárquica dos estilos de coleção reais; seleção, preview e exportação preparados para diagramas existentes |
+| Diagram Library | Árvore, coleções, criar, editar, excluir, clonar, copiar, mover, mesclar e estilos | CONCLUÍDO — navegação, CRUD, estilos, seleção múltipla e cópia, movimentação e mesclagem por seletor de coleção; recargas limpam seleções e comandos obsoletos |
 | Diagram Editor | Dimensões, título, marcas, pestanas, rótulos, estilos, preview e clipboard | PARCIAL — criar/editar, título, cordas, casas, preview, marcas, rótulos, pestanas e estilos reais; seleção no diagrama oferece adicionar/editar/remover e fechamento protege alterações não salvas |
 | Diagram Export | Escolha de caminho, SVG, PNG/JPG e escala | PARCIAL — exportação SVG nativa |
 | Chord Finder | Instrumento, afinação, qualidade, opções, busca assíncrona, cancelamento e resultados | PENDENTE |

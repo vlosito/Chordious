@@ -42,6 +42,8 @@ internal sealed class DesktopMessageHandlers : IDisposable
             _ = ShowDiagramBarreEditorAsync(message));
         StrongReferenceMessenger.Default.Register<ShowDiagramStyleEditorMessage>(this, (_, message) =>
             _ = ShowDiagramStyleEditorAsync(message));
+        StrongReferenceMessenger.Default.Register<ShowDiagramCollectionSelectorMessage>(this, (_, message) =>
+            _ = ShowDiagramCollectionSelectorAsync(message));
     }
 
     public void Dispose()
@@ -257,6 +259,25 @@ internal sealed class DesktopMessageHandlers : IDisposable
 
         vm.RequestClose -= dialog.Close;
         message.Process();
+        PersistUserConfig();
+    }
+
+    private async Task ShowDiagramCollectionSelectorAsync(ShowDiagramCollectionSelectorMessage message)
+    {
+        DiagramCollectionSelectorViewModel vm = message.DiagramCollectionSelectorVM;
+        DiagramCollectionSelectorWindow dialog = new()
+        {
+            DataContext = vm
+        };
+        vm.RequestClose += dialog.Close;
+
+        await ShowDialogAsync(dialog);
+
+        vm.RequestClose -= dialog.Close;
+        if (vm.WasAccepted && _owner.DataContext is ViewModels.MainWindowViewModel mainWindowViewModel)
+        {
+            mainWindowViewModel.SelectedLibraryNode = null;
+        }
         PersistUserConfig();
     }
 

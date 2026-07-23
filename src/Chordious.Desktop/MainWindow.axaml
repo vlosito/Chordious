@@ -31,7 +31,7 @@
                 VerticalAlignment="Center"
                 Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
                 CornerRadius="14">
-          <TextBlock FontWeight="SemiBold" Text="Fase 2 · Biblioteca" />
+          <TextBlock FontWeight="SemiBold" Text="Fase 2 · Biblioteca e editor" />
         </Border>
       </Grid>
     </Border>
@@ -57,6 +57,7 @@
                 <TextBlock Text="✓ Renderização SVG com Skia" />
                 <TextBlock Text="✓ Exportação SVG por diálogo nativo" />
                 <TextBlock Text="✓ Navegação e CRUD de coleções" />
+                <TextBlock Text="✓ Copiar, mover e mesclar coleções e diagramas" />
               </StackPanel>
             </Border>
 
@@ -75,10 +76,10 @@
                     CornerRadius="8">
               <StackPanel Spacing="8">
                 <TextBlock FontWeight="SemiBold" Text="Próximos fluxos" />
-                <TextBlock Text="1. Editor completo de diagramas" />
+                <TextBlock Text="1. Exportação PNG e JPG" />
                 <TextBlock Text="2. Chord Finder e Scale Finder" />
                 <TextBlock Text="3. Instrumentos, afinações e opções" />
-                <TextBlock Text="4. Paridade das 25 janelas WPF" />
+                <TextBlock Text="4. Paridade das integrações de plataforma" />
               </StackPanel>
             </Border>
           </StackPanel>
@@ -124,6 +125,7 @@
               </StackPanel>
               <ListBox Grid.Row="1"
                        ItemsSource="{Binding Library.Nodes}"
+                       SelectionChanged="LibraryNodesListBox_SelectionChanged"
                        SelectedItem="{Binding SelectedLibraryNode, Mode=TwoWay}">
                 <ListBox.ItemTemplate>
                   <DataTemplate x:DataType="coreVm:ObservableDiagramLibraryNode">
@@ -138,6 +140,8 @@
                 <Button Command="{Binding Library.CreateNode}" Content="Nova" />
                 <Button Command="{Binding Library.EditNode}" Content="Renomear" />
                 <Button Command="{Binding Library.CloneNode}" Content="Clonar" />
+                <Button Command="{Binding Library.CopyNode}" Content="Copiar…" />
+                <Button Command="{Binding Library.MergeNode}" Content="Mesclar…" />
                 <Button Command="{Binding Library.DeleteNode}" Content="Excluir" />
                 <Button Command="{Binding Library.EditNodeStyle}" Content="Estilo…" />
               </WrapPanel>
@@ -154,9 +158,11 @@
                 <TextBlock FontSize="17" FontWeight="SemiBold" Text="Diagramas" />
                 <TextBlock Opacity="0.65" Text="Selecione um item para visualizar" />
               </StackPanel>
-              <ListBox Grid.Row="1"
+              <ListBox x:Name="DiagramsListBox"
+                       Grid.Row="1"
                        ItemsSource="{Binding SelectedLibraryNode.Diagrams}"
-                       SelectedItem="{Binding SelectedLibraryDiagram, Mode=TwoWay}">
+                       SelectionChanged="DiagramsListBox_SelectionChanged"
+                       SelectionMode="Multiple">
                 <ListBox.ItemTemplate>
                   <DataTemplate x:DataType="coreVm:ObservableDiagram">
                     <Grid Margin="4" ColumnDefinitions="56,*" ColumnSpacing="8">
@@ -173,6 +179,9 @@
                 <Button Command="{Binding SelectedLibraryNode.CreateDiagram}" Content="Novo" />
                 <Button Command="{Binding SelectedLibraryNode.EditSelected}" Content="Editar" />
                 <Button Command="{Binding SelectedLibraryNode.CloneSelected}" Content="Clonar" />
+                <Button Command="{Binding SelectedLibraryNode.CopySelected}" Content="Copiar…" />
+                <Button Command="{Binding SelectedLibraryNode.MoveSelected}" Content="Mover…" />
+                <Button Command="{Binding SelectedLibraryNode.ResetStylesSelected}" Content="Redefinir estilos" />
                 <Button Command="{Binding SelectedLibraryNode.DeleteSelected}" Content="Excluir" />
               </WrapPanel>
             </Grid>

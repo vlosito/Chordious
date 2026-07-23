@@ -3,6 +3,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,6 +33,10 @@ public sealed class MainWindowViewModel : MainViewModel
         {
             if (ReferenceEquals(_selectedLibraryNode, value))
             {
+                if (value is null)
+                {
+                    ClearDiagramSelection();
+                }
                 return;
             }
 
@@ -52,19 +57,9 @@ public sealed class MainWindowViewModel : MainViewModel
                 return;
             }
 
-            SelectedLibraryNode?.SelectedDiagrams.Clear();
-            SetProperty(ref _selectedLibraryDiagram, value);
-
-            if (value is not null)
-            {
-                SelectedLibraryNode?.SelectedDiagrams.Add(value);
-            }
-
-            OnPropertyChanged(nameof(PreviewDiagram));
-            OnPropertyChanged(nameof(HasSelectedLibraryDiagram));
-            ExportSelectedDiagramCommand.NotifyCanExecuteChanged();
-            CopySelectedDiagramSvgCommand.NotifyCanExecuteChanged();
-            CopySelectedDiagramImageCommand.NotifyCanExecuteChanged();
+            SetSelectedLibraryDiagrams(
+                value is null ? Enumerable.Empty<ObservableDiagram>() : [value],
+                value);
         }
     }
 
@@ -110,6 +105,29 @@ public sealed class MainWindowViewModel : MainViewModel
         SelectedLibraryNode = Library.Nodes.FirstOrDefault();
     }
 
+    public void SetSelectedLibraryDiagrams(
+        IEnumerable<ObservableDiagram> diagrams,
+        ObservableDiagram? primaryDiagram = null)
+    {
+        ArgumentNullException.ThrowIfNull(diagrams);
+
+        List<ObservableDiagram> selection = diagrams.Distinct().ToList();
+        ObservableDiagram? primary = primaryDiagram is not null && selection.Contains(primaryDiagram)
+            ? primaryDiagram
+            : selection.FirstOrDefault();
+
+        SelectedLibraryNode?.SelectedDiagrams.Clear();
+        foreach (ObservableDiagram diagram in selection)
+        {
+            SelectedLibraryNode?.SelectedDiagrams.Add(diagram);
+        }
+
+        SetProperty(ref _selectedLibraryDiagram, primary, nameof(SelectedLibraryDiagram));
+        OnPropertyChanged(nameof(PreviewDiagram));
+        OnPropertyChanged(nameof(HasSelectedLibraryDiagram));
+        RefreshSelectedDiagramCommands();
+    }
+
     private async Task ExportPreviewSvgAsync()
     {
         string? path = await _saveSvgAsync(PreviewDiagram.SvgText);
@@ -148,7 +166,7 @@ public sealed class MainWindowViewModel : MainViewModel
     {
         if (e.PropertyName == nameof(DiagramLibraryViewModel.Nodes))
         {
-            SelectedLibraryNode = Library.Nodes.FirstOrDefault();
+            SelectedLibraryNode = null;
         }
     }
 
@@ -164,7 +182,11 @@ public sealed class MainWindowViewModel : MainViewModel
         OnPropertyChanged(nameof(SelectedLibraryDiagram));
         OnPropertyChanged(nameof(PreviewDiagram));
         OnPropertyChanged(nameof(HasSelectedLibraryDiagram));
+        RefreshSelectedDiagramCommands();
+    }
 
+    private void RefreshSelectedDiagramCommands()
+    {
         ExportSelectedDiagramCommand?.NotifyCanExecuteChanged();
         CopySelectedDiagramSvgCommand?.NotifyCanExecuteChanged();
         CopySelectedDiagramImageCommand?.NotifyCanExecuteChanged();
