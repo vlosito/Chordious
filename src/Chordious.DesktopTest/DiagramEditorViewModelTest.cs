@@ -97,6 +97,74 @@ public class DiagramEditorViewModelTest
     }
 
     [TestMethod]
+    public void DragThreshold_RequiresIntentionalPointerMovement()
+    {
+        Assert.IsFalse(DiagramEditorWindow.HasExceededDragThreshold(
+            new Point(10, 10),
+            new Point(13, 14)));
+        Assert.IsTrue(DiagramEditorWindow.HasExceededDragThreshold(
+            new Point(10, 10),
+            new Point(16, 10)));
+    }
+
+    [DataTestMethod]
+    [DataRow("C", "C.png")]
+    [DataRow("../C:maj", ".._C_maj.png")]
+    [DataRow("", "diagram.png")]
+    [DataRow("..", "diagram.png")]
+    public void GetSafeDragFileName_BlocksPathTraversal(
+        string title,
+        string expected)
+    {
+        Assert.AreEqual(expected, DiagramEditorWindow.GetSafeDragFileName(title));
+    }
+
+    [TestMethod]
+    public void StyleEditor_AcceptedChangeMarksEditorDirtyAndRefreshesPreview()
+    {
+        ObservableDiagram original = CreateDiagram("C", 6, 5);
+        DiagramEditorViewModel editor = new(original, isNew: false);
+        object recipient = new();
+
+        editor.ObservableDiagram.ResetStyles();
+        editor.Apply.Execute(null);
+        Assert.IsFalse(editor.Dirty);
+
+        StrongReferenceMessenger.Default.Register<ShowDiagramStyleEditorMessage>(recipient, (_, message) =>
+        {
+            ObservableDiagramStyle editedStyle = message.DiagramStyleEditorVM.Style;
+            editedStyle.GridFretSpacingIsLocal = true;
+            editedStyle.GridFretSpacing = 42;
+            message.DiagramStyleEditorVM.Accept.Execute(null);
+            message.Process();
+        });
+
+        try
+        {
+            editor.Style.ShowEditor.Execute(null);
+
+            Assert.IsTrue(editor.Dirty);
+            Assert.AreEqual(42, editor.Style.GridFretSpacing, 0.001);
+            Assert.IsTrue(editor.ResetStyles.CanExecute(null));
+        }
+        finally
+        {
+            StrongReferenceMessenger.Default.UnregisterAll(recipient);
+        }
+    }
+
+    [TestMethod]
+    public void RefreshPreview_DoesNotDirtyDiagram()
+    {
+        ObservableDiagram original = CreateDiagram("C", 6, 5);
+        TestDiagramEditorViewModel editor = new(original);
+
+        editor.RefreshForTest();
+
+        Assert.IsFalse(editor.Dirty);
+    }
+
+    [TestMethod]
     public void AddMark_RefreshesCommandsAfterEditorAccepts()
     {
         Diagram diagram = new(ConfigFile.DefaultConfig.DiagramStyle, 6, 5);
@@ -251,5 +319,15 @@ public class DiagramEditorViewModelTest
         {
             return new MemoryStream("<chordious />"u8.ToArray());
         }
+    }
+
+    private sealed class TestDiagramEditorViewModel : DiagramEditorViewModel
+    {
+        public TestDiagramEditorViewModel(ObservableDiagram diagram)
+            : base(diagram, isNew: false)
+        {
+        }
+
+        public void RefreshForTest() => RefreshPreview();
     }
 }

@@ -31,7 +31,7 @@
                 VerticalAlignment="Center"
                 Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
                 CornerRadius="14">
-          <TextBlock FontWeight="SemiBold" Text="Fase 4 · Configuração musical" />
+          <TextBlock FontWeight="SemiBold" Text="Fase 5 · Paridade de plataforma" />
         </Border>
       </Grid>
     </Border>
@@ -141,8 +141,8 @@
                     CornerRadius="8">
               <StackPanel Spacing="8">
                 <TextBlock FontWeight="SemiBold" Text="Próximos fluxos" />
-                <TextBlock Text="1. Diagram Editor completo" />
-                <TextBlock Text="2. Integrações de plataforma" />
+                <TextBlock Text="1. Corpus real de compatibilidade 2.8.0" />
+                <TextBlock Text="2. Integrações e validações macOS" />
                 <TextBlock Text="3. Atualização e distribuição assinada" />
               </StackPanel>
             </Border>

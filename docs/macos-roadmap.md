@@ -18,7 +18,7 @@ fluxos.
 | macOS Apple Silicon | Concluído | Ambiente identificado como `osx-arm64` |
 | SDK exigido | Concluído | .NET SDK 10.0.302 arm64 instalado persistentemente e fixado por `global.json`; runtime 8 mantido para compatibilidade |
 | Domínio no macOS | Concluído | 8 testes de `Chordious.CoreTest` aprovados em Release |
-| UI multiplataforma | Em andamento | `Chordious.Desktop` em `net10.0` possui 23 das 25 janelas WPF concluídas, 2 parciais e nenhuma pendente; preferências, dados avançados, configuração, importação legada, licenças e integrações com navegador/Finder também executam em Avalonia; 61 testes Desktop aprovados |
+| UI multiplataforma | Em andamento | `Chordious.Desktop` em `net10.0` possui 24 das 25 janelas WPF concluídas, 1 parcial e nenhuma pendente; o Diagram Editor cobre estilos, clipboard, fundo, tipo de marca, F5 e arraste de saída; 68 testes Desktop aprovados |
 | CI multiplataforma | Concluído | GitHub Actions valida Core, Desktop e publicação `osx-arm64` no macOS, além da solução e dos pacotes existentes no Windows |
 | Repositório e proveniência | Concluído | Fork público `vlosito/Chordious`, com `origin` apontando para o fork e `upstream` para `jonthysell/Chordious`; base validada em `main@b781057`, que contém `v2.8.0` e `2.8-official` |
 | Governança da `main` | Concluído | Branch protegida para exigir PR, checks Debug/Release/macOS e resolução de conversas; force-push e exclusão bloqueados inclusive para administradores |
@@ -63,7 +63,7 @@ Legenda: `CONCLUÍDO`, `PARCIAL`, `PENDENTE`.
 | --- | --- | --- |
 | Main | Inicialização, navegação, website, ajuda, opções e licenças | CONCLUÍDO — shell e ViewModel reais; website, ajuda, Options e Licenses possuem handlers macOS; a consolidação em menus nativos permanece no gate transversal de plataforma |
 | Diagram Library | Árvore, coleções, criar, editar, excluir, clonar, copiar, mover, mesclar e estilos | CONCLUÍDO — navegação, CRUD, estilos, seleção múltipla e cópia, movimentação e mesclagem por seletor de coleção; recargas limpam seleções e comandos obsoletos |
-| Diagram Editor | Dimensões, título, marcas, pestanas, rótulos, estilos, preview e clipboard | PARCIAL — criar/editar, título, cordas, casas, preview, marcas, rótulos, pestanas, reset de estilos e proteção contra perda estão funcionais; faltam os controles completos de layout/estilo da janela WPF, background de edição, tipo de marca, clipboard, atalho F5 e drag-and-drop |
+| Diagram Editor | Dimensões, título, marcas, pestanas, rótulos, estilos, preview e clipboard | CONCLUÍDO — criar/editar, título, cordas, casas, preview, marcas, rótulos, pestanas, reset, proteção contra perda, tipo padrão de marca, fundo do editor, F5/Esc, bitmap, bitmap escalado, SVG e arraste de saída estão funcionais; as 61 propriedades da janela WPF são acessadas pelo Style Editor Avalonia |
 | Diagram Export | Escolha de caminho, SVG, PNG/GIF/JPG, lote, nomes parametrizados, colisões, sobrescrita e escala | CONCLUÍDO — testes e smoke no `.app` validaram os quatro formatos, escala 2×, lote com nomes repetidos, resolução de colisão e restauração byte a byte da configuração |
 | Chord Finder | Instrumento, afinação, qualidade, opções, busca assíncrona, cancelamento e resultados | CONCLUÍDO — UI Avalonia cobre parâmetros e estilos, F5/Esc, seleção simples e múltipla, edição, clipboard e salvamento; testes e smoke no `.app` validaram 49 resultados reais e atualização imediata da Biblioteca |
 | Scale Finder | Instrumento, afinação, escala, opções, busca assíncrona, cancelamento e resultados | CONCLUÍDO — UI Avalonia cobre parâmetros e estilos, F5/Esc, seleção simples e múltipla, edição, clipboard e salvamento; testes e smoke no `.app` validaram 6 resultados reais e atualização imediata da Biblioteca |
@@ -74,7 +74,7 @@ Legenda: `CONCLUÍDO`, `PARCIAL`, `PENDENTE`.
 | Configuration | Persistência, importação, exportação, seleção de partes e importação legada | CONCLUÍDO — pickers nativos, seis partes selecionáveis, confirmação de sobrescrita, persistência, round-trip automatizado e real no `.app` e ChordLine automatizado estão funcionais |
 | Element editors | Mark, Barre, Fret Label e Style | CONCLUÍDO — os quatro editores cobrem todas as propriedades existentes, níveis de herança, estilos locais, aplicar/salvar/cancelar e proteção contra perda; o Style Editor cobre as 61 propriedades herdáveis da versão WPF |
 | Diálogos comuns | Confirmação persistente, informação, exceção, prompt e seleção de coleção | CONCLUÍDO — os cinco fluxos possuem equivalentes Avalonia e persistem as respostas aplicáveis |
-| Integrações | Clipboard de texto/bitmap, arquivos/pastas, URLs, Finder, fontes e atualização | PARCIAL — texto/bitmap, fontes, pickers nativos, navegador padrão e abertura da pasta temporária no Finder estão funcionais |
+| Integrações | Clipboard de texto/bitmap, arquivos/pastas, URLs, Finder, fontes e atualização | PARCIAL — texto/bitmap, fontes, pickers nativos, navegador padrão, pasta temporária no Finder e arraste de saída do Diagram Editor estão funcionais; interoperabilidade externa e drag-and-drop dos demais fluxos permanecem no gate transversal |
 | Distribuição | Bundle, ícone, assinatura, notarização, DMG e atualização | PENDENTE |
 
 ## Pendências restantes para paridade de 100%
@@ -84,52 +84,50 @@ não representam funcionalidade existente na versão 2.8.0 ficam fora desta list
 
 ### Janelas e fluxos WPF
 
-Das 25 janelas de referência, 23 estão concluídas e nenhuma está ausente. Restam
-2 equivalentes parciais:
+Das 25 janelas de referência, 24 estão concluídas e nenhuma está ausente. Resta
+1 equivalente parcial:
 
-1. **Diagram Editor — parcial:** expor todos os controles de layout e estilo da
-   janela WPF, background de edição, tipo de marca selecionado, cópia de bitmap,
-   cópia escalada, cópia SVG, atalho F5 e drag-and-drop.
-2. **Options — parcial:** implementar o grupo Updates após existir um mecanismo
+1. **Options — parcial:** implementar o grupo Updates após existir um mecanismo
    macOS capaz de consultar e instalar releases assinadas e notarizadas.
 
 ### Configuração e compatibilidade
 
-3. Validar round-trip sem perda com corpus real de configurações, bibliotecas,
+2. Validar round-trip sem perda com corpus real de configurações, bibliotecas,
    estilos, instrumentos, qualidades, escalas e documentos legados da versão
    2.8.0.
 
 ### Integrações macOS
 
-4. Implementar drag-and-drop de diagramas e coleções entre Library, Diagram
-    Editor, Chord Finder, Scale Finder e aplicativos externos, preservando as
-    semânticas de copiar, mover e mesclar.
-5. Completar menus de aplicativo, atalhos, ordem de foco, labels acessíveis e
+3. Completar drag-and-drop de diagramas e coleções na Library, no Chord Finder e
+    no Scale Finder, preservando as semânticas de copiar, mover e mesclar, e
+    validar o payload de bitmap/SVG/arquivo do Diagram Editor em aplicativos
+    externos.
+4. Completar menus de aplicativo, atalhos, ordem de foco, labels acessíveis e
     comportamento de diálogos conforme as convenções do macOS.
-6. Validar clipboard de texto/SVG, bitmap e bitmap escalado contra aplicativos
+5. Validar clipboard de texto/SVG, bitmap e bitmap escalado contra aplicativos
     nativos do macOS, além dos testes automatizados existentes.
-7. Validar fontes, arquivos, pastas, recuperação de configuração inválida e
+6. Validar fontes, arquivos, pastas, recuperação de configuração inválida e
     mensagens de erro em uma conta macOS limpa.
 
 ### Atualização e distribuição
 
-8. Criar o equivalente macOS do mecanismo de atualização WPF: verificação no
+7. Criar o equivalente macOS do mecanismo de atualização WPF: verificação no
     início, consulta manual, canal de release, última verificação e instalação
     segura de uma versão assinada.
-9. Definir nome público, bundle identifier, ícone definitivo e política para
+8. Definir nome público, bundle identifier, ícone definitivo e política para
     Macs Intel (`osx-x64` ou aplicativo universal).
-10. Automatizar o bundle `.app` final, assinatura Developer ID, notarização,
+9. Automatizar o bundle `.app` final, assinatura Developer ID, notarização,
     stapling, DMG e publicação dos artefatos no release público.
-11. Executar Gatekeeper e smoke por duplo clique em usuário e máquina limpos,
+10. Executar Gatekeeper e smoke por duplo clique em usuário e máquina limpos,
     incluindo persistência entre execuções e atualização de uma versão anterior.
 
 ### Gates finais de equivalência
 
-12. Comparar Chord Finder e Scale Finder com a versão WPF usando o mesmo corpus
+11. Comparar Chord Finder e Scale Finder com a versão WPF usando o mesmo corpus
     determinístico de entradas e resultados.
-13. Validar SVG, PNG, GIF e JPG quanto a dimensões, DPI, fontes, cores,
+12. Validar SVG, PNG, GIF e JPG quanto a dimensões, DPI, fontes, cores,
     transparência e nomes de arquivo, incluindo interoperabilidade externa.
-14. Executar uma matriz de smoke real das 25 janelas, integrações e atalhos e
+13. Executar uma matriz de smoke real das 25 janelas, integrações e atalhos e
     manter Core, Core.ViewModel e Desktop livres de WPF, WinForms e
     `System.Windows`.
 

@@ -253,20 +253,27 @@ internal sealed class DesktopMessageHandlers : IDisposable
 
     private async Task ShowDiagramEditorAsync(ShowDiagramEditorMessage message)
     {
-        DiagramEditorViewModel vm = new(message.Diagram, message.IsNew);
-        message.DiagramEditorVM = vm;
-
-        DiagramEditorWindow dialog = new()
+        try
         {
-            DataContext = vm
-        };
-        vm.RequestClose += dialog.Close;
+            ViewModels.DiagramEditorViewModel vm = new(message.Diagram, message.IsNew);
+            message.DiagramEditorVM = vm;
 
-        await ShowDialogAsync(dialog);
+            DiagramEditorWindow dialog = new()
+            {
+                DataContext = vm
+            };
+            vm.RequestClose += dialog.Close;
 
-        vm.RequestClose -= dialog.Close;
-        message.Process();
-        PersistUserConfig();
+            await ShowDialogAsync(dialog);
+
+            vm.RequestClose -= dialog.Close;
+            message.Process();
+            PersistUserConfig();
+        }
+        catch (Exception ex)
+        {
+            ExceptionUtils.HandleException(ex);
+        }
     }
 
     private async Task ShowChordFinderAsync(ShowChordFinderMessage message)

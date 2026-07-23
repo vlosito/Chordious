@@ -65,7 +65,7 @@ namespace Chordious.WPF
             {
                 AppVM.SetSetting("diagrameditor.renderbackground", value);
                 OnPropertyChanged(nameof(EditorRenderBackground));
-                ObservableDiagram.Refresh();
+                RefreshPreview();
             }
         }
 
