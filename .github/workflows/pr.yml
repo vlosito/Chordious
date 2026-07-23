@@ -20,12 +20,14 @@ jobs:
         configuration: [Debug, Release]
     steps:
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: |
+          8.0.x
+          10.0.x
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Build Solution
       run: dotnet build --configuration ${{ matrix.configuration }} ${{ env.SolutionFile }}
@@ -34,7 +36,44 @@ jobs:
       run: dotnet test --configuration ${{ matrix.configuration }} --no-build ${{ env.SolutionFile }}
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name:  ${{ matrix.configuration }}Binaries
-        path: ${{ env.BinDir }}/${{ matrix.configuration }}/net8.0
+        path: ${{ env.BinDir }}/${{ matrix.configuration }}/net8.0-windows
+
+  pr_macos_build_and_test:
+    name: PR macOS Build and Test
+    runs-on: macos-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: |
+          8.0.x
+          10.0.x
+
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Test Core
+      run: dotnet test src/Chordious.CoreTest/Chordious.CoreTest.csproj --configuration Release
+
+    - name: Test Desktop
+      run: dotnet test src/Chordious.DesktopTest/Chordious.DesktopTest.csproj --configuration Release
+
+    - name: Publish macOS Apple Silicon
+      run: >-
+        dotnet publish src/Chordious.Desktop/Chordious.Desktop.csproj
+        --configuration Release
+        --runtime osx-arm64
+        --self-contained false
+        --output bld/Chordious.osx-arm64
+
+    - name: Upload macOS Build Artifact
+      uses: actions/upload-artifact@v6
+      with:
+        name: Chordious.osx-arm64
+        path: bld/Chordious.osx-arm64

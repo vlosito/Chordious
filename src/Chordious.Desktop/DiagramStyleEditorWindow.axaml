@@ -1,0 +1,198 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:coreVm="using:Chordious.Core.ViewModel"
+        xmlns:desktopVm="using:Chordious.Desktop.ViewModels"
+        x:Class="Chordious.Desktop.DiagramStyleEditorWindow"
+        x:DataType="coreVm:DiagramStyleEditorViewModel"
+        x:Name="Root"
+        mc:Ignorable="d"
+        d:DesignWidth="940"
+        d:DesignHeight="720"
+        Width="940"
+        Height="720"
+        MinWidth="760"
+        MinHeight="560"
+        CanResize="True"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding Title}">
+  <Window.Resources>
+    <DataTemplate x:Key="StyleSectionTemplate" x:DataType="desktopVm:DiagramStyleEditorSection">
+      <Border Margin="0,0,0,14"
+              Padding="14"
+              BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+              BorderThickness="1"
+              CornerRadius="8">
+        <StackPanel Spacing="10">
+          <TextBlock FontSize="16" FontWeight="SemiBold" Text="{Binding Header}" />
+          <ItemsControl ItemsSource="{Binding Rows}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="desktopVm:DiagramStyleEditorPropertyRow">
+                <Grid Margin="0,3"
+                      ColumnDefinitions="260,*"
+                      ColumnSpacing="12"
+                      ToolTip.Tip="{Binding ToolTip}">
+                  <CheckBox VerticalAlignment="Center"
+                            Content="{Binding Label}"
+                            IsChecked="{Binding IsLocal, Mode=TwoWay}"
+                            IsEnabled="{Binding IsEditable}"
+                            IsVisible="{Binding HasLocalToggle}" />
+                  <TextBlock VerticalAlignment="Center"
+                             Text="{Binding Label}"
+                             IsVisible="{Binding HasPlainLabel}" />
+
+                  <Grid Grid.Column="1" IsEnabled="{Binding IsValueEnabled}">
+                    <CheckBox HorizontalAlignment="Left"
+                              AutomationProperties.HelpText="{Binding ToolTip}"
+                              AutomationProperties.Name="{Binding Label}"
+                              VerticalAlignment="Center"
+                              IsChecked="{Binding BooleanValue, Mode=TwoWay}"
+                              IsVisible="{Binding IsBoolean}" />
+                    <ComboBox AutomationProperties.HelpText="{Binding ToolTip}"
+                              AutomationProperties.Name="{Binding Label}"
+                              ItemsSource="{Binding Options}"
+                              SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
+                              IsVisible="{Binding IsChoice}" />
+                    <ComboBox AutomationProperties.HelpText="{Binding ToolTip}"
+                              AutomationProperties.Name="{Binding Label}"
+                              IsEditable="True"
+                              ItemsSource="{Binding Options}"
+                              SelectedItem="{Binding TextValue, Mode=TwoWay}"
+                              IsVisible="{Binding IsFont}" />
+                    <NumericUpDown AutomationProperties.HelpText="{Binding ToolTip}"
+                                   AutomationProperties.Name="{Binding Label}"
+                                   Minimum="{Binding Minimum}"
+                                   Maximum="{Binding Maximum}"
+                                   Increment="{Binding Increment}"
+                                   FormatString="{Binding FormatString}"
+                                   Value="{Binding NumericValue, Mode=TwoWay}"
+                                   IsVisible="{Binding IsNumeric}" />
+                    <TextBox AutomationProperties.HelpText="{Binding ToolTip}"
+                             AutomationProperties.Name="{Binding Label}"
+                             PlaceholderText="#RRGGBB"
+                             Text="{Binding TextValue, Mode=TwoWay}"
+                             IsVisible="{Binding IsText}" />
+                  </Grid>
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Border>
+    </DataTemplate>
+  </Window.Resources>
+
+  <Grid RowDefinitions="Auto,Auto,*,Auto"
+        Background="{DynamicResource SystemControlBackgroundBaseLowBrush}">
+    <Border Padding="22,16" Background="{DynamicResource AccentColor100}">
+      <StackPanel Spacing="2">
+        <TextBlock FontSize="22" FontWeight="SemiBold" Text="Editor de estilos do diagrama" />
+        <TextBlock Opacity="0.75"
+                   Text="Todas as propriedades e níveis de herança usando o ViewModel compartilhado" />
+      </StackPanel>
+    </Border>
+
+    <Grid Grid.Row="1"
+          Margin="20,16,20,10"
+          ColumnDefinitions="Auto,280,*"
+          ColumnSpacing="12">
+      <TextBlock VerticalAlignment="Center"
+                 FontWeight="SemiBold"
+                 Text="Nível selecionado" />
+      <ComboBox Grid.Column="1"
+                AutomationProperties.Name="Nível selecionado"
+                ItemsSource="{Binding Styles}"
+                SelectedIndex="{Binding SelectedStyleIndex, Mode=TwoWay}">
+        <ComboBox.ItemTemplate>
+          <DataTemplate x:DataType="coreVm:ObservableDiagramStyle">
+            <TextBlock Text="{Binding Level}" />
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+      <Border Grid.Column="2"
+              Padding="10"
+              BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+              BorderThickness="1"
+              CornerRadius="6">
+        <StackPanel Spacing="4">
+          <TextBlock FontWeight="SemiBold" Text="{Binding Style.SummaryLabel}" />
+          <TextBlock Opacity="0.72"
+                     Text="{Binding Style.Summary}"
+                     TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+    </Grid>
+
+    <TabControl Grid.Row="2" Margin="20,0,20,14">
+      <TabItem Header="Diagrama">
+        <ScrollViewer>
+          <ItemsControl Name="DiagramSections"
+                        Margin="12"
+                        ItemTemplate="{StaticResource StyleSectionTemplate}" />
+        </ScrollViewer>
+      </TabItem>
+      <TabItem Header="Grade">
+        <ScrollViewer>
+          <ItemsControl Name="GridSections"
+                        Margin="12"
+                        ItemTemplate="{StaticResource StyleSectionTemplate}" />
+        </ScrollViewer>
+      </TabItem>
+      <TabItem Header="Título">
+        <ScrollViewer>
+          <ItemsControl Name="TitleSections"
+                        Margin="12"
+                        ItemTemplate="{StaticResource StyleSectionTemplate}" />
+        </ScrollViewer>
+      </TabItem>
+      <TabItem Header="Marcas">
+        <ScrollViewer>
+          <ItemsControl Name="MarkSections"
+                        Margin="12"
+                        ItemTemplate="{StaticResource StyleSectionTemplate}" />
+        </ScrollViewer>
+      </TabItem>
+      <TabItem Header="Rótulos de casa">
+        <ScrollViewer>
+          <ItemsControl Name="FretLabelSections"
+                        Margin="12"
+                        ItemTemplate="{StaticResource StyleSectionTemplate}" />
+        </ScrollViewer>
+      </TabItem>
+      <TabItem Header="Pestanas">
+        <ScrollViewer>
+          <ItemsControl Name="BarreSections"
+                        Margin="12"
+                        ItemTemplate="{StaticResource StyleSectionTemplate}" />
+        </ScrollViewer>
+      </TabItem>
+    </TabControl>
+
+    <Border Grid.Row="3"
+            Padding="20,12"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+            BorderThickness="0,1,0,0">
+      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+        <Button Command="{Binding Style.Reset}"
+                Content="Restaurar nível"
+                IsEnabled="{Binding Style.IsEditable}" />
+        <TextBlock Grid.Column="1"
+                   VerticalAlignment="Center"
+                   Opacity="0.65"
+                   Text="Altere somente os valores marcados como locais; níveis somente leitura servem como referência." />
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+          <Button MinWidth="90" Command="{Binding Apply}" Content="Aplicar" />
+          <Button MinWidth="90"
+                  Command="{Binding Cancel}"
+                  Content="Cancelar"
+                  IsCancel="True" />
+          <Button MinWidth="90"
+                  Command="{Binding Accept}"
+                  Content="Salvar"
+                  IsDefault="True" />
+        </StackPanel>
+      </Grid>
+    </Border>
+  </Grid>
+</Window>

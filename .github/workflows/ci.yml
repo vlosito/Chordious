@@ -14,6 +14,7 @@ on:
       - main
       - 2.6-official
       - 2.8-official
+      - 'agent/**'
 
 defaults:
   run:
@@ -28,12 +29,14 @@ jobs:
         configuration: [Debug, Release]
     steps:
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: |
+          8.0.x
+          10.0.x
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Build Solution
       run: dotnet build --configuration ${{ matrix.configuration }} ${{ env.SolutionFile }}
@@ -42,7 +45,7 @@ jobs:
       run: dotnet test --configuration ${{ matrix.configuration }} --no-build ${{ env.SolutionFile }}
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name:  ${{ matrix.configuration }}Binaries
         path: ${{ env.BinDir }}/${{ matrix.configuration }}/net8.0
@@ -56,18 +59,20 @@ jobs:
         target: [Unpacked, WinX86, WinX64, WinArm64]
     steps:
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: |
+          8.0.x
+          10.0.x
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Build ${{ matrix.target }}
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: ${{ env.Product }}.${{ matrix.target }}
         path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}.zip
@@ -81,18 +86,20 @@ jobs:
         target: [WinX86.Setup, WinX64.Setup, WinArm64.Setup]
     steps:
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: |
+          8.0.x
+          10.0.x
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Build ${{ matrix.target }}
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: ${{ env.Product }}.${{ matrix.target }}
         path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}/${{ env.Product }}.${{ matrix.target }}.msi
@@ -101,6 +108,7 @@ jobs:
     name: CI Windows WinStore Build
     runs-on: windows-latest
     needs: ci_build_and_test
+    if: ${{ github.repository == 'jonthysell/Chordious' || vars.ENABLE_WINSTORE_BUILD == 'true' }}
     env:
       CertFile: src\Chordious.WinStore\Chordious.WinStore_TemporaryKey.pfx
     strategy:
@@ -108,15 +116,17 @@ jobs:
         target: [WinStore]
     steps:
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: |
+          8.0.x
+          10.0.x
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Create Code Signing Certificate
       run: |
@@ -133,7 +143,7 @@ jobs:
         Remove-Item ${{ env.CertFile }}
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: ${{ env.Product }}.${{ matrix.target }}
         path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}
@@ -147,43 +157,55 @@ jobs:
   #       target: [Linux]
   #   steps:
   #   - name: Setup .NET
-  #     uses: actions/setup-dotnet@v4
+  #     uses: actions/setup-dotnet@v5
   #     with:
   #       dotnet-version: '8.0.x'
 
   #   - name: Checkout
-  #     uses: actions/checkout@v4
+  #     uses: actions/checkout@v6
 
   #   - name: Build ${{ matrix.target }}
   #     run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
 
   #   - name: Upload Build Artifacts
-  #     uses: actions/upload-artifact@v4
+  #     uses: actions/upload-artifact@v6
   #     with:
   #       name: ${{ env.Product }}.${{ matrix.target }}
   #       path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}.tar.gz
   
-  # ci_build_macos:
-  #   name: CI MacOS Build
-  #   runs-on: macOS-latest
-  #   needs: ci_build_and_test
-  #   strategy:
-  #     matrix:
-  #       target: [MacOS]
-  #   steps:
-  #   - name: Setup .NET
-  #     uses: actions/setup-dotnet@v4
-  #     with:
-  #       dotnet-version: '8.0.x'
+  ci_build_macos:
+    name: CI macOS Build and Test
+    runs-on: macos-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: |
+          8.0.x
+          10.0.x
 
-  #   - name: Checkout
-  #     uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v6
 
-  #   - name: Build ${{ matrix.target }}
-  #     run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
+    - name: Test Core
+      run: dotnet test src/Chordious.CoreTest/Chordious.CoreTest.csproj --configuration Release
 
-  #   - name: Upload Build Artifacts
-  #     uses: actions/upload-artifact@v4
-  #     with:
-  #       name: ${{ env.Product }}.${{ matrix.target }}
-  #       path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}.tar.gz
+    - name: Test Desktop
+      run: dotnet test src/Chordious.DesktopTest/Chordious.DesktopTest.csproj --configuration Release
+
+    - name: Publish macOS Apple Silicon
+      run: >-
+        dotnet publish src/Chordious.Desktop/Chordious.Desktop.csproj
+        --configuration Release
+        --runtime osx-arm64
+        --self-contained false
+        --output bld/Chordious.osx-arm64
+
+    - name: Upload macOS Build Artifact
+      uses: actions/upload-artifact@v6
+      with:
+        name: Chordious.osx-arm64
+        path: bld/Chordious.osx-arm64

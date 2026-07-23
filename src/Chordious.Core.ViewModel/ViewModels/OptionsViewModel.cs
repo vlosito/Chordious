@@ -780,11 +780,15 @@ namespace Chordious.Core.ViewModel
                             try
                             {
                                 string proposedName = string.IsNullOrWhiteSpace(fileName) ? library.GetNewCollectionName() : fileName.Trim();
+                                DiagramCollection importedCollection;
+                                using (inputStream)
+                                {
+                                    importedCollection = ChordDocument.Load(library.Style, inputStream);
+                                }
                                 StrongReferenceMessenger.Default.Send(new PromptForTextMessage(Strings.OptionsLegacyImportNewCollectionPrompt, proposedName, (name) =>
                                 {
                                     try
                                     {
-                                        DiagramCollection importedCollection = ChordDocument.Load(library.Style, inputStream);
                                         DiagramCollection newCollection = library.Add(name);
 
                                         newCollection.Add(importedCollection);

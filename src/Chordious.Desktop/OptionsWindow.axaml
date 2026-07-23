@@ -1,0 +1,238 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:Chordious.Desktop.ViewModels"
+        x:Class="Chordious.Desktop.OptionsWindow"
+        x:DataType="vm:OptionsViewModel"
+        mc:Ignorable="d"
+        d:DesignWidth="720"
+        d:DesignHeight="640"
+        Width="720"
+        Height="640"
+        MinWidth="560"
+        MinHeight="480"
+        CanResize="True"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding Title}">
+  <Window.KeyBindings>
+    <KeyBinding Gesture="Escape" Command="{Binding Cancel}" />
+  </Window.KeyBindings>
+
+  <Grid RowDefinitions="*,Auto" IsEnabled="{Binding IsIdle}">
+    <TabControl Margin="14">
+      <TabItem Header="{Binding SettingsGroupLabel}">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+          <StackPanel Margin="8" Spacing="14">
+            <Border Padding="14"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8">
+              <StackPanel Spacing="10">
+                <TextBlock FontSize="16"
+                           FontWeight="SemiBold"
+                           Text="{Binding SettingsBackgroundGroupLabel}" />
+                <Grid ColumnDefinitions="*,220" ColumnSpacing="12" RowDefinitions="Auto,Auto" RowSpacing="10">
+                  <TextBlock VerticalAlignment="Center"
+                             Text="{Binding SelectedRenderBackgroundLabel}"
+                             ToolTip.Tip="{Binding SelectedRenderBackgroundToolTip}" />
+                  <ComboBox Grid.Column="1"
+                            AutomationProperties.HelpText="{Binding SelectedRenderBackgroundToolTip}"
+                            AutomationProperties.Name="{Binding SelectedRenderBackgroundLabel}"
+                            ItemsSource="{Binding RenderBackgrounds}"
+                            SelectedIndex="{Binding SelectedRenderBackgroundIndex, Mode=TwoWay}"
+                            ToolTip.Tip="{Binding SelectedRenderBackgroundToolTip}" />
+                  <TextBlock Grid.Row="1"
+                             VerticalAlignment="Center"
+                             Text="{Binding SelectedEditorRenderBackgroundLabel}"
+                             ToolTip.Tip="{Binding SelectedEditorRenderBackgroundToolTip}" />
+                  <ComboBox Grid.Row="1"
+                            Grid.Column="1"
+                            AutomationProperties.HelpText="{Binding SelectedEditorRenderBackgroundToolTip}"
+                            AutomationProperties.Name="{Binding SelectedEditorRenderBackgroundLabel}"
+                            ItemsSource="{Binding EditorRenderBackgrounds}"
+                            SelectedIndex="{Binding SelectedEditorRenderBackgroundIndex, Mode=TwoWay}"
+                            ToolTip.Tip="{Binding SelectedEditorRenderBackgroundToolTip}" />
+                </Grid>
+              </StackPanel>
+            </Border>
+
+            <Border Padding="14"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8">
+              <StackPanel Spacing="10">
+                <TextBlock FontSize="16"
+                           FontWeight="SemiBold"
+                           Text="{Binding SettingsIntegrationGroupLabel}" />
+                <CheckBox Content="{Binding EnhancedCopyLabel}"
+                          IsChecked="{Binding EnhancedCopy, Mode=TwoWay}"
+                          ToolTip.Tip="{Binding EnhancedCopyToolTip}" />
+                <Button HorizontalAlignment="Left"
+                        Command="{Binding OpenTempFolder}"
+                        Content="{Binding OpenTempFolderLabel}"
+                        ToolTip.Tip="{Binding OpenTempFolderToolTip}" />
+              </StackPanel>
+            </Border>
+
+            <Border Padding="14"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8">
+              <StackPanel Spacing="8">
+                <TextBlock FontSize="16"
+                           FontWeight="SemiBold"
+                           Text="{Binding SettingsAdvancedGroupLabel}" />
+                <Button Command="{Binding ShowAdvancedSettings}"
+                        Content="{Binding ShowAdvancedSettingsLabel}"
+                        ToolTip.Tip="{Binding ShowAdvancedSettingsToolTip}" />
+                <Button Command="{Binding ResetUserSettings}"
+                        Content="{Binding ResetUserSettingsLabel}"
+                        ToolTip.Tip="{Binding ResetUserSettingsToolTip}" />
+                <Button Command="{Binding ResetConfirmations}"
+                        Content="{Binding ResetConfirmationsLabel}"
+                        ToolTip.Tip="{Binding ResetConfirmationsToolTip}" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+      <TabItem Header="{Binding StylesGroupLabel}">
+        <StackPanel Margin="16" Spacing="14">
+          <Border Padding="14"
+                  BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                  BorderThickness="1"
+                  CornerRadius="8">
+            <StackPanel Spacing="8">
+              <TextBlock FontSize="16"
+                         FontWeight="SemiBold"
+                         Text="{Binding StylesBasicGroupLabel}" />
+              <Button Command="{Binding ShowStyleEditor}"
+                      Content="{Binding ShowStyleEditorLabel}"
+                      ToolTip.Tip="{Binding ShowStyleEditorToolTip}" />
+            </StackPanel>
+          </Border>
+          <Border Padding="14"
+                  BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                  BorderThickness="1"
+                  CornerRadius="8">
+            <StackPanel Spacing="8">
+              <TextBlock FontSize="16"
+                         FontWeight="SemiBold"
+                         Text="{Binding StylesAdvancedGroupLabel}" />
+              <Button Command="{Binding ShowAdvancedStyle}"
+                      Content="{Binding ShowAdvancedStyleLabel}"
+                      ToolTip.Tip="{Binding ShowAdvancedStyleToolTip}" />
+              <Button Command="{Binding ResetUserStyles}"
+                      Content="{Binding ResetUserStylesLabel}"
+                      ToolTip.Tip="{Binding ResetUserStylesToolTip}" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </TabItem>
+
+      <TabItem Header="{Binding FindersGroupLabel}">
+        <StackPanel Margin="16" Spacing="14">
+          <Border Padding="14"
+                  BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                  BorderThickness="1"
+                  CornerRadius="8">
+            <StackPanel Spacing="8">
+              <TextBlock FontSize="16"
+                         FontWeight="SemiBold"
+                         Text="{Binding FindersManagersGroupLabel}" />
+              <Button Command="{Binding ShowInstrumentManager}"
+                      Content="{Binding ShowInstrumentManagerLabel}"
+                      ToolTip.Tip="{Binding ShowInstrumentManagerToolTip}" />
+              <Button Command="{Binding ShowChordQualityManager}"
+                      Content="{Binding ShowChordQualityManagerLabel}"
+                      ToolTip.Tip="{Binding ShowChordQualityManagerToolTip}" />
+              <Button Command="{Binding ShowScaleManager}"
+                      Content="{Binding ShowScaleManagerLabel}"
+                      ToolTip.Tip="{Binding ShowScaleManagerToolTip}" />
+            </StackPanel>
+          </Border>
+          <Border Padding="14"
+                  BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                  BorderThickness="1"
+                  CornerRadius="8">
+            <StackPanel Spacing="8">
+              <TextBlock FontSize="16"
+                         FontWeight="SemiBold"
+                         Text="{Binding FindersSearchDefaultsGroupLabel}" />
+              <Button Command="{Binding ResetChordFinderDefaults}"
+                      Content="{Binding ResetChordFinderDefaultsLabel}"
+                      ToolTip.Tip="{Binding ResetChordFinderDefaultsToolTip}" />
+              <Button Command="{Binding ResetScaleFinderDefaults}"
+                      Content="{Binding ResetScaleFinderDefaultsLabel}"
+                      ToolTip.Tip="{Binding ResetScaleFinderDefaultsToolTip}" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </TabItem>
+
+      <TabItem Header="{Binding ConfigGroupLabel}">
+        <StackPanel Margin="16" Spacing="14">
+          <Border Padding="14"
+                  BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                  BorderThickness="1"
+                  CornerRadius="8">
+            <StackPanel Spacing="8">
+              <TextBlock FontSize="16"
+                         FontWeight="SemiBold"
+                         Text="{Binding ConfigImportExportGroupLabel}" />
+              <Button Command="{Binding ShowConfigImport}"
+                      Content="{Binding ShowConfigImportLabel}"
+                      ToolTip.Tip="{Binding ShowConfigImportToolTip}" />
+              <Button Command="{Binding ShowConfigExport}"
+                      Content="{Binding ShowConfigExportLabel}"
+                      ToolTip.Tip="{Binding ShowConfigExportToolTip}" />
+            </StackPanel>
+          </Border>
+          <Border Padding="14"
+                  BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                  BorderThickness="1"
+                  CornerRadius="8">
+            <StackPanel Spacing="8">
+              <TextBlock FontSize="16"
+                         FontWeight="SemiBold"
+                         Text="{Binding ConfigLegacyGroupLabel}" />
+              <Button Command="{Binding LegacyImport}"
+                      Content="{Binding LegacyImportLabel}"
+                      ToolTip.Tip="{Binding LegacyImportToolTip}" />
+            </StackPanel>
+          </Border>
+          <Border Padding="12"
+                  Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
+                  CornerRadius="6">
+            <TextBlock Text="A atualização automática será habilitada junto do pacote macOS assinado e notarizado."
+                       TextWrapping="Wrap" />
+          </Border>
+        </StackPanel>
+      </TabItem>
+    </TabControl>
+
+    <Border Grid.Row="1"
+            Padding="16,12"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+            BorderThickness="0,1,0,0">
+      <StackPanel HorizontalAlignment="Right"
+                  Orientation="Horizontal"
+                  Spacing="8">
+        <Button MinWidth="90"
+                Command="{Binding Apply}"
+                Content="{Binding AppVM.ApplyLabel}" />
+        <Button MinWidth="90"
+                Command="{Binding Cancel}"
+                Content="{Binding AppVM.CancelLabel}"
+                IsCancel="True" />
+        <Button MinWidth="90"
+                Command="{Binding Accept}"
+                Content="{Binding AppVM.AcceptLabel}"
+                IsDefault="True" />
+      </StackPanel>
+    </Border>
+  </Grid>
+</Window>

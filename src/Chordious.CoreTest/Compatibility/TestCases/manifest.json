@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "release": {
+    "repository": "jonthysell/Chordious",
+    "tag": "v2.8.0",
+    "commit": "bbcbcf6ec34846f4ed297fc4a06fa6dce2bd37fb",
+    "published_at": "2025-05-21",
+    "url": "https://github.com/jonthysell/Chordious/releases/tag/v2.8.0"
+  },
+  "official_asset": {
+    "name": "Chordious.Unpacked.zip",
+    "url": "https://github.com/jonthysell/Chordious/releases/download/v2.8.0/Chordious.Unpacked.zip",
+    "size_bytes": 3569397,
+    "sha256": "fe62cec0822ec787d2f7e77c6b6e6673cff0a8b76f01ed3fc76af5ae18dce3c4"
+  },
+  "official_binaries": {
+    "Chordious.Core.dll": {
+      "sha256": "7b22998ef8a35d6e4ebcf7addffaaab567d112e9540453749ea59997abf95f4a"
+    },
+    "Chordious.WPF.dll": {
+      "sha256": "2aa1ca4daaba57322590991e0eb5e22d2ba3750d4f82af07cef191ac9a9ef155"
+    }
+  },
+  "fixtures": {
+    "Chordious.Config.2.8.0.xml": {
+      "sha256": "e937d0d304fec57ecb16d805084aa251c3b10f92e886ad6ed5c1e9aaffe4b075",
+      "generated_with": "Official Chordious.Core.dll v2.8.0 public API",
+      "sanitized": true
+    },
+    "Classic.ChordLine.txt": {
+      "sha256": "c36f94ef338a07e0d8cc2af4ad9f1f93377b8f7a32762c2b9fa8f19cf69f017e",
+      "generated_with": "Classic Chordious ChordLine public format",
+      "sanitized": true
+    }
+  }
+}

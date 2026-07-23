@@ -1,0 +1,68 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:coreVm="using:Chordious.Core.ViewModel"
+        x:Class="Chordious.Desktop.ConfigPartsWindow"
+        x:DataType="coreVm:ConfigViewModelBase"
+        mc:Ignorable="d"
+        d:DesignWidth="440"
+        d:DesignHeight="520"
+        Width="440"
+        SizeToContent="Height"
+        MinWidth="380"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding Title}">
+  <Window.KeyBindings>
+    <KeyBinding Gesture="Escape" Command="{Binding Cancel}" />
+  </Window.KeyBindings>
+
+  <Grid Margin="20"
+        RowDefinitions="Auto,Auto"
+        RowSpacing="16"
+        IsEnabled="{Binding IsIdle}">
+    <Border Padding="16"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+            BorderThickness="1"
+            CornerRadius="8">
+      <StackPanel Spacing="10">
+        <TextBlock FontSize="17"
+                   FontWeight="SemiBold"
+                   Text="{Binding AppVM.IncludeLabel}" />
+        <CheckBox Content="{Binding IncludeSettingsLabel}"
+                  IsChecked="{Binding IncludeSettings, Mode=TwoWay}"
+                  ToolTip.Tip="{Binding IncludeSettingsToolTip}" />
+        <CheckBox Content="{Binding IncludeStylesLabel}"
+                  IsChecked="{Binding IncludeStyles, Mode=TwoWay}"
+                  ToolTip.Tip="{Binding IncludeStylesToolTip}" />
+        <CheckBox Content="{Binding IncludeInstrumentsLabel}"
+                  IsChecked="{Binding IncludeInstruments, Mode=TwoWay}"
+                  ToolTip.Tip="{Binding IncludeInstrumentsToolTip}" />
+        <CheckBox Content="{Binding IncludeChordQualitiesLabel}"
+                  IsChecked="{Binding IncludeChordQualities, Mode=TwoWay}"
+                  ToolTip.Tip="{Binding IncludeChordQualitiesToolTip}" />
+        <CheckBox Content="{Binding IncludeScalesLabel}"
+                  IsChecked="{Binding IncludeScales, Mode=TwoWay}"
+                  ToolTip.Tip="{Binding IncludeScalesToolTip}" />
+        <CheckBox Content="{Binding IncludeLibraryLabel}"
+                  IsChecked="{Binding IncludeLibrary, Mode=TwoWay}"
+                  ToolTip.Tip="{Binding IncludeLibraryToolTip}" />
+      </StackPanel>
+    </Border>
+
+    <StackPanel Grid.Row="1"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal"
+                Spacing="8">
+      <Button MinWidth="90"
+              Command="{Binding Cancel}"
+              Content="{Binding AppVM.CancelLabel}"
+              IsCancel="True" />
+      <Button MinWidth="90"
+              Command="{Binding Accept}"
+              Content="{Binding AppVM.AcceptLabel}"
+              IsDefault="True" />
+    </StackPanel>
+  </Grid>
+</Window>

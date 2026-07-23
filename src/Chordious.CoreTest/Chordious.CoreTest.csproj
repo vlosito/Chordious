@@ -10,12 +10,14 @@
   <ItemGroup>
     <Content Remove="ChordFinding\TestCases\**" />
     <Content Remove="Common\Music\TestCases\**" />
+    <Content Remove="Compatibility\TestCases\**" />
     <Content Remove="ScaleFinding\TestCases\**" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="ChordFinding\TestCases\**" />
     <EmbeddedResource Include="Common\Music\TestCases\**" />
+    <EmbeddedResource Include="Compatibility\TestCases\**" />
     <EmbeddedResource Include="ScaleFinding\TestCases\**" />
   </ItemGroup>
 

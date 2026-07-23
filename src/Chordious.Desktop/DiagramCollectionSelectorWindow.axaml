@@ -1,0 +1,51 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:coreVm="using:Chordious.Core.ViewModel"
+        x:Class="Chordious.Desktop.DiagramCollectionSelectorWindow"
+        x:DataType="coreVm:DiagramCollectionSelectorViewModel"
+        mc:Ignorable="d"
+        Width="460"
+        SizeToContent="Height"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding Title}">
+  <Window.KeyBindings>
+    <KeyBinding Gesture="Escape" Command="{Binding Cancel}" />
+  </Window.KeyBindings>
+
+  <Grid Margin="20" RowDefinitions="Auto,Auto" RowSpacing="18">
+    <StackPanel Spacing="8">
+      <TextBlock FontWeight="SemiBold" Text="{Binding CollectionNameLabel}" />
+      <ComboBox x:Name="CollectionNameComboBox"
+                AutomationProperties.HelpText="{Binding CollectionNameToolTip}"
+                AutomationProperties.Name="{Binding CollectionNameLabel}"
+                MinWidth="400"
+                IsEditable="True"
+                ItemsSource="{Binding CollectionNames}"
+                SelectedItem="{Binding CollectionName, Mode=TwoWay}"
+                Text="{Binding CollectionName, Mode=TwoWay}"
+                ToolTip.Tip="{Binding CollectionNameToolTip}" />
+      <TextBlock Opacity="0.65"
+                 Text="Selecione uma coleção existente ou informe um nome para criar uma nova."
+                 TextWrapping="Wrap" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="1"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal"
+                Spacing="8">
+      <Button MinWidth="88"
+              HorizontalContentAlignment="Center"
+              Command="{Binding Cancel}"
+              Content="Cancelar"
+              IsCancel="True" />
+      <Button MinWidth="88"
+              HorizontalContentAlignment="Center"
+              Command="{Binding Accept}"
+              Content="OK"
+              IsDefault="True" />
+    </StackPanel>
+  </Grid>
+</Window>

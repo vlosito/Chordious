@@ -77,6 +77,7 @@ namespace Chordious.Core.ViewModel
                     DeleteInstrument.NotifyCanExecuteChanged();
                     OnPropertyChanged(nameof(DeleteInstrumentLabel));
                     AddTuning.NotifyCanExecuteChanged();
+                    CopyTuning.NotifyCanExecuteChanged();
                 }
             }
         }
@@ -236,6 +237,8 @@ namespace Chordious.Core.ViewModel
                     OnPropertyChanged(nameof(EditTuningLabel));
                     DeleteTuning.NotifyCanExecuteChanged();
                     OnPropertyChanged(nameof(DeleteTuningLabel));
+                    CopyTuning.NotifyCanExecuteChanged();
+                    OnPropertyChanged(nameof(CopyTuningLabel));
                 }
             }
         }
@@ -676,7 +679,7 @@ namespace Chordious.Core.ViewModel
                     }
                 }, () =>
                 {
-                    return InstrumentIsSelected;
+                    return InstrumentIsSelected && TuningIsSelected;
                 });
             }
         }
@@ -715,29 +718,28 @@ namespace Chordious.Core.ViewModel
         {
             DefaultInstruments = AppViewModel.GetDefaultInstruments();
             UserInstruments = AppVM.GetUserInstruments();
+            SelectedInstrument = null;
+            SelectedUserInstrumentIndex = -1;
+            SelectedDefaultInstrumentIndex = -1;
 
-            if (selectedInstrument is null)
+            if (selectedInstrument is not null)
             {
-                SelectedInstrument = null;
-            }
-            else
-            {
-                foreach (ObservableInstrument oi in UserInstruments)
+                for (int i = 0; i < UserInstruments.Count; i++)
                 {
-                    if (oi.Instrument == selectedInstrument)
+                    if (UserInstruments[i].Instrument == selectedInstrument)
                     {
-                        SelectedInstrument = oi;
+                        SelectedUserInstrumentIndex = i;
                         break;
                     }
                 }
 
-                if (SelectedInstrument is not null)
+                if (SelectedInstrument is null)
                 {
-                    foreach (ObservableInstrument oi in DefaultInstruments)
+                    for (int i = 0; i < DefaultInstruments.Count; i++)
                     {
-                        if (oi.Instrument == selectedInstrument)
+                        if (DefaultInstruments[i].Instrument == selectedInstrument)
                         {
-                            SelectedInstrument = oi;
+                            SelectedDefaultInstrumentIndex = i;
                             break;
                         }
                     }

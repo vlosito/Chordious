@@ -91,8 +91,9 @@ namespace Chordious.Core.ViewModel
                 {
                     try
                     {
-                        RequestClose?.Invoke();
+                        WasAccepted = true;
                         ProcessClose();
+                        RequestClose?.Invoke();
                     }
                     catch (Exception ex)
                     {
@@ -124,6 +125,8 @@ namespace Chordious.Core.ViewModel
             }
         }
         private RelayCommand _cancel;
+
+        public bool WasAccepted { get; private set; }
 
         public Action RequestClose;
 

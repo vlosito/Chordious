@@ -11,7 +11,7 @@ using Chordious.Core.ViewModel.Resources;
 
 namespace Chordious.Core.ViewModel
 {
-    public class ConfigImportViewModel : ConfigViewModelBase
+    public class ConfigImportViewModel : ConfigViewModelBase, IDisposable
     {
         public override string Title
         {
@@ -64,6 +64,11 @@ namespace Chordious.Core.ViewModel
         public ConfigImportViewModel(Stream inputStream) : base()
         {
             _inputStream = inputStream ?? throw new ArgumentNullException(nameof(inputStream));
+        }
+
+        public void Dispose()
+        {
+            _inputStream.Dispose();
         }
 
         private void TryImport()

@@ -374,19 +374,49 @@ namespace Chordious.Core.ViewModel
                 _dirty = true;
             }
 
+            ObserveStyle(ObservableDiagram.Style);
             ObservableDiagram.PropertyChanged += ObservableDiagram_PropertyChanged;
-            ObservableDiagram.Style.PropertyChanged += Style_PropertyChanged;
         }
 
         void ObservableDiagram_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if (_isRefreshingPreview)
+            {
+                return;
+            }
+
             if (!ObservableDiagram.IsCursorProperty(e.PropertyName))
             {
                 Dirty = true;
                 if (e.PropertyName == nameof(Style))
                 {
+                    ObserveStyle(ObservableDiagram.Style);
                     OnPropertyChanged(nameof(Style));
                 }
+            }
+        }
+
+        void ObserveStyle(ObservableDiagramStyle style)
+        {
+            if (_observedStyle is not null)
+            {
+                _observedStyle.PropertyChanged -= Style_PropertyChanged;
+            }
+
+            _observedStyle = style;
+            _observedStyle.PostEditCallback = StyleEditor_PostEditCallback;
+            _observedStyle.PropertyChanged += Style_PropertyChanged;
+        }
+
+        private ObservableDiagramStyle _observedStyle;
+
+        void StyleEditor_PostEditCallback(bool changed)
+        {
+            if (changed)
+            {
+                Dirty = true;
+                RefreshPreview();
+                ResetStyles.NotifyCanExecuteChanged();
             }
         }
 
@@ -398,6 +428,21 @@ namespace Chordious.Core.ViewModel
                 ResetStyles.NotifyCanExecuteChanged();
             }
         }
+
+        protected void RefreshPreview()
+        {
+            _isRefreshingPreview = true;
+            try
+            {
+                ObservableDiagram.Refresh();
+            }
+            finally
+            {
+                _isRefreshingPreview = false;
+            }
+        }
+
+        private bool _isRefreshingPreview;
 
         public bool ProcessClose()
         {

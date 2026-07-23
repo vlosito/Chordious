@@ -1,0 +1,333 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:coreVm="using:Chordious.Core.ViewModel"
+        xmlns:desktopVm="using:Chordious.Desktop.ViewModels"
+        x:Class="Chordious.Desktop.DiagramEditorWindow"
+        x:DataType="desktopVm:DiagramEditorViewModel"
+        mc:Ignorable="d"
+        d:DesignWidth="900"
+        d:DesignHeight="620"
+        Width="900"
+        Height="620"
+        MinWidth="760"
+        MinHeight="520"
+        CanResize="True"
+        WindowStartupLocation="CenterOwner"
+        PointerMoved="Window_PointerMoved"
+        PointerReleased="Window_PointerReleased"
+        Title="{Binding Title}">
+  <Window.KeyBindings>
+    <KeyBinding Gesture="F5" Command="{Binding ObservableDiagram.RenderImage}" />
+    <KeyBinding Gesture="Escape" Command="{Binding Cancel}" />
+  </Window.KeyBindings>
+
+  <Grid RowDefinitions="Auto,*,Auto"
+        Background="{DynamicResource SystemControlBackgroundBaseLowBrush}">
+    <Border Padding="22,16" Background="{DynamicResource AccentColor100}">
+      <StackPanel Spacing="2">
+        <TextBlock FontSize="22" FontWeight="SemiBold" Text="Editor de diagrama" />
+        <TextBlock Opacity="0.75" Text="Título, dimensões e preview usando o ViewModel compartilhado" />
+      </StackPanel>
+    </Border>
+
+    <Grid Grid.Row="1"
+          Margin="20"
+          ColumnDefinitions="300,*"
+          ColumnSpacing="20">
+      <ScrollViewer Grid.Column="0">
+        <StackPanel Spacing="14">
+          <Border Padding="14"
+                  BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                  BorderThickness="1"
+                  CornerRadius="8">
+            <StackPanel Spacing="10">
+              <TextBlock FontSize="17" FontWeight="SemiBold" Text="Conteúdo" />
+              <TextBlock Text="Título" />
+              <TextBox AutomationProperties.Name="Título"
+                       Text="{Binding ObservableDiagram.Title, Mode=TwoWay}" />
+            </StackPanel>
+          </Border>
+
+          <Border Padding="14"
+                  BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                  BorderThickness="1"
+                  CornerRadius="8">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                  ColumnDefinitions="*,110"
+                  RowSpacing="10"
+                  ColumnSpacing="10">
+              <TextBlock Grid.ColumnSpan="2"
+                         FontSize="17"
+                         FontWeight="SemiBold"
+                         Text="Dimensões" />
+
+              <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="Cordas" />
+              <NumericUpDown Grid.Row="1"
+                             Grid.Column="1"
+                             AutomationProperties.Name="Cordas"
+                             Minimum="2"
+                             Maximum="24"
+                             Increment="1"
+                             FormatString="0"
+                             Value="{Binding ObservableDiagram.NumStrings, Mode=TwoWay}" />
+
+              <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="Casas" />
+              <NumericUpDown Grid.Row="2"
+                             Grid.Column="1"
+                             AutomationProperties.Name="Casas"
+                             Minimum="1"
+                             Maximum="36"
+                             Increment="1"
+                             FormatString="0"
+                             Value="{Binding ObservableDiagram.NumFrets, Mode=TwoWay}" />
+
+              <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="Largura renderizada" />
+              <TextBlock Grid.Row="3"
+                         Grid.Column="1"
+                         HorizontalAlignment="Right"
+                         VerticalAlignment="Center"
+                         Text="{Binding ObservableDiagram.TotalWidth}" />
+
+              <TextBlock Grid.Row="4" VerticalAlignment="Center" Text="Altura renderizada" />
+              <TextBlock Grid.Row="4"
+                         Grid.Column="1"
+                         HorizontalAlignment="Right"
+                         VerticalAlignment="Center"
+                         Text="{Binding ObservableDiagram.TotalHeight}" />
+            </Grid>
+          </Border>
+
+          <Border Padding="14"
+                  BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                  BorderThickness="1"
+                  CornerRadius="8">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                  ColumnDefinitions="*,130"
+                  RowSpacing="10"
+                  ColumnSpacing="10">
+              <TextBlock Grid.ColumnSpan="2"
+                         FontSize="17"
+                         FontWeight="SemiBold"
+                         Text="Estilo e preview" />
+
+              <TextBlock Grid.Row="1"
+                         VerticalAlignment="Center"
+                         Text="{Binding SelectedMarkTypeLabel}"
+                         ToolTip.Tip="{Binding Style.SelectedMarkTypeToolTip}" />
+              <ComboBox Grid.Row="1"
+                        Grid.Column="1"
+                        AutomationProperties.HelpText="{Binding Style.SelectedMarkTypeToolTip}"
+                        AutomationProperties.Name="{Binding SelectedMarkTypeLabel}"
+                        ItemsSource="{Binding Style.MarkTypes}"
+                        SelectedIndex="{Binding Style.SelectedMarkTypeIndex, Mode=TwoWay}"
+                        ToolTip.Tip="{Binding Style.SelectedMarkTypeToolTip}" />
+
+              <TextBlock Grid.Row="2"
+                         VerticalAlignment="Center"
+                         Text="{Binding SelectedEditorRenderBackgroundLabel}"
+                         ToolTip.Tip="{Binding SelectedEditorRenderBackgroundToolTip}" />
+              <ComboBox Grid.Row="2"
+                        Grid.Column="1"
+                        AutomationProperties.HelpText="{Binding SelectedEditorRenderBackgroundToolTip}"
+                        AutomationProperties.Name="{Binding SelectedEditorRenderBackgroundLabel}"
+                        ItemsSource="{Binding EditorRenderBackgrounds}"
+                        SelectedIndex="{Binding SelectedEditorRenderBackgroundIndex, Mode=TwoWay}"
+                        ToolTip.Tip="{Binding SelectedEditorRenderBackgroundToolTip}" />
+
+              <Button Grid.Row="3"
+                      Grid.ColumnSpan="2"
+                      HorizontalAlignment="Stretch"
+                      Command="{Binding Style.ShowEditor}"
+                      Content="Editar todas as propriedades de estilo…"
+                      ToolTip.Tip="Abre as 61 propriedades de diagrama, grade, título, marcas, rótulos e pestanas." />
+            </Grid>
+          </Border>
+        </StackPanel>
+      </ScrollViewer>
+
+      <Border Grid.Column="1"
+              Padding="18"
+              Background="White"
+              BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+              BorderThickness="1"
+              CornerRadius="10">
+        <DockPanel LastChildFill="True">
+          <StackPanel DockPanel.Dock="Top">
+            <TextBlock Foreground="Black"
+                       FontSize="18"
+                       FontWeight="SemiBold"
+                       Text="Preview" />
+            <TextBlock Foreground="#6A6A6A"
+                       Text="Selecione uma posição para editar marcas, rótulos ou pestanas" />
+          </StackPanel>
+          <StackPanel DockPanel.Dock="Bottom" Margin="0,12,0,0" Spacing="8">
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="8">
+              <Button Command="{Binding ObservableDiagram.SendImageToClipboard}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="Copiar imagem"
+                      Foreground="#202020"
+                      ToolTip.Tip="{Binding ObservableDiagram.SendImageToClipboardToolTip}" />
+              <Button Command="{Binding ObservableDiagram.SendScaledImageToClipboard}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="Copiar em escala…"
+                      Foreground="#202020"
+                      ToolTip.Tip="{Binding ObservableDiagram.SendScaledImageToClipboardToolTip}" />
+              <Button Command="{Binding ObservableDiagram.SendTextToClipboard}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="Copiar SVG"
+                      Foreground="#202020"
+                      ToolTip.Tip="{Binding ObservableDiagram.SendTextToClipboardToolTip}" />
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="8">
+              <Button Command="{Binding ObservableDiagram.AddMark}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="Adicionar marca…"
+                      Foreground="#202020"
+                      IsEnabled="{Binding ObservableDiagram.CanAddMark}" />
+              <Button Command="{Binding ObservableDiagram.EditMark}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="Editar marca…"
+                      Foreground="#202020"
+                      IsEnabled="{Binding ObservableDiagram.CanEditMark}" />
+              <Button Command="{Binding ObservableDiagram.RemoveMark}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="Remover marca"
+                      Foreground="#202020"
+                      IsEnabled="{Binding ObservableDiagram.CanRemoveMark}" />
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="8">
+              <Button Command="{Binding ObservableDiagram.AddFretLabel}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="{Binding ObservableDiagram.AddFretLabelLabel}"
+                      Foreground="#202020"
+                      IsEnabled="{Binding ObservableDiagram.CanAddFretLabel}" />
+              <Button Command="{Binding ObservableDiagram.EditFretLabel}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="{Binding ObservableDiagram.EditFretLabelLabel}"
+                      Foreground="#202020"
+                      IsEnabled="{Binding ObservableDiagram.CanEditFretLabel}" />
+              <Button Command="{Binding ObservableDiagram.RemoveFretLabel}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="{Binding ObservableDiagram.RemoveFretLabelLabel}"
+                      Foreground="#202020"
+                      IsEnabled="{Binding ObservableDiagram.CanRemoveFretLabel}" />
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="8">
+              <Button Command="{Binding ObservableDiagram.AddBarre}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="Adicionar pestana…"
+                      Foreground="#202020"
+                      IsEnabled="{Binding ObservableDiagram.CanAddBarre}" />
+              <Button Command="{Binding ObservableDiagram.EditBarre}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="Editar pestana…"
+                      Foreground="#202020"
+                      IsEnabled="{Binding ObservableDiagram.CanEditBarre}" />
+              <Button Command="{Binding ObservableDiagram.RemoveBarre}"
+                      Background="#F3F3F3"
+                      BorderBrush="#C5C5C5"
+                      Content="Remover pestana"
+                      Foreground="#202020"
+                      IsEnabled="{Binding ObservableDiagram.CanRemoveBarre}" />
+            </StackPanel>
+          </StackPanel>
+          <ScrollViewer Margin="0,12,0,0"
+                        HorizontalScrollBarVisibility="Auto"
+                        VerticalScrollBarVisibility="Auto">
+            <Image Name="DiagramImage"
+                   Margin="18"
+                   AutomationProperties.HelpText="O preview acompanha a posição selecionada para editar marcas, rótulos e pestanas. As mesmas ações estão disponíveis nos botões abaixo."
+                   AutomationProperties.LiveSetting="Polite"
+                   AutomationProperties.Name="Preview do diagrama em edição"
+                   Width="{Binding ObservableDiagram.TotalWidth}"
+                   Height="{Binding ObservableDiagram.TotalHeight}"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   DoubleTapped="DiagramImage_DoubleTapped"
+                   PointerPressed="DiagramImage_PointerPressed"
+                   Source="{Binding ObservableDiagram.ImageObject}"
+                   Stretch="Fill">
+              <Image.ContextMenu>
+                <ContextMenu>
+                  <MenuItem Command="{Binding ObservableDiagram.SendImageToClipboard}"
+                            Header="{Binding ObservableDiagram.SendImageToClipboardLabel}" />
+                  <MenuItem Command="{Binding ObservableDiagram.SendScaledImageToClipboard}"
+                            Header="{Binding ObservableDiagram.SendScaledImageToClipboardLabel}" />
+                  <MenuItem Command="{Binding ObservableDiagram.SendTextToClipboard}"
+                            Header="{Binding ObservableDiagram.SendTextToClipboardLabel}" />
+                  <Separator />
+                  <MenuItem Command="{Binding ObservableDiagram.AddMark}"
+                            Header="Adicionar marca…"
+                            IsVisible="{Binding ObservableDiagram.CanAddMark}" />
+                  <MenuItem Command="{Binding ObservableDiagram.EditMark}"
+                            Header="Editar marca…"
+                            IsVisible="{Binding ObservableDiagram.CanEditMark}" />
+                  <MenuItem Command="{Binding ObservableDiagram.RemoveMark}"
+                            Header="Remover marca"
+                            IsVisible="{Binding ObservableDiagram.CanRemoveMark}" />
+                  <Separator />
+                  <MenuItem Command="{Binding ObservableDiagram.AddFretLabel}"
+                            Header="{Binding ObservableDiagram.AddFretLabelLabel}"
+                            IsVisible="{Binding ObservableDiagram.CanAddFretLabel}" />
+                  <MenuItem Command="{Binding ObservableDiagram.EditFretLabel}"
+                            Header="{Binding ObservableDiagram.EditFretLabelLabel}"
+                            IsVisible="{Binding ObservableDiagram.CanEditFretLabel}" />
+                  <MenuItem Command="{Binding ObservableDiagram.RemoveFretLabel}"
+                            Header="{Binding ObservableDiagram.RemoveFretLabelLabel}"
+                            IsVisible="{Binding ObservableDiagram.CanRemoveFretLabel}" />
+                  <Separator />
+                  <MenuItem Command="{Binding ObservableDiagram.AddBarre}"
+                            Header="Adicionar pestana…"
+                            IsVisible="{Binding ObservableDiagram.CanAddBarre}" />
+                  <MenuItem Command="{Binding ObservableDiagram.EditBarre}"
+                            Header="Editar pestana…"
+                            IsVisible="{Binding ObservableDiagram.CanEditBarre}" />
+                  <MenuItem Command="{Binding ObservableDiagram.RemoveBarre}"
+                            Header="Remover pestana"
+                            IsVisible="{Binding ObservableDiagram.CanRemoveBarre}" />
+                </ContextMenu>
+              </Image.ContextMenu>
+            </Image>
+          </ScrollViewer>
+        </DockPanel>
+      </Border>
+    </Grid>
+
+    <Border Grid.Row="2"
+            Padding="20,12"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+            BorderThickness="0,1,0,0">
+      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+        <Button Command="{Binding ResetStyles}" Content="Restaurar estilos" />
+        <TextBlock Grid.Column="1"
+                   VerticalAlignment="Center"
+                   Opacity="0.65"
+                   Text="Alterações são aplicadas somente ao confirmar." />
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+          <Button MinWidth="90" Command="{Binding Apply}" Content="Aplicar" />
+          <Button MinWidth="90"
+                  Command="{Binding Cancel}"
+                  Content="Cancelar"
+                  IsCancel="True" />
+          <Button MinWidth="90"
+                  Command="{Binding Accept}"
+                  Content="Salvar"
+                  IsDefault="True" />
+        </StackPanel>
+      </Grid>
+    </Border>
+  </Grid>
+</Window>

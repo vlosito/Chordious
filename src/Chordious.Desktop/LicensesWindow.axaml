@@ -1,0 +1,50 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:coreVm="using:Chordious.Core.ViewModel"
+        x:Class="Chordious.Desktop.LicensesWindow"
+        x:DataType="coreVm:LicensesViewModel"
+        mc:Ignorable="d"
+        d:DesignWidth="760"
+        d:DesignHeight="560"
+        Width="760"
+        Height="560"
+        MinWidth="560"
+        MinHeight="400"
+        CanResize="True"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding Title}">
+  <Window.KeyBindings>
+    <KeyBinding Gesture="Escape" Command="{Binding Accept}" />
+  </Window.KeyBindings>
+
+  <Grid Margin="16" RowDefinitions="*,Auto" RowSpacing="12">
+    <TabControl ItemsSource="{Binding Licenses}">
+      <TabControl.ItemTemplate>
+        <DataTemplate x:DataType="coreVm:ObservableLicense">
+          <TextBlock Text="{Binding Header}" />
+        </DataTemplate>
+      </TabControl.ItemTemplate>
+      <TabControl.ContentTemplate>
+        <DataTemplate x:DataType="coreVm:ObservableLicense">
+          <TextBox AcceptsReturn="True"
+                   AutomationProperties.Name="{Binding Header}"
+                   IsReadOnly="True"
+                   Text="{Binding Body}"
+                   TextWrapping="Wrap"
+                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        </DataTemplate>
+      </TabControl.ContentTemplate>
+    </TabControl>
+
+    <Button Grid.Row="1"
+            HorizontalAlignment="Right"
+            MinWidth="90"
+            Command="{Binding Accept}"
+            Content="{Binding AppVM.AcceptLabel}"
+            IsCancel="True"
+            IsDefault="True" />
+  </Grid>
+</Window>
