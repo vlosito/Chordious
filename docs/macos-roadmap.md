@@ -64,7 +64,7 @@ Legenda: `CONCLUÍDO`, `PARCIAL`, `PENDENTE`.
 | Main | Inicialização, navegação, website, ajuda e licenças | PARCIAL — shell e ViewModel reais |
 | Diagram Library | Árvore, coleções, criar, editar, excluir, clonar, copiar, mover, mesclar e estilos | CONCLUÍDO — navegação, CRUD, estilos, seleção múltipla e cópia, movimentação e mesclagem por seletor de coleção; recargas limpam seleções e comandos obsoletos |
 | Diagram Editor | Dimensões, título, marcas, pestanas, rótulos, estilos, preview e clipboard | PARCIAL — criar/editar, título, cordas, casas, preview, marcas, rótulos, pestanas e estilos reais; seleção no diagrama oferece adicionar/editar/remover e fechamento protege alterações não salvas |
-| Diagram Export | Escolha de caminho, SVG, PNG/GIF/JPG, lote, nomes parametrizados, colisões, sobrescrita e escala | PARCIAL — fluxo Avalonia implementado e formatos/dimensões validados por testes reais; smoke de interação no `.app` aguarda o Mac desbloqueado |
+| Diagram Export | Escolha de caminho, SVG, PNG/GIF/JPG, lote, nomes parametrizados, colisões, sobrescrita e escala | PARCIAL — fluxo Avalonia implementado e formatos/dimensões validados por testes reais; smoke de interação no `.app` ainda pendente |
 | Chord Finder | Instrumento, afinação, qualidade, opções, busca assíncrona, cancelamento e resultados | PENDENTE |
 | Scale Finder | Instrumento, afinação, escala, opções, busca assíncrona, cancelamento e resultados | PENDENTE |
 | Instruments | Gerenciador e editor de instrumentos e afinações | PENDENTE |
