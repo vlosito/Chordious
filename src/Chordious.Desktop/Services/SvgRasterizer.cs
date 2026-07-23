@@ -2,15 +2,27 @@
 // Licensed under the MIT License.
 
 using System;
+using System.IO;
 
 using SkiaSharp;
 using Svg.Skia;
+
+using SixLabors.ImageSharp.Formats.Gif;
 
 namespace Chordious.Desktop.Services;
 
 internal static class SvgRasterizer
 {
     public static byte[] RenderPng(string svgText, int width, int height)
+    {
+        return RenderImage(svgText, width, height, RasterImageFormat.Png);
+    }
+
+    public static byte[] RenderImage(
+        string svgText,
+        int width,
+        int height,
+        RasterImageFormat format)
     {
         if (string.IsNullOrWhiteSpace(svgText))
         {
@@ -37,7 +49,7 @@ internal static class SvgRasterizer
             SKAlphaType.Premul));
 
         SKCanvas canvas = surface.Canvas;
-        canvas.Clear(SKColors.Transparent);
+        canvas.Clear(format == RasterImageFormat.Jpg ? SKColors.White : SKColors.Transparent);
 
         float scale = Math.Min(width / source.Width, height / source.Height);
         float offsetX = (width - (source.Width * scale)) / 2f;
@@ -50,9 +62,40 @@ internal static class SvgRasterizer
         canvas.Flush();
 
         using SKImage image = surface.Snapshot();
-        using SKData data = image.Encode(SKEncodedImageFormat.Png, 100)
-            ?? throw new InvalidOperationException("The rendered SVG could not be encoded as PNG.");
+        if (format == RasterImageFormat.Gif)
+        {
+            return EncodeGif(image);
+        }
+
+        SKEncodedImageFormat encodedFormat = format switch
+        {
+            RasterImageFormat.Png => SKEncodedImageFormat.Png,
+            RasterImageFormat.Jpg => SKEncodedImageFormat.Jpeg,
+            _ => throw new ArgumentOutOfRangeException(nameof(format))
+        };
+
+        using SKData data = image.Encode(encodedFormat, 100)
+            ?? throw new InvalidOperationException(
+                $"The rendered SVG could not be encoded as {format.ToString().ToUpperInvariant()}.");
 
         return data.ToArray();
     }
+
+    private static byte[] EncodeGif(SKImage image)
+    {
+        using SKData pngData = image.Encode(SKEncodedImageFormat.Png, 100)
+            ?? throw new InvalidOperationException("The rendered SVG could not be prepared for GIF encoding.");
+        using SixLabors.ImageSharp.Image gifImage =
+            SixLabors.ImageSharp.Image.Load(pngData.ToArray());
+        using MemoryStream output = new();
+        gifImage.Save(output, new GifEncoder());
+        return output.ToArray();
+    }
+}
+
+internal enum RasterImageFormat
+{
+    Png,
+    Gif,
+    Jpg
 }

@@ -2,10 +2,13 @@
 // Licensed under the MIT License.
 
 using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Avalonia.Controls;
 using Avalonia.Layout;
+using Avalonia.Platform.Storage;
 
 using CommunityToolkit.Mvvm.Messaging;
 
@@ -44,6 +47,8 @@ internal sealed class DesktopMessageHandlers : IDisposable
             _ = ShowDiagramStyleEditorAsync(message));
         StrongReferenceMessenger.Default.Register<ShowDiagramCollectionSelectorMessage>(this, (_, message) =>
             _ = ShowDiagramCollectionSelectorAsync(message));
+        StrongReferenceMessenger.Default.Register<ShowDiagramExportMessage>(this, (_, message) =>
+            _ = ShowDiagramExportAsync(message));
     }
 
     public void Dispose()
@@ -279,6 +284,47 @@ internal sealed class DesktopMessageHandlers : IDisposable
             mainWindowViewModel.SelectedLibraryNode = null;
         }
         PersistUserConfig();
+    }
+
+    private async Task ShowDiagramExportAsync(ShowDiagramExportMessage message)
+    {
+        ViewModels.DiagramExportViewModel vm = new(
+            message.DiagramsToExport,
+            message.CollectionName,
+            ChooseOutputPathAsync);
+        message.DiagramExportVM = vm;
+
+        DiagramExportWindow dialog = new()
+        {
+            DataContext = vm
+        };
+        vm.RequestClose += dialog.Close;
+
+        await ShowDialogAsync(dialog);
+
+        vm.RequestClose -= dialog.Close;
+        message.Process();
+        PersistUserConfig();
+    }
+
+    private async Task<string?> ChooseOutputPathAsync(string currentPath)
+    {
+        IStorageFolder? suggestedFolder = null;
+        if (Directory.Exists(currentPath))
+        {
+            suggestedFolder = await _owner.StorageProvider.TryGetFolderFromPathAsync(
+                new Uri(Path.GetFullPath(currentPath)));
+        }
+
+        var folders = await _owner.StorageProvider.OpenFolderPickerAsync(
+            new FolderPickerOpenOptions
+            {
+                Title = "Escolha a pasta para exportar os diagramas",
+                AllowMultiple = false,
+                SuggestedStartLocation = suggestedFolder
+            });
+
+        return folders.FirstOrDefault()?.Path.LocalPath;
     }
 
     private async Task ShowDialogAsync(Window dialog)

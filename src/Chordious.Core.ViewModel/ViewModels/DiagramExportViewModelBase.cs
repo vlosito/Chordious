@@ -153,6 +153,9 @@ namespace Chordious.Core.ViewModel
                     {
                         OnExportEnd(cancelled);
 
+                        _lastExportComplete = DateTime.Now;
+                        _exportAsyncCancellationTokenSource?.Dispose();
+                        _exportAsyncCancellationTokenSource = null;
                         IsIdle = true;
                         PercentComplete = 0;
                     }
@@ -194,7 +197,7 @@ namespace Chordious.Core.ViewModel
         }
         private RelayCommand _cancelOrClose;
 
-        private readonly DateTime? _lastExportComplete = null;
+        private DateTime? _lastExportComplete = null;
 
         public event EventHandler ExportStart;
 

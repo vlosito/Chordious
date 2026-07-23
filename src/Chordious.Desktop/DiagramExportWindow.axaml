@@ -1,0 +1,106 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:Chordious.Desktop.ViewModels"
+        x:Class="Chordious.Desktop.DiagramExportWindow"
+        x:DataType="vm:DiagramExportViewModel"
+        mc:Ignorable="d"
+        d:DesignWidth="620"
+        d:DesignHeight="390"
+        Width="620"
+        SizeToContent="Height"
+        MinHeight="360"
+        MaxHeight="520"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding Title}">
+  <Grid Margin="24"
+        RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+        RowSpacing="16">
+    <Grid ColumnDefinitions="Auto,*,Auto"
+          ColumnSpacing="10"
+          IsEnabled="{Binding IsIdle}">
+      <TextBlock VerticalAlignment="Center" Text="Pasta de saída" />
+      <TextBox Grid.Column="1"
+               Text="{Binding OutputPath, Mode=TwoWay}"
+               PlaceholderText="Selecione uma pasta" />
+      <Button Grid.Column="2"
+              Command="{Binding ChooseOutputPathCommand}"
+              Content="Escolher…" />
+    </Grid>
+
+    <Grid Grid.Row="1"
+          ColumnDefinitions="Auto,*,110"
+          ColumnSpacing="10"
+          IsEnabled="{Binding IsIdle}">
+      <TextBlock VerticalAlignment="Center" Text="Nome do arquivo" />
+      <ComboBox Grid.Column="1"
+                IsEditable="True"
+                ItemsSource="{Binding FilenameFormats}"
+                SelectedItem="{Binding SelectedFilenameFormat, Mode=TwoWay}"
+                Text="{Binding SelectedFilenameFormat, Mode=TwoWay}" />
+      <ComboBox Grid.Column="2"
+                ItemsSource="{Binding ExportFormats}"
+                SelectedIndex="{Binding SelectedExportFormatIndex, Mode=TwoWay}" />
+    </Grid>
+
+    <Border Grid.Row="2"
+            Padding="12"
+            Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
+            CornerRadius="6"
+            IsEnabled="{Binding IsIdle}">
+      <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+        <TextBlock FontWeight="SemiBold" Text="Exemplo" />
+        <TextBlock Grid.Column="1"
+                   FontStyle="Italic"
+                   Text="{Binding ExampleFilename}"
+                   TextTrimming="CharacterEllipsis" />
+      </Grid>
+    </Border>
+
+    <Grid Grid.Row="3"
+          ColumnDefinitions="Auto,120,Auto,Auto,*"
+          ColumnSpacing="10"
+          IsEnabled="{Binding IsIdle}">
+      <TextBlock VerticalAlignment="Center" Text="Escala" />
+      <NumericUpDown Grid.Column="1"
+                     Minimum="0.01"
+                     Maximum="{Binding MaxScaleFactor}"
+                     Increment="0.25"
+                     FormatString="0.##×"
+                     IsEnabled="{Binding CanScale}"
+                     Value="{Binding ScaleFactor, Mode=TwoWay}" />
+      <TextBlock Grid.Column="2"
+                 Margin="18,0,0,0"
+                 VerticalAlignment="Center"
+                 Text="Sobrescrever arquivos" />
+      <CheckBox Grid.Column="3"
+                VerticalAlignment="Center"
+                IsChecked="{Binding OverwriteFiles, Mode=TwoWay}" />
+    </Grid>
+
+    <StackPanel Grid.Row="4" Spacing="6">
+      <ProgressBar Minimum="0"
+                   Maximum="1"
+                   Value="{Binding PercentComplete}" />
+      <TextBlock HorizontalAlignment="Center"
+                 Opacity="0.7"
+                 Text="{Binding PercentComplete, StringFormat='{}{0:P0}'}" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="5"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Spacing="10">
+      <Button Command="{Binding CancelOrClose}"
+              Content="Cancelar/Fechar"
+              MinWidth="96"
+              HorizontalContentAlignment="Center" />
+      <Button Command="{Binding ExportAsync}"
+              Content="Exportar"
+              MinWidth="112"
+              HorizontalContentAlignment="Center" />
+    </StackPanel>
+  </Grid>
+</Window>

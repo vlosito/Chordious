@@ -31,7 +31,7 @@
                 VerticalAlignment="Center"
                 Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
                 CornerRadius="14">
-          <TextBlock FontWeight="SemiBold" Text="Fase 2 · Biblioteca e editor" />
+          <TextBlock FontWeight="SemiBold" Text="Fase 3 · Exportação multiplataforma" />
         </Border>
       </Grid>
     </Border>
@@ -56,6 +56,8 @@
                 <TextBlock Text="✓ Diagrama gerado pelo Chordious.Core" />
                 <TextBlock Text="✓ Renderização SVG com Skia" />
                 <TextBlock Text="✓ Exportação SVG por diálogo nativo" />
+                <TextBlock Text="✓ Exportação em lote SVG, PNG, GIF e JPG" />
+                <TextBlock Text="✓ Escala e nomes de arquivo parametrizados" />
                 <TextBlock Text="✓ Navegação e CRUD de coleções" />
                 <TextBlock Text="✓ Copiar, mover e mesclar coleções e diagramas" />
               </StackPanel>
@@ -76,10 +78,9 @@
                     CornerRadius="8">
               <StackPanel Spacing="8">
                 <TextBlock FontWeight="SemiBold" Text="Próximos fluxos" />
-                <TextBlock Text="1. Exportação PNG e JPG" />
-                <TextBlock Text="2. Chord Finder e Scale Finder" />
-                <TextBlock Text="3. Instrumentos, afinações e opções" />
-                <TextBlock Text="4. Paridade das integrações de plataforma" />
+                <TextBlock Text="1. Chord Finder e Scale Finder" />
+                <TextBlock Text="2. Instrumentos, afinações e opções" />
+                <TextBlock Text="3. Paridade das integrações de plataforma" />
               </StackPanel>
             </Border>
           </StackPanel>
@@ -193,7 +194,7 @@
                   BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
                   BorderThickness="1"
                   CornerRadius="8">
-            <Grid RowDefinitions="Auto,*,Auto,Auto" RowSpacing="10">
+            <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
               <StackPanel>
                 <TextBlock Foreground="Black"
                            FontSize="18"
@@ -206,14 +207,10 @@
                      Source="{Binding PreviewDiagram.ImageObject}"
                      Stretch="Uniform" />
               <WrapPanel Grid.Row="2" ItemSpacing="8" LineSpacing="8">
-                <Button Command="{Binding ExportSelectedDiagramCommand}" Content="Exportar SVG" />
+                <Button Command="{Binding SelectedLibraryNode.ExportSelected}" Content="Exportar…" />
                 <Button Command="{Binding CopySelectedDiagramSvgCommand}" Content="Copiar SVG" />
                 <Button Command="{Binding CopySelectedDiagramImageCommand}" Content="Copiar imagem" />
               </WrapPanel>
-              <TextBlock Grid.Row="3"
-                         Foreground="#6A6A6A"
-                         Text="{Binding ExportStatus}"
-                         TextWrapping="Wrap" />
             </Grid>
           </Border>
         </Grid>

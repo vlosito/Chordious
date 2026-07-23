@@ -18,7 +18,7 @@ fluxos.
 | macOS Apple Silicon | Concluído | Ambiente identificado como `osx-arm64` |
 | SDK exigido | Concluído | .NET SDK 10.0.302 arm64 instalado persistentemente e fixado por `global.json`; runtime 8 mantido para compatibilidade |
 | Domínio no macOS | Concluído | 8 testes de `Chordious.CoreTest` aprovados em Release |
-| UI multiplataforma | Em andamento | `Chordious.Desktop` em `net10.0` executa biblioteca e os quatro editores elementares em Avalonia; 30 testes Desktop aprovados |
+| UI multiplataforma | Em andamento | `Chordious.Desktop` em `net10.0` executa biblioteca, os quatro editores elementares e o fluxo completo de exportação em Avalonia; 40 testes Desktop aprovados |
 | CI multiplataforma | Concluído | GitHub Actions valida Core, Desktop e publicação `osx-arm64` no macOS, além da solução e dos pacotes existentes no Windows |
 | Repositório e proveniência | Concluído | Fork público `vlosito/Chordious`, com `origin` apontando para o fork e `upstream` para `jonthysell/Chordious`; base validada em `main@b781057`, que contém `v2.8.0` e `2.8-official` |
 | Governança da `main` | Concluído | Branch protegida para exigir PR, checks Debug/Release/macOS e resolução de conversas; force-push e exclusão bloqueados inclusive para administradores |
@@ -31,7 +31,7 @@ fluxos.
   testes de round-trip com amostras reais.
 - Chord Finder e Scale Finder produzem resultados equivalentes para o mesmo
   conjunto de entradas.
-- SVG, PNG e demais formatos atuais são exportados com dimensões, fontes, cores e
+- SVG, PNG, GIF e JPG são exportados com dimensões, fontes, cores e
   DPI validados.
 - Clipboard de texto, SVG e bitmap funciona com aplicativos nativos do macOS.
 - Menus, atalhos, foco, diálogos, drag-and-drop e acessibilidade seguem as
@@ -64,7 +64,7 @@ Legenda: `CONCLUÍDO`, `PARCIAL`, `PENDENTE`.
 | Main | Inicialização, navegação, website, ajuda e licenças | PARCIAL — shell e ViewModel reais |
 | Diagram Library | Árvore, coleções, criar, editar, excluir, clonar, copiar, mover, mesclar e estilos | CONCLUÍDO — navegação, CRUD, estilos, seleção múltipla e cópia, movimentação e mesclagem por seletor de coleção; recargas limpam seleções e comandos obsoletos |
 | Diagram Editor | Dimensões, título, marcas, pestanas, rótulos, estilos, preview e clipboard | PARCIAL — criar/editar, título, cordas, casas, preview, marcas, rótulos, pestanas e estilos reais; seleção no diagrama oferece adicionar/editar/remover e fechamento protege alterações não salvas |
-| Diagram Export | Escolha de caminho, SVG, PNG/JPG e escala | PARCIAL — exportação SVG nativa |
+| Diagram Export | Escolha de caminho, SVG, PNG/GIF/JPG, lote, nomes parametrizados, colisões, sobrescrita e escala | PARCIAL — fluxo Avalonia implementado e formatos/dimensões validados por testes reais; smoke de interação no `.app` aguarda o Mac desbloqueado |
 | Chord Finder | Instrumento, afinação, qualidade, opções, busca assíncrona, cancelamento e resultados | PENDENTE |
 | Scale Finder | Instrumento, afinação, escala, opções, busca assíncrona, cancelamento e resultados | PENDENTE |
 | Instruments | Gerenciador e editor de instrumentos e afinações | PENDENTE |
@@ -74,7 +74,7 @@ Legenda: `CONCLUÍDO`, `PARCIAL`, `PENDENTE`.
 | Configuration | Persistência, importação, exportação, seleção de partes e importação legada | PARCIAL — persistência do arquivo de usuário e round-trip de biblioteca testado |
 | Element editors | Mark, Barre, Fret Label e Style | CONCLUÍDO — os quatro editores cobrem todas as propriedades existentes, níveis de herança, estilos locais, aplicar/salvar/cancelar e proteção contra perda; o Style Editor cobre as 61 propriedades herdáveis da versão WPF |
 | Diálogos comuns | Confirmação persistente, informação, exceção, prompt e seleção de coleção | PARCIAL — confirmação persistente, informação, exceção e prompt nativos |
-| Integrações | Clipboard de texto/bitmap, arquivos/pastas, URLs, Finder, fontes e atualização | PARCIAL — texto/bitmap, fontes e save picker iniciais |
+| Integrações | Clipboard de texto/bitmap, arquivos/pastas, URLs, Finder, fontes e atualização | PARCIAL — texto/bitmap, fontes, save picker e folder picker nativos |
 | Distribuição | Bundle, ícone, assinatura, notarização, DMG e atualização | PENDENTE |
 
 ## Política para issues herdadas
