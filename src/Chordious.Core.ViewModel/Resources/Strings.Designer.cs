@@ -4993,7 +4993,7 @@ namespace Chordious.Core.ViewModel.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This will delete the chord quality &quot;{0}&quot;. This cannot be undone. Do you want to continue?.
+        ///   Looks up a localized string similar to This will delete the scale &quot;{0}&quot;. This cannot be undone. Do you want to continue?.
         /// </summary>
         internal static string ScaleManagerDeleteNamedIntervalPromptFormat {
             get {

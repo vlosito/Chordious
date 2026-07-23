@@ -296,6 +296,84 @@ namespace Chordious.Core.ViewModel
 
         #endregion
 
+        #region Show Chord Quality Manager
+
+        public static string ShowChordQualityManagerLabel
+        {
+            get
+            {
+                return Strings.ShowChordQualityManagerLabel;
+            }
+        }
+
+        public static string ShowChordQualityManagerToolTip
+        {
+            get
+            {
+                return Strings.ShowChordQualityManagerToolTip;
+            }
+        }
+
+        public RelayCommand ShowChordQualityManager
+        {
+            get
+            {
+                return _showChordQualityManager ??= new RelayCommand(() =>
+                {
+                    try
+                    {
+                        StrongReferenceMessenger.Default.Send(new ShowChordQualityManagerMessage());
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                });
+            }
+        }
+        private RelayCommand _showChordQualityManager;
+
+        #endregion
+
+        #region Show Scale Manager
+
+        public static string ShowScaleManagerLabel
+        {
+            get
+            {
+                return Strings.ShowScaleManagerLabel;
+            }
+        }
+
+        public static string ShowScaleManagerToolTip
+        {
+            get
+            {
+                return Strings.ShowScaleManagerToolTip;
+            }
+        }
+
+        public RelayCommand ShowScaleManager
+        {
+            get
+            {
+                return _showScaleManager ??= new RelayCommand(() =>
+                {
+                    try
+                    {
+                        StrongReferenceMessenger.Default.Send(new ShowScaleManagerMessage());
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                });
+            }
+        }
+        private RelayCommand _showScaleManager;
+
+        #endregion
+
         #region Show Options
 
         public static string ShowOptionsLabel

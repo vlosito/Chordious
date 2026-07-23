@@ -45,6 +45,14 @@ internal sealed class DesktopMessageHandlers : IDisposable
             _ = ShowInstrumentEditorAsync(message));
         StrongReferenceMessenger.Default.Register<ShowTuningEditorMessage>(this, (_, message) =>
             _ = ShowTuningEditorAsync(message));
+        StrongReferenceMessenger.Default.Register<ShowChordQualityManagerMessage>(this, (_, message) =>
+            _ = ShowChordQualityManagerAsync(message));
+        StrongReferenceMessenger.Default.Register<ShowChordQualityEditorMessage>(this, (_, message) =>
+            _ = ShowChordQualityEditorAsync(message));
+        StrongReferenceMessenger.Default.Register<ShowScaleManagerMessage>(this, (_, message) =>
+            _ = ShowScaleManagerAsync(message));
+        StrongReferenceMessenger.Default.Register<ShowScaleEditorMessage>(this, (_, message) =>
+            _ = ShowScaleEditorAsync(message));
         StrongReferenceMessenger.Default.Register<ShowDiagramEditorMessage>(this, (_, message) =>
             _ = ShowDiagramEditorAsync(message));
         StrongReferenceMessenger.Default.Register<ShowDiagramMarkEditorMessage>(this, (_, message) =>
@@ -289,6 +297,68 @@ internal sealed class DesktopMessageHandlers : IDisposable
 
         vm.RequestClose -= dialog.Close;
         message.Process();
+        PersistUserConfig();
+    }
+
+    private async Task ShowChordQualityManagerAsync(ShowChordQualityManagerMessage message)
+    {
+        ChordQualityManagerViewModel vm = message.ChordQualityManagerVM;
+        NamedIntervalManagerWindow dialog = new()
+        {
+            DataContext = vm
+        };
+        vm.RequestClose += dialog.Close;
+
+        await ShowDialogAsync(dialog);
+
+        vm.RequestClose -= dialog.Close;
+        message.Process();
+        PersistUserConfig();
+    }
+
+    private async Task ShowChordQualityEditorAsync(ShowChordQualityEditorMessage message)
+    {
+        ChordQualityEditorViewModel vm = message.ChordQualityEditorVM;
+        ChordQualityEditorWindow dialog = new()
+        {
+            DataContext = vm
+        };
+        vm.RequestClose += dialog.Close;
+
+        await ShowDialogAsync(dialog);
+
+        vm.RequestClose -= dialog.Close;
+        PersistUserConfig();
+    }
+
+    private async Task ShowScaleManagerAsync(ShowScaleManagerMessage message)
+    {
+        ScaleManagerViewModel vm = message.ScaleManagerVM;
+        NamedIntervalManagerWindow dialog = new()
+        {
+            DataContext = vm
+        };
+        vm.RequestClose += dialog.Close;
+
+        await ShowDialogAsync(dialog);
+
+        vm.RequestClose -= dialog.Close;
+        message.Process();
+        PersistUserConfig();
+    }
+
+    private async Task ShowScaleEditorAsync(ShowScaleEditorMessage message)
+    {
+        ScaleEditorViewModel vm = message.ScaleEditorVM;
+        ScaleEditorWindow dialog = new()
+        {
+            DataContext = vm
+        };
+        vm.RequestClose += dialog.Close;
+
+        await ShowDialogAsync(dialog);
+
+        vm.RequestClose -= dialog.Close;
         PersistUserConfig();
     }
 

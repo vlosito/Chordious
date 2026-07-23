@@ -41,7 +41,9 @@
         <Grid Margin="6"
               ColumnDefinitions="340,*"
               ColumnSpacing="24">
-          <StackPanel Grid.Column="0" Spacing="14">
+          <ScrollViewer Grid.Column="0"
+                        VerticalScrollBarVisibility="Auto">
+          <StackPanel Spacing="14">
             <TextBlock FontSize="18" FontWeight="SemiBold" Text="Baseline funcional" />
 
             <Border Padding="16"
@@ -63,6 +65,8 @@
                 <TextBlock Text="✓ Chord Finder com resultados reais" />
                 <TextBlock Text="✓ Scale Finder com resultados reais" />
                 <TextBlock Text="✓ Instrumentos e afinações" />
+                <TextBlock Text="✓ Qualidades de acordes e intervalos" />
+                <TextBlock Text="✓ Escalas e intervalos" />
               </StackPanel>
             </Border>
 
@@ -86,6 +90,18 @@
 
             <Button HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    Command="{Binding ShowChordQualityManager}"
+                    Content="{Binding ShowChordQualityManagerLabel}"
+                    ToolTip.Tip="{Binding ShowChordQualityManagerToolTip}" />
+
+            <Button HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding ShowScaleManager}"
+                    Content="{Binding ShowScaleManagerLabel}"
+                    ToolTip.Tip="{Binding ShowScaleManagerToolTip}" />
+
+            <Button HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
                     Command="{Binding ExportPreviewSvgCommand}"
                     Content="Exportar preview como SVG" />
 
@@ -99,12 +115,13 @@
                     CornerRadius="8">
               <StackPanel Spacing="8">
                 <TextBlock FontWeight="SemiBold" Text="Próximos fluxos" />
-                <TextBlock Text="1. Gerenciadores de qualidades e escalas" />
-                <TextBlock Text="2. Preferências e configuração completa" />
-                <TextBlock Text="3. Integrações e distribuição" />
+                <TextBlock Text="1. Preferências e configuração completa" />
+                <TextBlock Text="2. Integrações de plataforma" />
+                <TextBlock Text="3. Distribuição assinada e notarizada" />
               </StackPanel>
             </Border>
           </StackPanel>
+          </ScrollViewer>
 
           <Border Grid.Column="1"
                   Padding="20"

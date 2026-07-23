@@ -73,7 +73,16 @@
         </StackPanel>
 
         <StackPanel Grid.Column="3" Spacing="5">
-          <TextBlock FontWeight="SemiBold" Text="{Binding SelectedScaleLabel}" />
+          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+            <TextBlock VerticalAlignment="Center"
+                       FontWeight="SemiBold"
+                       Text="{Binding SelectedScaleLabel}" />
+            <Button Grid.Column="1"
+                    Padding="8,2"
+                    Command="{Binding ShowScaleManager}"
+                    Content="{Binding ShowScaleManagerLabel}"
+                    ToolTip.Tip="{Binding ShowScaleManagerToolTip}" />
+          </Grid>
           <ComboBox ItemsSource="{Binding Scales}"
                     SelectedItem="{Binding SelectedScale, Mode=TwoWay}"
                     ContainerPrepared="HeaderComboBox_ContainerPrepared"

@@ -73,7 +73,16 @@
         </StackPanel>
 
         <StackPanel Grid.Column="3" Spacing="5">
-          <TextBlock FontWeight="SemiBold" Text="{Binding SelectedChordQualityLabel}" />
+          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+            <TextBlock VerticalAlignment="Center"
+                       FontWeight="SemiBold"
+                       Text="{Binding SelectedChordQualityLabel}" />
+            <Button Grid.Column="1"
+                    Padding="8,2"
+                    Command="{Binding ShowChordQualityManager}"
+                    Content="{Binding ShowChordQualityManagerLabel}"
+                    ToolTip.Tip="{Binding ShowChordQualityManagerToolTip}" />
+          </Grid>
           <ComboBox ItemsSource="{Binding ChordQualities}"
                     SelectedItem="{Binding SelectedChordQuality, Mode=TwoWay}"
                     ContainerPrepared="HeaderComboBox_ContainerPrepared"

@@ -1147,7 +1147,7 @@
     <value>New Scale</value>
   </data>
   <data name="ScaleManagerDeleteNamedIntervalPromptFormat" xml:space="preserve">
-    <value>This will delete the chord quality "{0}". This cannot be undone. Do you want to continue?</value>
+    <value>This will delete the scale "{0}". This cannot be undone. Do you want to continue?</value>
   </data>
   <data name="MainShowHelpPromptMessage" xml:space="preserve">
     <value>This will open the Help section on the Chordious website in your browser. Do you want to continue?</value>

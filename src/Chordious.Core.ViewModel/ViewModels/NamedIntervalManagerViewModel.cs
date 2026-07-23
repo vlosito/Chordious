@@ -225,28 +225,30 @@ namespace Chordious.Core.ViewModel
         {
             DefaultNamedIntervals = new ObservableCollection<ObservableNamedInterval>(_getDefaultNamedIntervals());
             UserNamedIntervals = new ObservableCollection<ObservableNamedInterval>(_getUserNamedIntervals());
+            SelectedNamedInterval = null;
+            SelectedUserNamedIntervalIndex = -1;
+            SelectedDefaultNamedIntervalIndex = -1;
 
-            if (selectedNamedInterval is null)
+            if (selectedNamedInterval is not null)
             {
-                SelectedNamedInterval = null;
-            }
-            else
-            {
-                foreach (ObservableNamedInterval oni in UserNamedIntervals)
+                for (int i = 0; i < UserNamedIntervals.Count; i++)
                 {
-                    if (oni.NamedInterval == selectedNamedInterval)
+                    if (UserNamedIntervals[i].NamedInterval == selectedNamedInterval)
                     {
-                        SelectedNamedInterval = oni;
+                        SelectedUserNamedIntervalIndex = i;
                         break;
                     }
                 }
 
-                foreach (ObservableNamedInterval oni in DefaultNamedIntervals)
+                if (SelectedNamedInterval is null)
                 {
-                    if (oni.NamedInterval == selectedNamedInterval)
+                    for (int i = 0; i < DefaultNamedIntervals.Count; i++)
                     {
-                        SelectedNamedInterval = oni;
-                        break;
+                        if (DefaultNamedIntervals[i].NamedInterval == selectedNamedInterval)
+                        {
+                            SelectedDefaultNamedIntervalIndex = i;
+                            break;
+                        }
                     }
                 }
             }
