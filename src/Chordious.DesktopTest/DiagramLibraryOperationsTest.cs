@@ -245,6 +245,72 @@ public class DiagramLibraryOperationsTest
         Assert.IsTrue(viewModel.SearchAsync.CanExecute(null));
     }
 
+    [TestMethod]
+    public void ScaleFinderSelection_SynchronizesResultsAndCommands()
+    {
+        ScaleFinderViewModel viewModel = new();
+        ObservableDiagram first = new(CreateDiagram("C major"), name: "C major");
+        ObservableDiagram second = new(CreateDiagram("G major"), name: "G major");
+
+        ScaleFinderWindow.SynchronizeSelection(viewModel, [first, second, first]);
+
+        Assert.AreEqual(2, viewModel.SelectedResults.Count);
+        Assert.AreSame(first, viewModel.SelectedResults[0]);
+        Assert.AreSame(second, viewModel.SelectedResults[1]);
+        Assert.IsTrue(viewModel.SaveSelected.CanExecute(null));
+        Assert.IsTrue(viewModel.EditSelected.CanExecute(null));
+        Assert.IsTrue(viewModel.SendSelectedImageToClipboard.CanExecute(null));
+
+        ScaleFinderWindow.SynchronizeSelection(viewModel, []);
+
+        Assert.AreEqual(0, viewModel.SelectedResults.Count);
+        Assert.IsFalse(viewModel.SaveSelected.CanExecute(null));
+        Assert.IsFalse(viewModel.EditSelected.CanExecute(null));
+        Assert.IsFalse(viewModel.SendSelectedImageToClipboard.CanExecute(null));
+    }
+
+    [TestMethod]
+    public async Task ScaleFinderSearch_DefaultTargetRendersDiagrams()
+    {
+        ScaleFinderViewModel viewModel = new();
+
+        Assert.IsNotNull(viewModel.SelectedInstrument);
+        Assert.IsNotNull(viewModel.SelectedTuning);
+        Assert.IsNotNull(viewModel.SelectedScale);
+        Assert.IsTrue(viewModel.SearchAsync.CanExecute(null));
+
+        viewModel.SearchAsync.Execute(null);
+
+        DateTime deadline = DateTime.UtcNow.AddSeconds(30);
+        while (!viewModel.IsIdle && DateTime.UtcNow < deadline)
+        {
+            await Task.Delay(25);
+        }
+
+        Assert.IsTrue(viewModel.IsIdle, "A busca padrão de escalas não terminou no limite de 30 segundos.");
+        Assert.IsTrue(viewModel.Results.Count > 0);
+        Assert.IsTrue(viewModel.Results[0].SvgText.Contains("<svg"));
+        Assert.IsNotNull(viewModel.Results[0].ImageObject);
+    }
+
+    [TestMethod]
+    public async Task ScaleFinderSearch_CancelReturnsToIdleState()
+    {
+        ScaleFinderViewModel viewModel = new();
+
+        viewModel.SearchAsync.Execute(null);
+        viewModel.CancelSearch.Execute(null);
+
+        DateTime deadline = DateTime.UtcNow.AddSeconds(5);
+        while (!viewModel.IsIdle && DateTime.UtcNow < deadline)
+        {
+            await Task.Delay(25);
+        }
+
+        Assert.IsTrue(viewModel.IsIdle, "A busca de escalas cancelada não retornou ao estado ocioso.");
+        Assert.IsTrue(viewModel.SearchAsync.CanExecute(null));
+    }
+
     private static Diagram CreateDiagram(string title)
     {
         return new Diagram(ConfigFile.DefaultConfig.DiagramStyle, 6, 5)

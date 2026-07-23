@@ -37,6 +37,8 @@ internal sealed class DesktopMessageHandlers : IDisposable
             _ = ShowTextPromptAsync(message));
         StrongReferenceMessenger.Default.Register<ShowChordFinderMessage>(this, (_, message) =>
             _ = ShowChordFinderAsync(message));
+        StrongReferenceMessenger.Default.Register<ShowScaleFinderMessage>(this, (_, message) =>
+            _ = ShowScaleFinderAsync(message));
         StrongReferenceMessenger.Default.Register<ShowDiagramEditorMessage>(this, (_, message) =>
             _ = ShowDiagramEditorAsync(message));
         StrongReferenceMessenger.Default.Register<ShowDiagramMarkEditorMessage>(this, (_, message) =>
@@ -209,6 +211,22 @@ internal sealed class DesktopMessageHandlers : IDisposable
     {
         ChordFinderViewModel vm = message.ChordFinderVM;
         ChordFinderWindow dialog = new()
+        {
+            DataContext = vm
+        };
+        vm.RequestClose += dialog.Close;
+
+        await ShowDialogAsync(dialog);
+
+        vm.RequestClose -= dialog.Close;
+        message.Process();
+        PersistUserConfig();
+    }
+
+    private async Task ShowScaleFinderAsync(ShowScaleFinderMessage message)
+    {
+        ScaleFinderViewModel vm = message.ScaleFinderVM;
+        ScaleFinderWindow dialog = new()
         {
             DataContext = vm
         };

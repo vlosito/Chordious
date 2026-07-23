@@ -31,7 +31,7 @@
                 VerticalAlignment="Center"
                 Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
                 CornerRadius="14">
-          <TextBlock FontWeight="SemiBold" Text="Fase 4 · Chord Finder" />
+          <TextBlock FontWeight="SemiBold" Text="Fase 4 · Busca musical" />
         </Border>
       </Grid>
     </Border>
@@ -61,6 +61,7 @@
                 <TextBlock Text="✓ Navegação e CRUD de coleções" />
                 <TextBlock Text="✓ Copiar, mover e mesclar coleções e diagramas" />
                 <TextBlock Text="✓ Chord Finder com resultados reais" />
+                <TextBlock Text="✓ Scale Finder com resultados reais" />
               </StackPanel>
             </Border>
 
@@ -69,6 +70,12 @@
                     Command="{Binding ShowChordFinder}"
                     Content="{Binding ShowChordFinderLabel}"
                     ToolTip.Tip="{Binding ShowChordFinderToolTip}" />
+
+            <Button HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding ShowScaleFinder}"
+                    Content="{Binding ShowScaleFinderLabel}"
+                    ToolTip.Tip="{Binding ShowScaleFinderToolTip}" />
 
             <Button HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
@@ -85,9 +92,9 @@
                     CornerRadius="8">
               <StackPanel Spacing="8">
                 <TextBlock FontWeight="SemiBold" Text="Próximos fluxos" />
-                <TextBlock Text="1. Scale Finder" />
-                <TextBlock Text="2. Gerenciadores de instrumentos, afinações e qualidades" />
-                <TextBlock Text="3. Paridade das integrações restantes" />
+                <TextBlock Text="1. Gerenciador de instrumentos e afinações" />
+                <TextBlock Text="2. Gerenciadores de qualidades e escalas" />
+                <TextBlock Text="3. Preferências e configuração completa" />
               </StackPanel>
             </Border>
           </StackPanel>
