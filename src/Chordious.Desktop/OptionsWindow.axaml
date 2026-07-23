@@ -38,6 +38,8 @@
                              Text="{Binding SelectedRenderBackgroundLabel}"
                              ToolTip.Tip="{Binding SelectedRenderBackgroundToolTip}" />
                   <ComboBox Grid.Column="1"
+                            AutomationProperties.HelpText="{Binding SelectedRenderBackgroundToolTip}"
+                            AutomationProperties.Name="{Binding SelectedRenderBackgroundLabel}"
                             ItemsSource="{Binding RenderBackgrounds}"
                             SelectedIndex="{Binding SelectedRenderBackgroundIndex, Mode=TwoWay}"
                             ToolTip.Tip="{Binding SelectedRenderBackgroundToolTip}" />
@@ -47,6 +49,8 @@
                              ToolTip.Tip="{Binding SelectedEditorRenderBackgroundToolTip}" />
                   <ComboBox Grid.Row="1"
                             Grid.Column="1"
+                            AutomationProperties.HelpText="{Binding SelectedEditorRenderBackgroundToolTip}"
+                            AutomationProperties.Name="{Binding SelectedEditorRenderBackgroundLabel}"
                             ItemsSource="{Binding EditorRenderBackgrounds}"
                             SelectedIndex="{Binding SelectedEditorRenderBackgroundIndex, Mode=TwoWay}"
                             ToolTip.Tip="{Binding SelectedEditorRenderBackgroundToolTip}" />

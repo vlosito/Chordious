@@ -127,14 +127,16 @@ internal sealed class DesktopMessageHandlers : IDisposable
             Text = vm.Message,
             TextWrapping = Avalonia.Media.TextWrapping.Wrap
         });
-        content.Children.Add(new TextBox
-        {
-            Text = vm.Details,
-            IsReadOnly = true,
-            AcceptsReturn = true,
-            Height = 160,
-            TextWrapping = Avalonia.Media.TextWrapping.Wrap
-        });
+        content.Children.Add(DesktopDialogAccessibility.Describe(
+            new TextBox
+            {
+                Text = vm.Details,
+                IsReadOnly = true,
+                AcceptsReturn = true,
+                Height = 160,
+                TextWrapping = Avalonia.Media.TextWrapping.Wrap
+            },
+            "Detalhes técnicos do erro"));
 
         Window dialog = CreateDialog(ExceptionViewModel.Title, content, 560);
         Button accept = CreateButton("OK");
@@ -191,11 +193,13 @@ internal sealed class DesktopMessageHandlers : IDisposable
     private async Task ShowTextPromptAsync(PromptForTextMessage message)
     {
         TextPromptViewModel vm = message.TextPromptVM;
-        TextBox textBox = new()
-        {
-            Text = vm.Text ?? string.Empty,
-            MinWidth = 360
-        };
+        TextBox textBox = DesktopDialogAccessibility.Describe(
+            new TextBox
+            {
+                Text = vm.Text ?? string.Empty,
+                MinWidth = 360
+            },
+            vm.Prompt);
 
         StackPanel content = new() { Spacing = 10 };
         content.Children.Add(new TextBlock
@@ -786,6 +790,7 @@ internal sealed class DesktopMessageHandlers : IDisposable
     {
         Window previousOwner = _dialogOwner;
         _dialogOwner = dialog;
+        DesktopDialogAccessibility.AttachInitialFocus(dialog);
         try
         {
             await dialog.ShowDialog(previousOwner);

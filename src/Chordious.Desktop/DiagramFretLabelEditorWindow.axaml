@@ -42,6 +42,7 @@
             <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="Texto" />
             <TextBox Grid.Row="1"
                      Grid.Column="1"
+                     AutomationProperties.Name="Texto do rótulo de casa"
                      MaxLength="32"
                      Text="{Binding Text, Mode=TwoWay}" />
           </Grid>
@@ -60,6 +61,7 @@
                           IsChecked="{Binding Style.FretLabelFontFamilyIsLocal, Mode=TwoWay}" />
                 <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Fonte" />
                 <ComboBox Grid.Column="2"
+                          AutomationProperties.Name="Fonte do rótulo de casa"
                           ItemsSource="{Binding Style.FontFamilies}"
                           SelectedItem="{Binding Style.FretLabelFontFamily, Mode=TwoWay}"
                           IsEnabled="{Binding Style.FretLabelFontFamilyIsLocal}" />
@@ -70,6 +72,7 @@
                           IsChecked="{Binding Style.FretLabelTextStyleIsLocal, Mode=TwoWay}" />
                 <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Estilo" />
                 <ComboBox Grid.Column="2"
+                          AutomationProperties.Name="Estilo do texto do rótulo de casa"
                           ItemsSource="{Binding Style.FretLabelTextStyles}"
                           SelectedIndex="{Binding Style.SelectedFretLabelTextStyleIndex, Mode=TwoWay}"
                           IsEnabled="{Binding Style.FretLabelTextStyleIsLocal}" />
@@ -80,6 +83,7 @@
                           IsChecked="{Binding Style.FretLabelTextColorIsLocal, Mode=TwoWay}" />
                 <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Cor" />
                 <TextBox Grid.Column="2"
+                         AutomationProperties.Name="Cor do texto do rótulo de casa"
                          PlaceholderText="#RRGGBB"
                          Text="{Binding Style.FretLabelTextColor, Mode=TwoWay}"
                          IsEnabled="{Binding Style.FretLabelTextColorIsLocal}" />
@@ -90,6 +94,7 @@
                           IsChecked="{Binding Style.FretLabelTextOpacityIsLocal, Mode=TwoWay}" />
                 <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Opacidade" />
                 <NumericUpDown Grid.Column="2"
+                               AutomationProperties.Name="Opacidade do texto do rótulo de casa"
                                Minimum="0"
                                Maximum="1"
                                Increment="0.01"
@@ -103,6 +108,7 @@
                           IsChecked="{Binding Style.FretLabelTextSizeRatioIsLocal, Mode=TwoWay}" />
                 <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Proporção" />
                 <NumericUpDown Grid.Column="2"
+                               AutomationProperties.Name="Proporção do tamanho do texto do rótulo de casa"
                                Minimum="0"
                                Maximum="2"
                                Increment="0.01"
@@ -116,6 +122,7 @@
                           IsChecked="{Binding Style.FretLabelTextWidthRatioIsLocal, Mode=TwoWay}" />
                 <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Proporção" />
                 <NumericUpDown Grid.Column="2"
+                               AutomationProperties.Name="Proporção da largura do texto do rótulo de casa"
                                Minimum="0"
                                Maximum="2"
                                Increment="0.01"
@@ -139,6 +146,7 @@
                           IsChecked="{Binding Style.FretLabelTextVisibleIsLocal, Mode=TwoWay}" />
                 <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Visível" />
                 <CheckBox Grid.Column="2"
+                          AutomationProperties.Name="Texto do rótulo de casa visível"
                           IsChecked="{Binding Style.FretLabelTextVisible, Mode=TwoWay}"
                           IsEnabled="{Binding Style.FretLabelTextVisibleIsLocal}" />
               </Grid>
@@ -148,6 +156,7 @@
                           IsChecked="{Binding Style.FretLabelTextAlignmentIsLocal, Mode=TwoWay}" />
                 <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Alinhamento" />
                 <ComboBox Grid.Column="2"
+                          AutomationProperties.Name="Alinhamento do texto do rótulo de casa"
                           ItemsSource="{Binding Style.FretLabelTextAlignments}"
                           SelectedIndex="{Binding Style.SelectedFretLabelTextAlignmentIndex, Mode=TwoWay}"
                           IsEnabled="{Binding Style.FretLabelTextAlignmentIsLocal}" />
@@ -158,6 +167,7 @@
                           IsChecked="{Binding Style.FretLabelGridPaddingIsLocal, Mode=TwoWay}" />
                 <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Pixels" />
                 <NumericUpDown Grid.Column="2"
+                               AutomationProperties.Name="Espaçamento da grade do rótulo de casa em pixels"
                                Minimum="0"
                                Increment="0.25"
                                FormatString="0.00"

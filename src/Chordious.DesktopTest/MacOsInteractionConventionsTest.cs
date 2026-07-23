@@ -6,7 +6,11 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
+using Avalonia.Automation;
+using Avalonia.Controls;
 using Avalonia.Input;
+
+using Chordious.Desktop.Services;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -106,6 +110,77 @@ public sealed class MacOsInteractionConventionsTest
     }
 
     [TestMethod]
+    public void SecondaryWindows_LabelEveryFormControlAndMeaningfulImage()
+    {
+        string[] formControlNames =
+        [
+            "TextBox",
+            "ComboBox",
+            "NumericUpDown",
+            "ListBox"
+        ];
+        int labeledControlCount = 0;
+        int labeledImageCount = 0;
+
+        foreach (string path in Directory.EnumerateFiles(
+                     DesktopProjectDirectory,
+                     "*Window.axaml",
+                     SearchOption.TopDirectoryOnly)
+                     .Where(path => Path.GetFileName(path) != "MainWindow.axaml"))
+        {
+            XDocument document = XDocument.Load(path);
+            foreach (XElement control in document.Descendants().Where(element =>
+                         formControlNames.Contains(element.Name.LocalName) ||
+                         (element.Name.LocalName == "CheckBox" &&
+                          element.Attribute("Content") is null)))
+            {
+                AssertHasAccessibleName(control, path);
+                labeledControlCount++;
+            }
+
+            foreach (XElement image in document.Descendants(AvaloniaNamespace + "Image"))
+            {
+                bool isDecorative =
+                    image.Attribute("AutomationProperties.AccessibilityView")?.Value == "Raw";
+                if (!isDecorative)
+                {
+                    AssertHasAccessibleName(image, path);
+                    labeledImageCount++;
+                }
+            }
+        }
+
+        Assert.IsTrue(labeledControlCount >= 80);
+        Assert.IsTrue(labeledImageCount >= 3);
+    }
+
+    [TestMethod]
+    public void ProgrammaticDialogs_DescribeFieldsForAssistiveTechnology()
+    {
+        TextBox field = DesktopDialogAccessibility.Describe(
+            new TextBox(),
+            "Detalhes",
+            "Informação adicional");
+
+        Assert.AreEqual("Detalhes", AutomationProperties.GetName(field));
+        Assert.AreEqual("Informação adicional", AutomationProperties.GetHelpText(field));
+    }
+
+    [TestMethod]
+    public void DialogInitialFocus_SkipsUnavailableControlsAndKeepsVisualOrder()
+    {
+        Button hidden = new() { IsVisible = false };
+        TextBox disabled = new() { IsEnabled = false };
+        TextBox expected = new();
+        Button later = new();
+
+        Control? result = DesktopDialogAccessibility.FindInitialFocusCandidate(
+            [hidden, disabled, expected, later]);
+
+        Assert.AreSame(expected, result);
+    }
+
+    [TestMethod]
     public void DialogButtons_DeclareDefaultAndCancelActions()
     {
         int defaultButtonCount = 0;
@@ -187,6 +262,16 @@ public sealed class MacOsInteractionConventionsTest
 
         Assert.IsNotNull(item, $"O item de menu '{header}' não foi encontrado.");
         return item;
+    }
+
+    private static void AssertHasAccessibleName(XElement element, string path)
+    {
+        bool hasName = element.Attribute("AutomationProperties.Name") is not null;
+        bool hasLabel = element.Attribute("AutomationProperties.LabeledBy") is not null;
+
+        Assert.IsTrue(
+            hasName || hasLabel,
+            $"{Path.GetFileName(path)} contém {element.Name.LocalName} sem nome acessível.");
     }
 
     private static XDocument LoadAxaml(string fileName)

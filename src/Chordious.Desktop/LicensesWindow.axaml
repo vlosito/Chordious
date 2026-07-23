@@ -29,6 +29,7 @@
       <TabControl.ContentTemplate>
         <DataTemplate x:DataType="coreVm:ObservableLicense">
           <TextBox AcceptsReturn="True"
+                   AutomationProperties.Name="{Binding Header}"
                    IsReadOnly="True"
                    Text="{Binding Body}"
                    TextWrapping="Wrap"

@@ -39,6 +39,7 @@
                         IsChecked="{Binding Style.BarreArcRatioIsLocal, Mode=TwoWay}" />
               <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Proporção" />
               <NumericUpDown Grid.Column="2"
+                             AutomationProperties.Name="Proporção da curvatura da pestana"
                              Minimum="0"
                              Maximum="4"
                              Increment="0.01"
@@ -52,6 +53,7 @@
                         IsChecked="{Binding Style.BarreOpacityIsLocal, Mode=TwoWay}" />
               <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Opacidade" />
               <NumericUpDown Grid.Column="2"
+                             AutomationProperties.Name="Opacidade da pestana"
                              Minimum="0"
                              Maximum="1"
                              Increment="0.01"
@@ -65,6 +67,7 @@
                         IsChecked="{Binding Style.BarreLineColorIsLocal, Mode=TwoWay}" />
               <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Cor" />
               <TextBox Grid.Column="2"
+                       AutomationProperties.Name="Cor da linha da pestana"
                        PlaceholderText="#RRGGBB"
                        Text="{Binding Style.BarreLineColor, Mode=TwoWay}"
                        IsEnabled="{Binding Style.BarreLineColorIsLocal}" />
@@ -75,6 +78,7 @@
                         IsChecked="{Binding Style.BarreLineThicknessIsLocal, Mode=TwoWay}" />
               <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Pixels" />
               <NumericUpDown Grid.Column="2"
+                             AutomationProperties.Name="Espessura da linha da pestana em pixels"
                              Minimum="0"
                              Increment="0.25"
                              FormatString="0.00"
@@ -97,6 +101,7 @@
                         IsChecked="{Binding Style.BarreVisibleIsLocal, Mode=TwoWay}" />
               <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Visível" />
               <CheckBox Grid.Column="2"
+                        AutomationProperties.Name="Pestana visível"
                         IsChecked="{Binding Style.BarreVisible, Mode=TwoWay}"
                         IsEnabled="{Binding Style.BarreVisibleIsLocal}" />
             </Grid>
@@ -106,6 +111,7 @@
                         IsChecked="{Binding Style.BarreVerticalAlignmentIsLocal, Mode=TwoWay}" />
               <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Alinhamento" />
               <ComboBox Grid.Column="2"
+                        AutomationProperties.Name="Alinhamento vertical da pestana"
                         ItemsSource="{Binding Style.BarreVerticalAlignments}"
                         SelectedIndex="{Binding Style.SelectedBarreVerticalAlignmentIndex, Mode=TwoWay}"
                         IsEnabled="{Binding Style.BarreVerticalAlignmentIsLocal}" />
@@ -116,6 +122,7 @@
                         IsChecked="{Binding Style.BarreStackIsLocal, Mode=TwoWay}" />
               <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Empilhamento" />
               <ComboBox Grid.Column="2"
+                        AutomationProperties.Name="Empilhamento da pestana"
                         ItemsSource="{Binding Style.BarreStacks}"
                         SelectedIndex="{Binding Style.SelectedBarreStackIndex, Mode=TwoWay}"
                         IsEnabled="{Binding Style.BarreStackIsLocal}" />

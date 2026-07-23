@@ -23,6 +23,7 @@
           IsEnabled="{Binding IsIdle}">
       <TextBlock VerticalAlignment="Center" Text="Pasta de saída" />
       <TextBox Grid.Column="1"
+               AutomationProperties.Name="Pasta de saída"
                Text="{Binding OutputPath, Mode=TwoWay}"
                PlaceholderText="Selecione uma pasta" />
       <Button Grid.Column="2"
@@ -36,11 +37,13 @@
           IsEnabled="{Binding IsIdle}">
       <TextBlock VerticalAlignment="Center" Text="Nome do arquivo" />
       <ComboBox Grid.Column="1"
+                AutomationProperties.Name="Nome do arquivo"
                 IsEditable="True"
                 ItemsSource="{Binding FilenameFormats}"
                 SelectedItem="{Binding SelectedFilenameFormat, Mode=TwoWay}"
                 Text="{Binding SelectedFilenameFormat, Mode=TwoWay}" />
       <ComboBox Grid.Column="2"
+                AutomationProperties.Name="Formato de exportação"
                 ItemsSource="{Binding ExportFormats}"
                 SelectedIndex="{Binding SelectedExportFormatIndex, Mode=TwoWay}" />
     </Grid>
@@ -65,6 +68,7 @@
           IsEnabled="{Binding IsIdle}">
       <TextBlock VerticalAlignment="Center" Text="Escala" />
       <NumericUpDown Grid.Column="1"
+                     AutomationProperties.Name="Escala"
                      Minimum="0.01"
                      Maximum="{Binding MaxScaleFactor}"
                      Increment="0.25"
@@ -76,15 +80,19 @@
                  VerticalAlignment="Center"
                  Text="Sobrescrever arquivos" />
       <CheckBox Grid.Column="3"
+                AutomationProperties.Name="Sobrescrever arquivos"
                 VerticalAlignment="Center"
                 IsChecked="{Binding OverwriteFiles, Mode=TwoWay}" />
     </Grid>
 
     <StackPanel Grid.Row="4" Spacing="6">
       <ProgressBar Minimum="0"
+                   AutomationProperties.Name="Progresso da exportação"
                    Maximum="1"
                    Value="{Binding PercentComplete}" />
       <TextBlock HorizontalAlignment="Center"
+                 AutomationProperties.LiveSetting="Polite"
+                 AutomationProperties.Name="Percentual concluído"
                  Opacity="0.7"
                  Text="{Binding PercentComplete, StringFormat='{}{0:P0}'}" />
     </StackPanel>

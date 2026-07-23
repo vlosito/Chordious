@@ -42,7 +42,9 @@
                     Content="{Binding ShowInstrumentManagerLabel}"
                     ToolTip.Tip="{Binding ShowInstrumentManagerToolTip}" />
           </Grid>
-          <ComboBox ItemsSource="{Binding Instruments}"
+          <ComboBox AutomationProperties.HelpText="{Binding SelectedInstrumentToolTip}"
+                    AutomationProperties.Name="{Binding SelectedInstrumentLabel}"
+                    ItemsSource="{Binding Instruments}"
                     SelectedItem="{Binding SelectedInstrument, Mode=TwoWay}"
                     ContainerPrepared="HeaderComboBox_ContainerPrepared"
                     ToolTip.Tip="{Binding SelectedInstrumentToolTip}">
@@ -56,7 +58,9 @@
 
         <StackPanel Grid.Column="1" Spacing="5">
           <TextBlock FontWeight="SemiBold" Text="{Binding SelectedTuningLabel}" />
-          <ComboBox ItemsSource="{Binding Tunings}"
+          <ComboBox AutomationProperties.HelpText="{Binding SelectedTuningToolTip}"
+                    AutomationProperties.Name="{Binding SelectedTuningLabel}"
+                    ItemsSource="{Binding Tunings}"
                     SelectedItem="{Binding SelectedTuning, Mode=TwoWay}"
                     ToolTip.Tip="{Binding SelectedTuningToolTip}">
             <ComboBox.ItemTemplate>
@@ -69,7 +73,9 @@
 
         <StackPanel Grid.Column="2" Spacing="5">
           <TextBlock FontWeight="SemiBold" Text="{Binding SelectedRootNoteLabel}" />
-          <ComboBox ItemsSource="{Binding RootNotes}"
+          <ComboBox AutomationProperties.HelpText="{Binding SelectedRootNoteToolTip}"
+                    AutomationProperties.Name="{Binding SelectedRootNoteLabel}"
+                    ItemsSource="{Binding RootNotes}"
                     SelectedItem="{Binding SelectedRootNote, Mode=TwoWay}"
                     ToolTip.Tip="{Binding SelectedRootNoteToolTip}" />
         </StackPanel>
@@ -85,7 +91,9 @@
                     Content="{Binding ShowScaleManagerLabel}"
                     ToolTip.Tip="{Binding ShowScaleManagerToolTip}" />
           </Grid>
-          <ComboBox ItemsSource="{Binding Scales}"
+          <ComboBox AutomationProperties.HelpText="{Binding SelectedScaleToolTip}"
+                    AutomationProperties.Name="{Binding SelectedScaleLabel}"
+                    ItemsSource="{Binding Scales}"
                     SelectedItem="{Binding SelectedScale, Mode=TwoWay}"
                     ContainerPrepared="HeaderComboBox_ContainerPrepared"
                     ToolTip.Tip="{Binding SelectedScaleToolTip}">
@@ -118,6 +126,8 @@
                     RowSpacing="8">
                 <TextBlock VerticalAlignment="Center" Text="{Binding NumFretsLabel}" />
                 <NumericUpDown Grid.Column="1"
+                               AutomationProperties.HelpText="{Binding NumFretsToolTip}"
+                               AutomationProperties.Name="{Binding NumFretsLabel}"
                                Minimum="0"
                                Increment="1"
                                FormatString="0"
@@ -127,6 +137,8 @@
                 <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{Binding MaxFretLabel}" />
                 <NumericUpDown Grid.Row="1"
                                Grid.Column="1"
+                               AutomationProperties.HelpText="{Binding MaxFretToolTip}"
+                               AutomationProperties.Name="{Binding MaxFretLabel}"
                                Minimum="0"
                                Increment="1"
                                FormatString="0"
@@ -136,6 +148,8 @@
                 <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{Binding MaxReachLabel}" />
                 <NumericUpDown Grid.Row="2"
                                Grid.Column="1"
+                               AutomationProperties.HelpText="{Binding MaxReachToolTip}"
+                               AutomationProperties.Name="{Binding MaxReachLabel}"
                                Minimum="0"
                                Increment="1"
                                FormatString="0"
@@ -178,12 +192,16 @@
                         ToolTip.Tip="{Binding AddRootNotesToolTip}" />
 
               <TextBlock Text="{Binding SelectedMarkTextOptionLabel}" />
-              <ComboBox ItemsSource="{Binding MarkTextOptions}"
+              <ComboBox AutomationProperties.HelpText="{Binding SelectedMarkTextOptionToolTip}"
+                        AutomationProperties.Name="{Binding SelectedMarkTextOptionLabel}"
+                        ItemsSource="{Binding MarkTextOptions}"
                         SelectedIndex="{Binding SelectedMarkTextOptionIndex, Mode=TwoWay}"
                         ToolTip.Tip="{Binding SelectedMarkTextOptionToolTip}" />
 
               <TextBlock Text="{Binding SelectedFretLabelSideLabel}" />
-              <ComboBox ItemsSource="{Binding FretLabelSides}"
+              <ComboBox AutomationProperties.HelpText="{Binding SelectedFretLabelSideToolTip}"
+                        AutomationProperties.Name="{Binding SelectedFretLabelSideLabel}"
+                        ItemsSource="{Binding FretLabelSides}"
                         SelectedIndex="{Binding SelectedFretLabelSideIndex, Mode=TwoWay}"
                         ToolTip.Tip="{Binding SelectedFretLabelSideToolTip}" />
             </StackPanel>
@@ -227,6 +245,9 @@
 
           <ListBox x:Name="ResultsListBox"
                    Grid.Row="1"
+                   AutomationProperties.AutomationId="ScaleFinderResultsList"
+                   AutomationProperties.HelpText="Selecione um ou mais diagramas para salvar; selecione um para editar ou copiar."
+                   AutomationProperties.Name="Resultados do Scale Finder"
                    ItemsSource="{Binding Results}"
                    SelectionChanged="ResultsListBox_SelectionChanged"
                    SelectionMode="Multiple"
@@ -246,6 +267,7 @@
                         BorderThickness="1"
                         CornerRadius="6">
                   <Image Width="{Binding TotalWidth}"
+                         AutomationProperties.Name="{Binding Title, StringFormat='Diagrama {0}'}"
                          Height="{Binding TotalHeight}"
                          MaxWidth="190"
                          MaxHeight="300"

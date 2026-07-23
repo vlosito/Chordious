@@ -44,23 +44,33 @@
 
                   <Grid Grid.Column="1" IsEnabled="{Binding IsValueEnabled}">
                     <CheckBox HorizontalAlignment="Left"
+                              AutomationProperties.HelpText="{Binding ToolTip}"
+                              AutomationProperties.Name="{Binding Label}"
                               VerticalAlignment="Center"
                               IsChecked="{Binding BooleanValue, Mode=TwoWay}"
                               IsVisible="{Binding IsBoolean}" />
-                    <ComboBox ItemsSource="{Binding Options}"
+                    <ComboBox AutomationProperties.HelpText="{Binding ToolTip}"
+                              AutomationProperties.Name="{Binding Label}"
+                              ItemsSource="{Binding Options}"
                               SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
                               IsVisible="{Binding IsChoice}" />
-                    <ComboBox IsEditable="True"
+                    <ComboBox AutomationProperties.HelpText="{Binding ToolTip}"
+                              AutomationProperties.Name="{Binding Label}"
+                              IsEditable="True"
                               ItemsSource="{Binding Options}"
                               SelectedItem="{Binding TextValue, Mode=TwoWay}"
                               IsVisible="{Binding IsFont}" />
-                    <NumericUpDown Minimum="{Binding Minimum}"
+                    <NumericUpDown AutomationProperties.HelpText="{Binding ToolTip}"
+                                   AutomationProperties.Name="{Binding Label}"
+                                   Minimum="{Binding Minimum}"
                                    Maximum="{Binding Maximum}"
                                    Increment="{Binding Increment}"
                                    FormatString="{Binding FormatString}"
                                    Value="{Binding NumericValue, Mode=TwoWay}"
                                    IsVisible="{Binding IsNumeric}" />
-                    <TextBox PlaceholderText="#RRGGBB"
+                    <TextBox AutomationProperties.HelpText="{Binding ToolTip}"
+                             AutomationProperties.Name="{Binding Label}"
+                             PlaceholderText="#RRGGBB"
                              Text="{Binding TextValue, Mode=TwoWay}"
                              IsVisible="{Binding IsText}" />
                   </Grid>
@@ -91,6 +101,7 @@
                  FontWeight="SemiBold"
                  Text="Nível selecionado" />
       <ComboBox Grid.Column="1"
+                AutomationProperties.Name="Nível selecionado"
                 ItemsSource="{Binding Styles}"
                 SelectedIndex="{Binding SelectedStyleIndex, Mode=TwoWay}">
         <ComboBox.ItemTemplate>

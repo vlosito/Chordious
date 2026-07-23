@@ -40,6 +40,8 @@
 
           <ListBox x:Name="UserInstrumentsListBox"
                    Grid.Row="1"
+                   AutomationProperties.HelpText="Selecione um instrumento personalizado. Pressione Enter para editar ou Delete para excluir."
+                   AutomationProperties.Name="{Binding UserInstrumentsGroupLabel}"
                    ItemsSource="{Binding UserInstruments}"
                    SelectedIndex="{Binding SelectedUserInstrumentIndex, Mode=TwoWay}"
                    DoubleTapped="InstrumentList_DoubleTapped"
@@ -98,6 +100,8 @@
 
           <ListBox x:Name="DefaultInstrumentsListBox"
                    Grid.Row="1"
+                   AutomationProperties.HelpText="Selecione um instrumento padrão para consultar seus detalhes e afinações."
+                   AutomationProperties.Name="{Binding DefaultInstrumentsGroupLabel}"
                    ItemsSource="{Binding DefaultInstruments}"
                    SelectedIndex="{Binding SelectedDefaultInstrumentIndex, Mode=TwoWay}"
                    DoubleTapped="InstrumentList_DoubleTapped"
@@ -133,6 +137,8 @@
 
         <ListBox x:Name="TuningsListBox"
                  Grid.Row="1"
+                 AutomationProperties.HelpText="Selecione uma afinação. Pressione Enter para editar ou Delete para excluir quando permitido."
+                 AutomationProperties.Name="{Binding TuningsGroupLabel}"
                  IsEnabled="{Binding InstrumentIsSelected}"
                  ItemsSource="{Binding Tunings}"
                  SelectedItem="{Binding SelectedTuning, Mode=TwoWay}"

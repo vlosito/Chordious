@@ -25,6 +25,8 @@
     <StackPanel Spacing="5">
       <TextBlock FontWeight="SemiBold" Text="{Binding NameLabel}" />
       <TextBox x:Name="NameTextBox"
+               AutomationProperties.HelpText="{Binding NameToolTip}"
+               AutomationProperties.Name="{Binding NameLabel}"
                IsReadOnly="{Binding ReadOnly}"
                Text="{Binding Name, Mode=TwoWay}"
                ToolTip.Tip="{Binding NameToolTip}" />
@@ -61,6 +63,8 @@
         <ItemsControl.ItemTemplate>
           <DataTemplate x:DataType="coreVm:NamedIntervalValue">
             <NumericUpDown Width="76"
+                           AutomationProperties.HelpText="{Binding ValueToolTip}"
+                           AutomationProperties.Name="Intervalo"
                            Minimum="0"
                            Increment="1"
                            FormatString="0"

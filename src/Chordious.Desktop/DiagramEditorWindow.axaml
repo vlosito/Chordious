@@ -45,7 +45,8 @@
             <StackPanel Spacing="10">
               <TextBlock FontSize="17" FontWeight="SemiBold" Text="Conteúdo" />
               <TextBlock Text="Título" />
-              <TextBox Text="{Binding ObservableDiagram.Title, Mode=TwoWay}" />
+              <TextBox AutomationProperties.Name="Título"
+                       Text="{Binding ObservableDiagram.Title, Mode=TwoWay}" />
             </StackPanel>
           </Border>
 
@@ -65,6 +66,7 @@
               <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="Cordas" />
               <NumericUpDown Grid.Row="1"
                              Grid.Column="1"
+                             AutomationProperties.Name="Cordas"
                              Minimum="2"
                              Maximum="24"
                              Increment="1"
@@ -74,6 +76,7 @@
               <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="Casas" />
               <NumericUpDown Grid.Row="2"
                              Grid.Column="1"
+                             AutomationProperties.Name="Casas"
                              Minimum="1"
                              Maximum="36"
                              Increment="1"
@@ -115,6 +118,8 @@
                          ToolTip.Tip="{Binding Style.SelectedMarkTypeToolTip}" />
               <ComboBox Grid.Row="1"
                         Grid.Column="1"
+                        AutomationProperties.HelpText="{Binding Style.SelectedMarkTypeToolTip}"
+                        AutomationProperties.Name="{Binding SelectedMarkTypeLabel}"
                         ItemsSource="{Binding Style.MarkTypes}"
                         SelectedIndex="{Binding Style.SelectedMarkTypeIndex, Mode=TwoWay}"
                         ToolTip.Tip="{Binding Style.SelectedMarkTypeToolTip}" />
@@ -125,6 +130,8 @@
                          ToolTip.Tip="{Binding SelectedEditorRenderBackgroundToolTip}" />
               <ComboBox Grid.Row="2"
                         Grid.Column="1"
+                        AutomationProperties.HelpText="{Binding SelectedEditorRenderBackgroundToolTip}"
+                        AutomationProperties.Name="{Binding SelectedEditorRenderBackgroundLabel}"
                         ItemsSource="{Binding EditorRenderBackgrounds}"
                         SelectedIndex="{Binding SelectedEditorRenderBackgroundIndex, Mode=TwoWay}"
                         ToolTip.Tip="{Binding SelectedEditorRenderBackgroundToolTip}" />
@@ -242,6 +249,9 @@
                         VerticalScrollBarVisibility="Auto">
             <Image Name="DiagramImage"
                    Margin="18"
+                   AutomationProperties.HelpText="O preview acompanha a posição selecionada para editar marcas, rótulos e pestanas. As mesmas ações estão disponíveis nos botões abaixo."
+                   AutomationProperties.LiveSetting="Polite"
+                   AutomationProperties.Name="Preview do diagrama em edição"
                    Width="{Binding ObservableDiagram.TotalWidth}"
                    Height="{Binding ObservableDiagram.TotalHeight}"
                    HorizontalAlignment="Center"

@@ -25,6 +25,8 @@
     <StackPanel Spacing="5">
       <TextBlock FontWeight="SemiBold" Text="{Binding NameLabel}" />
       <TextBox x:Name="NameTextBox"
+               AutomationProperties.HelpText="{Binding NameToolTip}"
+               AutomationProperties.Name="{Binding NameLabel}"
                IsReadOnly="{Binding ReadOnly}"
                Text="{Binding Name, Mode=TwoWay}"
                ToolTip.Tip="{Binding NameToolTip}" />
@@ -52,13 +54,17 @@
                     ColumnSpacing="8">
                 <StackPanel Spacing="4">
                   <TextBlock Text="{Binding SelectedNoteLabel}" />
-                  <ComboBox ItemsSource="{Binding Notes}"
+                  <ComboBox AutomationProperties.HelpText="{Binding SelectedNoteToolTip}"
+                            AutomationProperties.Name="{Binding SelectedNoteLabel}"
+                            ItemsSource="{Binding Notes}"
                             SelectedIndex="{Binding SelectedNoteIndex, Mode=TwoWay}"
                             ToolTip.Tip="{Binding SelectedNoteToolTip}" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Spacing="4">
                   <TextBlock Text="{Binding OctaveLabel}" />
-                  <NumericUpDown Minimum="0"
+                  <NumericUpDown AutomationProperties.HelpText="{Binding OctaveToolTip}"
+                                 AutomationProperties.Name="{Binding OctaveLabel}"
+                                 Minimum="0"
                                  Increment="1"
                                  FormatString="0"
                                  Value="{Binding Octave, Mode=TwoWay}"

@@ -43,6 +43,7 @@
                          TextTrimming="CharacterEllipsis"
                          ToolTip.Tip="{Binding Key}" />
               <TextBox Grid.Column="1"
+                       AutomationProperties.Name="{Binding Key}"
                        Text="{Binding Value, Mode=TwoWay}" />
               <TextBlock Grid.Column="2"
                          VerticalAlignment="Center"

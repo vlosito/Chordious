@@ -35,6 +35,8 @@
         </StackPanel>
 
         <ListBox Grid.Row="1"
+                 AutomationProperties.HelpText="Selecione um item personalizado. Pressione Enter para editar ou Delete para excluir."
+                 AutomationProperties.Name="{Binding UserNamedIntervalGroupLabel}"
                  ItemsSource="{Binding UserNamedIntervals}"
                  SelectedIndex="{Binding SelectedUserNamedIntervalIndex, Mode=TwoWay}"
                  DoubleTapped="NamedIntervalList_DoubleTapped"
@@ -87,6 +89,8 @@
         </StackPanel>
 
         <ListBox Grid.Row="1"
+                 AutomationProperties.HelpText="Selecione um item padrão para consultar seus detalhes."
+                 AutomationProperties.Name="{Binding DefaultNamedIntervalGroupLabel}"
                  ItemsSource="{Binding DefaultNamedIntervals}"
                  SelectedIndex="{Binding SelectedDefaultNamedIntervalIndex, Mode=TwoWay}"
                  DoubleTapped="NamedIntervalList_DoubleTapped"

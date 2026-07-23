@@ -19,6 +19,8 @@
     <StackPanel Spacing="8">
       <TextBlock FontWeight="SemiBold" Text="{Binding CollectionNameLabel}" />
       <ComboBox x:Name="CollectionNameComboBox"
+                AutomationProperties.HelpText="{Binding CollectionNameToolTip}"
+                AutomationProperties.Name="{Binding CollectionNameLabel}"
                 MinWidth="400"
                 IsEditable="True"
                 ItemsSource="{Binding CollectionNames}"
