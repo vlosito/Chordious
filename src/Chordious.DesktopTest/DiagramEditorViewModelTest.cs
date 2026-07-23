@@ -12,6 +12,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Chordious.Core;
 using Chordious.Core.ViewModel;
 using Chordious.Desktop;
+using Chordious.Desktop.Services;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -99,10 +100,10 @@ public class DiagramEditorViewModelTest
     [TestMethod]
     public void DragThreshold_RequiresIntentionalPointerMovement()
     {
-        Assert.IsFalse(DiagramEditorWindow.HasExceededDragThreshold(
+        Assert.IsFalse(DiagramDragDropService.HasExceededDragThreshold(
             new Point(10, 10),
             new Point(13, 14)));
-        Assert.IsTrue(DiagramEditorWindow.HasExceededDragThreshold(
+        Assert.IsTrue(DiagramDragDropService.HasExceededDragThreshold(
             new Point(10, 10),
             new Point(16, 10)));
     }
@@ -116,7 +117,7 @@ public class DiagramEditorViewModelTest
         string title,
         string expected)
     {
-        Assert.AreEqual(expected, DiagramEditorWindow.GetSafeDragFileName(title));
+        Assert.AreEqual(expected, DiagramDragDropService.GetSafeDragFileName(title));
     }
 
     [TestMethod]

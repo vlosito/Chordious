@@ -8,9 +8,13 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
+using Avalonia.Controls;
+using Avalonia.Input;
+
 using Chordious.Core;
 using Chordious.Core.ViewModel;
 using Chordious.Desktop;
+using Chordious.Desktop.Services;
 using Chordious.Desktop.ViewModels;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -136,6 +140,131 @@ public class DiagramLibraryOperationsTest
     }
 
     [TestMethod]
+    public async Task LibraryDragPayload_RoundTripsOnlyInsideApplication()
+    {
+        DiagramLibrary library = GetUserLibrary();
+        string sourceName = NewCollectionName("drag-payload");
+
+        try
+        {
+            library.Add(sourceName).Add(CreateDiagram("C"));
+            ObservableDiagramLibraryNode sourceNode =
+                new(PathUtils.PathRoot, sourceName, library);
+            DiagramLibraryDragPayload expected =
+                new(sourceNode, UseSelectedDiagrams: false);
+
+            using DataTransfer dataTransfer =
+                await DiagramDragDropService.CreateLibraryDataAsync(
+                    new Border(),
+                    expected);
+            DiagramLibraryDragPayload? actual =
+                DiagramDragDropService.TryGetLibraryPayload(dataTransfer);
+
+            Assert.AreSame(expected, actual);
+            Assert.IsFalse(dataTransfer.Formats.Contains(DataFormat.Text));
+            Assert.IsFalse(dataTransfer.Formats.Contains(DataFormat.File));
+        }
+        finally
+        {
+            RemoveCollectionIfPresent(library, sourceName);
+        }
+    }
+
+    [TestMethod]
+    public void LibraryDropModifiers_UseOptionOrControlForCopy()
+    {
+        Assert.AreEqual(
+            DiagramLibraryDropAction.Move,
+            DiagramDragDropService.GetLibraryDropAction(KeyModifiers.None));
+        Assert.AreEqual(
+            DiagramLibraryDropAction.Copy,
+            DiagramDragDropService.GetLibraryDropAction(KeyModifiers.Control));
+        Assert.AreEqual(
+            DiagramLibraryDropAction.Copy,
+            DiagramDragDropService.GetLibraryDropAction(KeyModifiers.Alt));
+    }
+
+    [TestMethod]
+    public void LibraryDrop_SelectedDiagramsCopyAndMoveToDestination()
+    {
+        DiagramLibrary library = GetUserLibrary();
+        string sourceName = NewCollectionName("drag-source");
+        string destinationName = NewCollectionName("drag-destination");
+
+        try
+        {
+            DiagramCollection sourceCollection = library.Add(sourceName);
+            DiagramCollection destinationCollection = library.Add(destinationName);
+            sourceCollection.Add(CreateDiagram("C"));
+            sourceCollection.Add(CreateDiagram("G"));
+
+            ObservableDiagramLibraryNode sourceNode =
+                new(PathUtils.PathRoot, sourceName, library);
+            ObservableDiagramLibraryNode destinationNode =
+                new(PathUtils.PathRoot, destinationName, library);
+            sourceNode.SelectedDiagrams.Add(sourceNode.Diagrams[0]);
+            DiagramLibraryDragPayload payload =
+                new(sourceNode, UseSelectedDiagrams: true);
+
+            Assert.IsTrue(DiagramDragDropService.ApplyLibraryDrop(
+                payload,
+                destinationNode,
+                DiagramLibraryDropAction.Copy));
+            Assert.AreEqual(2, sourceCollection.Count);
+            Assert.AreEqual(1, destinationCollection.Count);
+            Assert.AreNotSame(
+                sourceCollection.DiagramAt(0),
+                destinationCollection.DiagramAt(0));
+
+            Assert.IsTrue(DiagramDragDropService.ApplyLibraryDrop(
+                payload,
+                destinationNode,
+                DiagramLibraryDropAction.Move));
+            Assert.AreEqual(1, sourceCollection.Count);
+            Assert.AreEqual(2, destinationCollection.Count);
+        }
+        finally
+        {
+            RemoveCollectionIfPresent(library, sourceName);
+            RemoveCollectionIfPresent(library, destinationName);
+        }
+    }
+
+    [TestMethod]
+    public void LibraryDrop_CopyWithinSameCollectionClonesSelectedDiagram()
+    {
+        DiagramLibrary library = GetUserLibrary();
+        string sourceName = NewCollectionName("drag-clone");
+
+        try
+        {
+            DiagramCollection sourceCollection = library.Add(sourceName);
+            sourceCollection.Add(CreateDiagram("C"));
+            ObservableDiagramLibraryNode sourceNode =
+                new(PathUtils.PathRoot, sourceName, library);
+            sourceNode.SelectedDiagrams.Add(sourceNode.Diagrams[0]);
+            DiagramLibraryDragPayload payload =
+                new(sourceNode, UseSelectedDiagrams: true);
+
+            Assert.IsTrue(DiagramDragDropService.ApplyLibraryDrop(
+                payload,
+                sourceNode,
+                DiagramLibraryDropAction.Copy));
+            Assert.AreEqual(2, sourceCollection.Count);
+
+            Assert.IsFalse(DiagramDragDropService.ApplyLibraryDrop(
+                payload,
+                sourceNode,
+                DiagramLibraryDropAction.Move));
+            Assert.AreEqual(2, sourceCollection.Count);
+        }
+        finally
+        {
+            RemoveCollectionIfPresent(library, sourceName);
+        }
+    }
+
+    [TestMethod]
     public void MainWindowSelection_SynchronizesMultipleSelectedDiagrams()
     {
         DiagramLibrary library = GetUserLibrary();
@@ -176,6 +305,43 @@ public class DiagramLibraryOperationsTest
         finally
         {
             RemoveCollectionIfPresent(library, collectionName);
+        }
+    }
+
+    [TestMethod]
+    public void MainWindowSelection_RejectsStaleDiagramAfterCollectionChanges()
+    {
+        DiagramLibrary library = GetUserLibrary();
+        string sourceName = NewCollectionName("stale-source");
+        string destinationName = NewCollectionName("stale-destination");
+
+        try
+        {
+            library.Add(sourceName).Add(CreateDiagram("Dm"));
+            library.Add(destinationName);
+            ObservableDiagramLibraryNode sourceNode =
+                new(PathUtils.PathRoot, sourceName, library);
+            ObservableDiagramLibraryNode destinationNode =
+                new(PathUtils.PathRoot, destinationName, library);
+            ObservableDiagram staleDiagram = sourceNode.Diagrams[0];
+            MainWindowViewModel viewModel =
+                new(_ => Task.FromResult<string?>(null))
+                {
+                    SelectedLibraryNode = sourceNode
+                };
+
+            viewModel.SetSelectedLibraryDiagrams([staleDiagram], staleDiagram);
+            viewModel.SelectedLibraryNode = destinationNode;
+            viewModel.SetSelectedLibraryDiagrams([staleDiagram], staleDiagram);
+
+            Assert.IsNull(viewModel.SelectedLibraryDiagram);
+            Assert.AreEqual(0, destinationNode.SelectedDiagrams.Count);
+            Assert.IsFalse(viewModel.HasSelectedLibraryDiagram);
+        }
+        finally
+        {
+            RemoveCollectionIfPresent(library, sourceName);
+            RemoveCollectionIfPresent(library, destinationName);
         }
     }
 

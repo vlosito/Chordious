@@ -13,6 +13,8 @@
         MinWidth="920"
         MinHeight="640"
         WindowStartupLocation="CenterOwner"
+        PointerMoved="Window_PointerMoved"
+        PointerReleased="Window_PointerReleased"
         Title="{Binding Title}">
   <Window.KeyBindings>
     <KeyBinding Gesture="F5" Command="{Binding SearchAsync}" />
@@ -269,6 +271,7 @@
                          MaxHeight="300"
                          Source="{Binding ImageObject}"
                          Stretch="Uniform"
+                         PointerPressed="ResultImage_PointerPressed"
                          DoubleTapped="ResultImage_DoubleTapped" />
                 </Border>
               </DataTemplate>

@@ -111,7 +111,12 @@ public sealed class MainWindowViewModel : MainViewModel
     {
         ArgumentNullException.ThrowIfNull(diagrams);
 
-        List<ObservableDiagram> selection = diagrams.Distinct().ToList();
+        HashSet<ObservableDiagram> availableDiagrams =
+            SelectedLibraryNode?.Diagrams.ToHashSet() ?? [];
+        List<ObservableDiagram> selection = diagrams
+            .Where(availableDiagrams.Contains)
+            .Distinct()
+            .ToList();
         ObservableDiagram? primary = primaryDiagram is not null && selection.Contains(primaryDiagram)
             ? primaryDiagram
             : selection.FirstOrDefault();

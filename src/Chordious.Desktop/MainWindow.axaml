@@ -13,6 +13,8 @@
         Height="640"
         MinWidth="820"
         MinHeight="540"
+        PointerMoved="Window_PointerMoved"
+        PointerReleased="Window_PointerReleased"
         Title="Chordious">
   <Grid RowDefinitions="Auto,*" Background="{DynamicResource SystemControlBackgroundBaseLowBrush}">
     <Border Grid.Row="0"
@@ -191,10 +193,18 @@
               <ListBox Grid.Row="1"
                        ItemsSource="{Binding Library.Nodes}"
                        SelectionChanged="LibraryNodesListBox_SelectionChanged"
-                       SelectedItem="{Binding SelectedLibraryNode, Mode=TwoWay}">
+                       SelectedItem="{Binding SelectedLibraryNode, Mode=TwoWay}"
+                       DragDrop.AllowDrop="True"
+                       DragDrop.DragOver="LibraryDropTarget_DragOver"
+                       DragDrop.Drop="LibraryNodesListBox_Drop">
                 <ListBox.ItemTemplate>
                   <DataTemplate x:DataType="coreVm:ObservableDiagramLibraryNode">
-                    <StackPanel Margin="4" Spacing="2">
+                    <StackPanel Margin="4"
+                                Spacing="2"
+                                PointerPressed="LibraryNode_PointerPressed"
+                                DragDrop.AllowDrop="True"
+                                DragDrop.DragOver="LibraryDropTarget_DragOver"
+                                DragDrop.Drop="LibraryNode_Drop">
                       <TextBlock FontWeight="SemiBold" Text="{Binding Name}" />
                       <TextBlock FontSize="11" Opacity="0.6" Text="{Binding Path}" />
                     </StackPanel>
@@ -227,11 +237,18 @@
                        Grid.Row="1"
                        ItemsSource="{Binding SelectedLibraryNode.Diagrams}"
                        SelectionChanged="DiagramsListBox_SelectionChanged"
-                       SelectionMode="Multiple">
+                       SelectionMode="Multiple"
+                       DragDrop.AllowDrop="True"
+                       DragDrop.DragOver="LibraryDropTarget_DragOver"
+                       DragDrop.Drop="DiagramsListBox_Drop">
                 <ListBox.ItemTemplate>
                   <DataTemplate x:DataType="coreVm:ObservableDiagram">
                     <Grid Margin="4" ColumnDefinitions="56,*" ColumnSpacing="8">
-                      <Image Width="52" Height="52" Source="{Binding ImageObject}" Stretch="Uniform" />
+                      <Image Width="52"
+                             Height="52"
+                             Source="{Binding ImageObject}"
+                             Stretch="Uniform"
+                             PointerPressed="LibraryDiagram_PointerPressed" />
                       <StackPanel Grid.Column="1" VerticalAlignment="Center">
                         <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
                         <TextBlock FontSize="11" Opacity="0.6" Text="{Binding Name}" />
