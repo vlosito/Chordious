@@ -30,7 +30,16 @@
       <Grid ColumnDefinitions="1.2*,1.2*,100,1.4*"
             ColumnSpacing="12">
         <StackPanel Spacing="5">
-          <TextBlock FontWeight="SemiBold" Text="{Binding SelectedInstrumentLabel}" />
+          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+            <TextBlock VerticalAlignment="Center"
+                       FontWeight="SemiBold"
+                       Text="{Binding SelectedInstrumentLabel}" />
+            <Button Grid.Column="1"
+                    Padding="8,2"
+                    Command="{Binding ShowInstrumentManager}"
+                    Content="{Binding ShowInstrumentManagerLabel}"
+                    ToolTip.Tip="{Binding ShowInstrumentManagerToolTip}" />
+          </Grid>
           <ComboBox ItemsSource="{Binding Instruments}"
                     SelectedItem="{Binding SelectedInstrument, Mode=TwoWay}"
                     ContainerPrepared="HeaderComboBox_ContainerPrepared"

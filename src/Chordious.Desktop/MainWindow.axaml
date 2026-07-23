@@ -31,7 +31,7 @@
                 VerticalAlignment="Center"
                 Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
                 CornerRadius="14">
-          <TextBlock FontWeight="SemiBold" Text="Fase 4 · Busca musical" />
+          <TextBlock FontWeight="SemiBold" Text="Fase 4 · Configuração musical" />
         </Border>
       </Grid>
     </Border>
@@ -62,6 +62,7 @@
                 <TextBlock Text="✓ Copiar, mover e mesclar coleções e diagramas" />
                 <TextBlock Text="✓ Chord Finder com resultados reais" />
                 <TextBlock Text="✓ Scale Finder com resultados reais" />
+                <TextBlock Text="✓ Instrumentos e afinações" />
               </StackPanel>
             </Border>
 
@@ -79,6 +80,12 @@
 
             <Button HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    Command="{Binding ShowInstrumentManager}"
+                    Content="{Binding ShowInstrumentManagerLabel}"
+                    ToolTip.Tip="{Binding ShowInstrumentManagerToolTip}" />
+
+            <Button HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
                     Command="{Binding ExportPreviewSvgCommand}"
                     Content="Exportar preview como SVG" />
 
@@ -92,9 +99,9 @@
                     CornerRadius="8">
               <StackPanel Spacing="8">
                 <TextBlock FontWeight="SemiBold" Text="Próximos fluxos" />
-                <TextBlock Text="1. Gerenciador de instrumentos e afinações" />
-                <TextBlock Text="2. Gerenciadores de qualidades e escalas" />
-                <TextBlock Text="3. Preferências e configuração completa" />
+                <TextBlock Text="1. Gerenciadores de qualidades e escalas" />
+                <TextBlock Text="2. Preferências e configuração completa" />
+                <TextBlock Text="3. Integrações e distribuição" />
               </StackPanel>
             </Border>
           </StackPanel>

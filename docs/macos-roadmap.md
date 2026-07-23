@@ -18,7 +18,7 @@ fluxos.
 | macOS Apple Silicon | Concluído | Ambiente identificado como `osx-arm64` |
 | SDK exigido | Concluído | .NET SDK 10.0.302 arm64 instalado persistentemente e fixado por `global.json`; runtime 8 mantido para compatibilidade |
 | Domínio no macOS | Concluído | 8 testes de `Chordious.CoreTest` aprovados em Release |
-| UI multiplataforma | Em andamento | `Chordious.Desktop` em `net10.0` executa biblioteca, os quatro editores elementares, exportação completa, Chord Finder e Scale Finder em Avalonia; 46 testes Desktop aprovados |
+| UI multiplataforma | Em andamento | `Chordious.Desktop` em `net10.0` executa biblioteca, os quatro editores elementares, exportação completa, Chord Finder, Scale Finder e gerenciamento de instrumentos e afinações em Avalonia; 50 testes Desktop aprovados |
 | CI multiplataforma | Concluído | GitHub Actions valida Core, Desktop e publicação `osx-arm64` no macOS, além da solução e dos pacotes existentes no Windows |
 | Repositório e proveniência | Concluído | Fork público `vlosito/Chordious`, com `origin` apontando para o fork e `upstream` para `jonthysell/Chordious`; base validada em `main@b781057`, que contém `v2.8.0` e `2.8-official` |
 | Governança da `main` | Concluído | Branch protegida para exigir PR, checks Debug/Release/macOS e resolução de conversas; force-push e exclusão bloqueados inclusive para administradores |
@@ -67,7 +67,7 @@ Legenda: `CONCLUÍDO`, `PARCIAL`, `PENDENTE`.
 | Diagram Export | Escolha de caminho, SVG, PNG/GIF/JPG, lote, nomes parametrizados, colisões, sobrescrita e escala | CONCLUÍDO — testes e smoke no `.app` validaram os quatro formatos, escala 2×, lote com nomes repetidos, resolução de colisão e restauração byte a byte da configuração |
 | Chord Finder | Instrumento, afinação, qualidade, opções, busca assíncrona, cancelamento e resultados | CONCLUÍDO — UI Avalonia cobre parâmetros e estilos, F5/Esc, seleção simples e múltipla, edição, clipboard e salvamento; testes e smoke no `.app` validaram 49 resultados reais e atualização imediata da Biblioteca |
 | Scale Finder | Instrumento, afinação, escala, opções, busca assíncrona, cancelamento e resultados | CONCLUÍDO — UI Avalonia cobre parâmetros e estilos, F5/Esc, seleção simples e múltipla, edição, clipboard e salvamento; testes e smoke no `.app` validaram 6 resultados reais e atualização imediata da Biblioteca |
-| Instruments | Gerenciador e editor de instrumentos e afinações | PENDENTE |
+| Instruments | Gerenciador e editor de instrumentos e afinações | CONCLUÍDO — CRUD de instrumentos e afinações, cópia de afinação padrão, itens padrão somente leitura e atualização imediata dos seletores do Chord Finder e Scale Finder; testes e smoke no `.app` validaram instrumentos com 4 e 5 cordas, seleção estável após ordenação e confirmação/cancelamento de exclusão |
 | Chord qualities | Gerenciador, editor e intervalos nomeados | PENDENTE |
 | Scales | Gerenciador, editor e intervalos nomeados | PENDENTE |
 | Options | Preferências, estilo global, resets, diretório temporário e defaults dos finders | PENDENTE |
