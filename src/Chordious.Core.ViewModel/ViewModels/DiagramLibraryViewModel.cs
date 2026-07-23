@@ -115,6 +115,11 @@ namespace Chordious.Core.ViewModel
 
         private bool _firstLoad = true;
 
+        public void RefreshNodes()
+        {
+            ReloadNodes();
+        }
+
         #endregion
 
         #region CreateNode

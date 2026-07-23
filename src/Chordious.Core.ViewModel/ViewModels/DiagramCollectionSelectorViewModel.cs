@@ -92,8 +92,8 @@ namespace Chordious.Core.ViewModel
                     try
                     {
                         WasAccepted = true;
-                        RequestClose?.Invoke();
                         ProcessClose();
+                        RequestClose?.Invoke();
                     }
                     catch (Exception ex)
                     {

@@ -31,7 +31,7 @@
                 VerticalAlignment="Center"
                 Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
                 CornerRadius="14">
-          <TextBlock FontWeight="SemiBold" Text="Fase 3 · Exportação multiplataforma" />
+          <TextBlock FontWeight="SemiBold" Text="Fase 4 · Chord Finder" />
         </Border>
       </Grid>
     </Border>
@@ -60,8 +60,15 @@
                 <TextBlock Text="✓ Escala e nomes de arquivo parametrizados" />
                 <TextBlock Text="✓ Navegação e CRUD de coleções" />
                 <TextBlock Text="✓ Copiar, mover e mesclar coleções e diagramas" />
+                <TextBlock Text="✓ Chord Finder com resultados reais" />
               </StackPanel>
             </Border>
+
+            <Button HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding ShowChordFinder}"
+                    Content="{Binding ShowChordFinderLabel}"
+                    ToolTip.Tip="{Binding ShowChordFinderToolTip}" />
 
             <Button HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
@@ -78,9 +85,9 @@
                     CornerRadius="8">
               <StackPanel Spacing="8">
                 <TextBlock FontWeight="SemiBold" Text="Próximos fluxos" />
-                <TextBlock Text="1. Chord Finder e Scale Finder" />
-                <TextBlock Text="2. Instrumentos, afinações e opções" />
-                <TextBlock Text="3. Paridade das integrações de plataforma" />
+                <TextBlock Text="1. Scale Finder" />
+                <TextBlock Text="2. Gerenciadores de instrumentos, afinações e qualidades" />
+                <TextBlock Text="3. Paridade das integrações restantes" />
               </StackPanel>
             </Border>
           </StackPanel>

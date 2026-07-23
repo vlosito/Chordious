@@ -35,6 +35,8 @@ internal sealed class DesktopMessageHandlers : IDisposable
             _ = ShowConfirmationAsync(message));
         StrongReferenceMessenger.Default.Register<PromptForTextMessage>(this, (_, message) =>
             _ = ShowTextPromptAsync(message));
+        StrongReferenceMessenger.Default.Register<ShowChordFinderMessage>(this, (_, message) =>
+            _ = ShowChordFinderAsync(message));
         StrongReferenceMessenger.Default.Register<ShowDiagramEditorMessage>(this, (_, message) =>
             _ = ShowDiagramEditorAsync(message));
         StrongReferenceMessenger.Default.Register<ShowDiagramMarkEditorMessage>(this, (_, message) =>
@@ -203,6 +205,22 @@ internal sealed class DesktopMessageHandlers : IDisposable
         PersistUserConfig();
     }
 
+    private async Task ShowChordFinderAsync(ShowChordFinderMessage message)
+    {
+        ChordFinderViewModel vm = message.ChordFinderVM;
+        ChordFinderWindow dialog = new()
+        {
+            DataContext = vm
+        };
+        vm.RequestClose += dialog.Close;
+
+        await ShowDialogAsync(dialog);
+
+        vm.RequestClose -= dialog.Close;
+        message.Process();
+        PersistUserConfig();
+    }
+
     private async Task ShowDiagramMarkEditorAsync(ShowDiagramMarkEditorMessage message)
     {
         DiagramMarkEditorViewModel vm = message.DiagramMarkEditorVM;
@@ -282,6 +300,7 @@ internal sealed class DesktopMessageHandlers : IDisposable
         if (vm.WasAccepted && _owner.DataContext is ViewModels.MainWindowViewModel mainWindowViewModel)
         {
             mainWindowViewModel.SelectedLibraryNode = null;
+            mainWindowViewModel.Library.RefreshNodes();
         }
         PersistUserConfig();
     }

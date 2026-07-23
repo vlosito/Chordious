@@ -1,0 +1,301 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:coreVm="using:Chordious.Core.ViewModel"
+        x:Class="Chordious.Desktop.ChordFinderWindow"
+        x:DataType="coreVm:ChordFinderViewModel"
+        mc:Ignorable="d"
+        d:DesignWidth="1180"
+        d:DesignHeight="760"
+        Width="1180"
+        Height="760"
+        MinWidth="920"
+        MinHeight="640"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding Title}">
+  <Window.KeyBindings>
+    <KeyBinding Gesture="F5" Command="{Binding SearchAsync}" />
+    <KeyBinding Gesture="Escape" Command="{Binding CancelOrClose}" />
+  </Window.KeyBindings>
+
+  <Grid Margin="18"
+        RowDefinitions="Auto,*,Auto"
+        RowSpacing="14">
+    <Border Padding="14"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+            BorderThickness="1"
+            CornerRadius="8"
+            IsEnabled="{Binding IsIdle}">
+      <Grid ColumnDefinitions="1.2*,1.2*,100,1.4*"
+            ColumnSpacing="12">
+        <StackPanel Spacing="5">
+          <TextBlock FontWeight="SemiBold" Text="{Binding SelectedInstrumentLabel}" />
+          <ComboBox ItemsSource="{Binding Instruments}"
+                    SelectedItem="{Binding SelectedInstrument, Mode=TwoWay}"
+                    ContainerPrepared="HeaderComboBox_ContainerPrepared"
+                    ToolTip.Tip="{Binding SelectedInstrumentToolTip}">
+            <ComboBox.ItemTemplate>
+              <DataTemplate x:DataType="coreVm:ObservableInstrument">
+                <TextBlock Text="{Binding Name}" />
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Spacing="5">
+          <TextBlock FontWeight="SemiBold" Text="{Binding SelectedTuningLabel}" />
+          <ComboBox ItemsSource="{Binding Tunings}"
+                    SelectedItem="{Binding SelectedTuning, Mode=TwoWay}"
+                    ToolTip.Tip="{Binding SelectedTuningToolTip}">
+            <ComboBox.ItemTemplate>
+              <DataTemplate x:DataType="coreVm:ObservableTuning">
+                <TextBlock Text="{Binding LongName}" />
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+        </StackPanel>
+
+        <StackPanel Grid.Column="2" Spacing="5">
+          <TextBlock FontWeight="SemiBold" Text="{Binding SelectedRootNoteLabel}" />
+          <ComboBox ItemsSource="{Binding RootNotes}"
+                    SelectedItem="{Binding SelectedRootNote, Mode=TwoWay}"
+                    ToolTip.Tip="{Binding SelectedRootNoteToolTip}" />
+        </StackPanel>
+
+        <StackPanel Grid.Column="3" Spacing="5">
+          <TextBlock FontWeight="SemiBold" Text="{Binding SelectedChordQualityLabel}" />
+          <ComboBox ItemsSource="{Binding ChordQualities}"
+                    SelectedItem="{Binding SelectedChordQuality, Mode=TwoWay}"
+                    ContainerPrepared="HeaderComboBox_ContainerPrepared"
+                    ToolTip.Tip="{Binding SelectedChordQualityToolTip}">
+            <ComboBox.ItemTemplate>
+              <DataTemplate x:DataType="coreVm:ObservableChordQuality">
+                <TextBlock Text="{Binding LongName}" />
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <Grid Grid.Row="1"
+          ColumnDefinitions="320,*"
+          ColumnSpacing="14">
+      <ScrollViewer VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled"
+                    IsEnabled="{Binding IsIdle}">
+        <StackPanel Spacing="12">
+          <Border Padding="14"
+                  BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                  BorderThickness="1"
+                  CornerRadius="8">
+            <StackPanel Spacing="10">
+              <TextBlock FontSize="16" FontWeight="SemiBold" Text="Opções de busca" />
+              <Grid ColumnDefinitions="*,100"
+                    RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                    ColumnSpacing="10"
+                    RowSpacing="8">
+                <TextBlock VerticalAlignment="Center" Text="{Binding NumFretsLabel}" />
+                <NumericUpDown Grid.Column="1"
+                               Minimum="0"
+                               Increment="1"
+                               FormatString="0"
+                               Value="{Binding NumFrets, Mode=TwoWay}"
+                               ToolTip.Tip="{Binding NumFretsToolTip}" />
+
+                <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{Binding MaxFretLabel}" />
+                <NumericUpDown Grid.Row="1"
+                               Grid.Column="1"
+                               Minimum="0"
+                               Increment="1"
+                               FormatString="0"
+                               Value="{Binding MaxFret, Mode=TwoWay}"
+                               ToolTip.Tip="{Binding MaxFretToolTip}" />
+
+                <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="{Binding MaxReachLabel}" />
+                <NumericUpDown Grid.Row="2"
+                               Grid.Column="1"
+                               Minimum="0"
+                               Increment="1"
+                               FormatString="0"
+                               Value="{Binding MaxReach, Mode=TwoWay}"
+                               ToolTip.Tip="{Binding MaxReachToolTip}" />
+
+                <CheckBox Grid.Row="3"
+                          Grid.ColumnSpan="2"
+                          Content="{Binding AllowOpenStringsLabel}"
+                          IsChecked="{Binding AllowOpenStrings, Mode=TwoWay}"
+                          ToolTip.Tip="{Binding AllowOpenStringsToolTip}" />
+                <CheckBox Grid.Row="4"
+                          Grid.ColumnSpan="2"
+                          Content="{Binding AllowMutedStringsLabel}"
+                          IsChecked="{Binding AllowMutedStrings, Mode=TwoWay}"
+                          ToolTip.Tip="{Binding AllowMutedStringsToolTip}" />
+                <CheckBox Grid.Row="5"
+                          Grid.ColumnSpan="2"
+                          Content="{Binding AllowRootlessChordsLabel}"
+                          IsChecked="{Binding AllowRootlessChords, Mode=TwoWay}"
+                          ToolTip.Tip="{Binding AllowRootlessChordsToolTip}" />
+                <CheckBox Grid.Row="6"
+                          Grid.ColumnSpan="2"
+                          Content="{Binding AllowPartialChordsLabel}"
+                          IsChecked="{Binding AllowPartialChords, Mode=TwoWay}"
+                          ToolTip.Tip="{Binding AllowPartialChordsToolTip}" />
+              </Grid>
+            </StackPanel>
+          </Border>
+
+          <Border Padding="14"
+                  BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                  BorderThickness="1"
+                  CornerRadius="8">
+            <StackPanel Spacing="10">
+              <TextBlock FontSize="16" FontWeight="SemiBold" Text="Estilo dos resultados" />
+              <CheckBox Content="{Binding AddTitleLabel}"
+                        IsChecked="{Binding AddTitle, Mode=TwoWay}"
+                        ToolTip.Tip="{Binding AddTitleToolTip}" />
+              <CheckBox Content="{Binding MirrorResultsLabel}"
+                        IsChecked="{Binding MirrorResults, Mode=TwoWay}"
+                        ToolTip.Tip="{Binding MirrorResultsToolTip}" />
+              <CheckBox Content="{Binding AddRootNotesLabel}"
+                        IsChecked="{Binding AddRootNotes, Mode=TwoWay}"
+                        ToolTip.Tip="{Binding AddRootNotesToolTip}" />
+
+              <TextBlock Text="{Binding SelectedBarreTypeOptionLabel}" />
+              <ComboBox ItemsSource="{Binding BarreTypeOptions}"
+                        SelectedIndex="{Binding SelectedBarreTypeOptionIndex, Mode=TwoWay}"
+                        ToolTip.Tip="{Binding SelectedBarreTypeOptionToolTip}" />
+
+              <TextBlock Text="{Binding SelectedMarkTextOptionLabel}" />
+              <ComboBox ItemsSource="{Binding MarkTextOptions}"
+                        SelectedIndex="{Binding SelectedMarkTextOptionIndex, Mode=TwoWay}"
+                        ToolTip.Tip="{Binding SelectedMarkTextOptionToolTip}" />
+
+              <CheckBox Content="{Binding AddBottomMarksLabel}"
+                        IsChecked="{Binding AddBottomMarks, Mode=TwoWay}"
+                        ToolTip.Tip="{Binding AddBottomMarksToolTip}" />
+              <TextBlock Text="{Binding SelectedBottomMarkTextOptionLabel}"
+                         IsEnabled="{Binding AddBottomMarks}" />
+              <ComboBox ItemsSource="{Binding BottomMarkTextOptions}"
+                        SelectedIndex="{Binding SelectedBottomMarkTextOptionIndex, Mode=TwoWay}"
+                        IsEnabled="{Binding AddBottomMarks}"
+                        ToolTip.Tip="{Binding SelectedBottomMarkTextOptionToolTip}" />
+
+              <TextBlock Text="{Binding SelectedFretLabelSideLabel}" />
+              <ComboBox ItemsSource="{Binding FretLabelSides}"
+                        SelectedIndex="{Binding SelectedFretLabelSideIndex, Mode=TwoWay}"
+                        ToolTip.Tip="{Binding SelectedFretLabelSideToolTip}" />
+            </StackPanel>
+          </Border>
+
+          <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+            <Button Command="{Binding SetAsDefaults}"
+                    Content="{Binding SetAsDefaultsLabel}"
+                    HorizontalContentAlignment="Center"
+                    ToolTip.Tip="{Binding SetAsDefaultsToolTip}" />
+            <Button Grid.Column="1"
+                    Command="{Binding ResetToDefaults}"
+                    Content="{Binding ResetToDefaultsLabel}"
+                    HorizontalContentAlignment="Center"
+                    ToolTip.Tip="{Binding ResetToDefaultsToolTip}" />
+          </Grid>
+        </StackPanel>
+      </ScrollViewer>
+
+      <Border Grid.Column="1"
+              Padding="10"
+              Background="White"
+              BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+              BorderThickness="1"
+              CornerRadius="8">
+        <Grid RowDefinitions="Auto,*" RowSpacing="8">
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2">
+              <TextBlock Foreground="Black"
+                         FontSize="16"
+                         FontWeight="SemiBold"
+                         Text="Resultados" />
+              <TextBlock Foreground="#6A6A6A"
+                         Text="Selecione um ou mais diagramas para salvar; selecione um para editar ou copiar." />
+            </StackPanel>
+            <TextBlock Grid.Column="1"
+                       VerticalAlignment="Center"
+                       Foreground="#6A6A6A"
+                       Text="{Binding Results.Count, StringFormat='{}{0} encontrado(s)'}" />
+          </Grid>
+
+          <ListBox x:Name="ResultsListBox"
+                   Grid.Row="1"
+                   ItemsSource="{Binding Results}"
+                   SelectionChanged="ResultsListBox_SelectionChanged"
+                   SelectionMode="Multiple"
+                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemsPanel>
+              <ItemsPanelTemplate>
+                <WrapPanel Orientation="Horizontal"
+                           ItemSpacing="8"
+                           LineSpacing="8" />
+              </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="coreVm:ObservableDiagram">
+                <Border Padding="6"
+                        Background="White"
+                        BorderBrush="#D8D8D8"
+                        BorderThickness="1"
+                        CornerRadius="6">
+                  <Image Width="{Binding TotalWidth}"
+                         Height="{Binding TotalHeight}"
+                         MaxWidth="190"
+                         MaxHeight="300"
+                         Source="{Binding ImageObject}"
+                         Stretch="Uniform"
+                         DoubleTapped="ResultImage_DoubleTapped" />
+                </Border>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </Grid>
+      </Border>
+    </Grid>
+
+    <Grid Grid.Row="2"
+          ColumnDefinitions="Auto,*,Auto"
+          ColumnSpacing="12">
+      <Button Command="{Binding SearchAsync}"
+              Content="{Binding SearchAsyncLabel}"
+              MinWidth="120"
+              HorizontalContentAlignment="Center"
+              IsDefault="True"
+              ToolTip.Tip="{Binding SearchAsyncToolTip}" />
+
+      <WrapPanel Grid.Column="1"
+                 HorizontalAlignment="Center"
+                 ItemSpacing="8"
+                 LineSpacing="8">
+        <Button Command="{Binding SaveSelected}"
+                Content="{Binding SaveSelectedLabel}"
+                ToolTip.Tip="{Binding SaveSelectedToolTip}" />
+        <Button Command="{Binding EditSelected}"
+                Content="{Binding EditSelectedLabel}"
+                ToolTip.Tip="{Binding EditSelectedToolTip}" />
+        <Button Command="{Binding SendSelectedImageToClipboard}"
+                Content="Copiar imagem"
+                ToolTip.Tip="{Binding SendSelectedImageToClipboardToolTip}" />
+        <Button Command="{Binding SendSelectedScaledImageToClipboard}"
+                Content="Copiar com escala…"
+                ToolTip.Tip="{Binding SendSelectedScaledImageToClipboardToolTip}" />
+        <Button Command="{Binding SendSelectedTextToClipboard}"
+                Content="Copiar SVG"
+                ToolTip.Tip="{Binding SendSelectedTextToClipboardToolTip}" />
+      </WrapPanel>
+
+      <Button Grid.Column="2"
+              Command="{Binding CancelOrClose}"
+              Content="Cancelar busca / Fechar"
+              MinWidth="150"
+              HorizontalContentAlignment="Center" />
+    </Grid>
+  </Grid>
+</Window>
