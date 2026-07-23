@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,6 +36,8 @@ internal sealed class DesktopMessageHandlers : IDisposable
             _ = ShowConfirmationAsync(message));
         StrongReferenceMessenger.Default.Register<PromptForTextMessage>(this, (_, message) =>
             _ = ShowTextPromptAsync(message));
+        StrongReferenceMessenger.Default.Register<LaunchUrlMessage>(this, (_, message) =>
+            OpenExternalTarget(message));
         StrongReferenceMessenger.Default.Register<ShowChordFinderMessage>(this, (_, message) =>
             _ = ShowChordFinderAsync(message));
         StrongReferenceMessenger.Default.Register<ShowScaleFinderMessage>(this, (_, message) =>
@@ -53,6 +56,12 @@ internal sealed class DesktopMessageHandlers : IDisposable
             _ = ShowScaleManagerAsync(message));
         StrongReferenceMessenger.Default.Register<ShowScaleEditorMessage>(this, (_, message) =>
             _ = ShowScaleEditorAsync(message));
+        StrongReferenceMessenger.Default.Register<ShowOptionsMessage>(this, (_, message) =>
+            _ = ShowOptionsAsync(message));
+        StrongReferenceMessenger.Default.Register<ShowLicensesMessage>(this, (_, message) =>
+            _ = ShowLicensesAsync(message));
+        StrongReferenceMessenger.Default.Register<ShowAdvancedDataMessage>(this, (_, message) =>
+            _ = ShowAdvancedDataAsync(message));
         StrongReferenceMessenger.Default.Register<ShowDiagramEditorMessage>(this, (_, message) =>
             _ = ShowDiagramEditorAsync(message));
         StrongReferenceMessenger.Default.Register<ShowDiagramMarkEditorMessage>(this, (_, message) =>
@@ -67,6 +76,16 @@ internal sealed class DesktopMessageHandlers : IDisposable
             _ = ShowDiagramCollectionSelectorAsync(message));
         StrongReferenceMessenger.Default.Register<ShowDiagramExportMessage>(this, (_, message) =>
             _ = ShowDiagramExportAsync(message));
+        StrongReferenceMessenger.Default.Register<ShowConfigImportMessage>(this, (_, message) =>
+            _ = ShowConfigImportAsync(message));
+        StrongReferenceMessenger.Default.Register<PromptForConfigInputStreamMessage>(this, (_, message) =>
+            _ = PromptForConfigInputStreamAsync(message));
+        StrongReferenceMessenger.Default.Register<ShowConfigExportMessage>(this, (_, message) =>
+            _ = ShowConfigExportAsync(message));
+        StrongReferenceMessenger.Default.Register<PromptForConfigOutputStreamMessage>(this, (_, message) =>
+            _ = PromptForConfigOutputStreamAsync(message));
+        StrongReferenceMessenger.Default.Register<PromptForLegacyImportMessage>(this, (_, message) =>
+            _ = PromptForLegacyImportAsync(message));
     }
 
     public void Dispose()
@@ -201,6 +220,35 @@ internal sealed class DesktopMessageHandlers : IDisposable
         await ShowDialogAsync(dialog);
         vm.RequestClose -= dialog.Close;
         PersistUserConfig();
+    }
+
+    private static void OpenExternalTarget(LaunchUrlMessage message)
+    {
+        try
+        {
+            ProcessStartInfo startInfo;
+            if (OperatingSystem.IsMacOS())
+            {
+                startInfo = new ProcessStartInfo("/usr/bin/open")
+                {
+                    UseShellExecute = false
+                };
+                startInfo.ArgumentList.Add(message.Url);
+            }
+            else
+            {
+                startInfo = new ProcessStartInfo(message.Url)
+                {
+                    UseShellExecute = true
+                };
+            }
+
+            Process.Start(startInfo);
+        }
+        catch (Exception ex)
+        {
+            ExceptionUtils.HandleException(ex);
+        }
     }
 
     private async Task ShowDiagramEditorAsync(ShowDiagramEditorMessage message)
@@ -362,6 +410,61 @@ internal sealed class DesktopMessageHandlers : IDisposable
         PersistUserConfig();
     }
 
+    private async Task ShowOptionsAsync(ShowOptionsMessage message)
+    {
+        ViewModels.OptionsViewModel vm = new();
+        message.OptionsVM = vm;
+
+        OptionsWindow dialog = new()
+        {
+            DataContext = vm
+        };
+        vm.RequestClose += dialog.Close;
+
+        await ShowDialogAsync(dialog);
+
+        vm.RequestClose -= dialog.Close;
+        message.Process();
+        if (vm.ItemsChanged)
+        {
+            RefreshMainLibrary();
+        }
+        PersistUserConfig();
+    }
+
+    private async Task ShowLicensesAsync(ShowLicensesMessage message)
+    {
+        LicensesViewModel vm = message.LicensesVM;
+        DesktopLicenseCatalog.AddDesktopDependencies(vm);
+
+        LicensesWindow dialog = new()
+        {
+            DataContext = vm
+        };
+        vm.RequestClose += dialog.Close;
+
+        await ShowDialogAsync(dialog);
+
+        vm.RequestClose -= dialog.Close;
+        message.Process();
+    }
+
+    private async Task ShowAdvancedDataAsync(ShowAdvancedDataMessage message)
+    {
+        AdvancedDataViewModel vm = message.AdvancedDataVM;
+        AdvancedDataWindow dialog = new()
+        {
+            DataContext = vm
+        };
+        vm.RequestClose += dialog.Close;
+
+        await ShowDialogAsync(dialog);
+
+        vm.RequestClose -= dialog.Close;
+        message.Process();
+        PersistUserConfig();
+    }
+
     private async Task ShowDiagramMarkEditorAsync(ShowDiagramMarkEditorMessage message)
     {
         DiagramMarkEditorViewModel vm = message.DiagramMarkEditorVM;
@@ -467,16 +570,145 @@ internal sealed class DesktopMessageHandlers : IDisposable
         PersistUserConfig();
     }
 
+    private async Task ShowConfigImportAsync(ShowConfigImportMessage message)
+    {
+        using ConfigImportViewModel vm = message.ConfigImportVM;
+        ConfigPartsWindow dialog = new()
+        {
+            DataContext = vm
+        };
+        vm.RequestClose += dialog.Close;
+
+        await ShowDialogAsync(dialog);
+
+        vm.RequestClose -= dialog.Close;
+        message.Process();
+        RefreshMainLibrary();
+        PersistUserConfig();
+    }
+
+    private async Task ShowConfigExportAsync(ShowConfigExportMessage message)
+    {
+        ConfigExportViewModel vm = message.ConfigExportVM;
+        ConfigPartsWindow dialog = new()
+        {
+            DataContext = vm
+        };
+        vm.RequestClose += dialog.Close;
+
+        await ShowDialogAsync(dialog);
+
+        vm.RequestClose -= dialog.Close;
+        message.Process();
+        PersistUserConfig();
+    }
+
+    private async Task PromptForConfigInputStreamAsync(PromptForConfigInputStreamMessage message)
+    {
+        await Task.Yield();
+
+        IStorageFile? file = (await _dialogOwner.StorageProvider.OpenFilePickerAsync(
+            new FilePickerOpenOptions
+            {
+                Title = "Importar configuração do Chordious",
+                AllowMultiple = false,
+                SuggestedStartLocation = await GetSuggestedStartLocationAsync(),
+                FileTypeFilter = [ConfigFileType]
+            })).FirstOrDefault();
+
+        if (file is null)
+        {
+            return;
+        }
+
+        RememberLastPath(file);
+        Stream inputStream = await file.OpenReadAsync();
+        try
+        {
+            message.Process(inputStream);
+        }
+        catch
+        {
+            inputStream.Dispose();
+            throw;
+        }
+    }
+
+    private async Task PromptForConfigOutputStreamAsync(PromptForConfigOutputStreamMessage message)
+    {
+        await Task.Yield();
+
+        IStorageFile? file = await _dialogOwner.StorageProvider.SaveFilePickerAsync(
+            new FilePickerSaveOptions
+            {
+                Title = "Exportar configuração do Chordious",
+                SuggestedFileName = "Chordious.Config.xml",
+                DefaultExtension = "xml",
+                ShowOverwritePrompt = true,
+                SuggestedStartLocation = await GetSuggestedStartLocationAsync(),
+                FileTypeChoices = [ConfigFileType]
+            });
+
+        if (file is null)
+        {
+            return;
+        }
+
+        RememberLastPath(file);
+        Stream outputStream = await file.OpenWriteAsync();
+        outputStream.SetLength(0);
+        try
+        {
+            message.Process(outputStream);
+        }
+        catch
+        {
+            outputStream.Dispose();
+            throw;
+        }
+    }
+
+    private async Task PromptForLegacyImportAsync(PromptForLegacyImportMessage message)
+    {
+        await Task.Yield();
+
+        IStorageFile? file = (await _dialogOwner.StorageProvider.OpenFilePickerAsync(
+            new FilePickerOpenOptions
+            {
+                Title = "Importar documento ChordLine",
+                AllowMultiple = false,
+                SuggestedStartLocation = await GetSuggestedStartLocationAsync(),
+                FileTypeFilter = [ChordLineFileType, FilePickerFileTypes.All]
+            })).FirstOrDefault();
+
+        if (file is null)
+        {
+            return;
+        }
+
+        RememberLastPath(file);
+        Stream inputStream = await file.OpenReadAsync();
+        try
+        {
+            message.Process(file.Name, inputStream);
+        }
+        catch
+        {
+            inputStream.Dispose();
+            throw;
+        }
+    }
+
     private async Task<string?> ChooseOutputPathAsync(string currentPath)
     {
         IStorageFolder? suggestedFolder = null;
         if (Directory.Exists(currentPath))
         {
-            suggestedFolder = await _owner.StorageProvider.TryGetFolderFromPathAsync(
+            suggestedFolder = await _dialogOwner.StorageProvider.TryGetFolderFromPathAsync(
                 new Uri(Path.GetFullPath(currentPath)));
         }
 
-        var folders = await _owner.StorageProvider.OpenFolderPickerAsync(
+        var folders = await _dialogOwner.StorageProvider.OpenFolderPickerAsync(
             new FolderPickerOpenOptions
             {
                 Title = "Escolha a pasta para exportar os diagramas",
@@ -485,6 +717,54 @@ internal sealed class DesktopMessageHandlers : IDisposable
             });
 
         return folders.FirstOrDefault()?.Path.LocalPath;
+    }
+
+    private async Task<IStorageFolder?> GetSuggestedStartLocationAsync()
+    {
+        string lastPath;
+        try
+        {
+            lastPath = AppViewModel.Instance.GetSetting("app.lastpath");
+        }
+        catch (Chordious.Core.InheritableDictionaryKeyNotFoundException)
+        {
+            lastPath = string.Empty;
+        }
+
+        if (!Directory.Exists(lastPath))
+        {
+            lastPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        }
+
+        return Directory.Exists(lastPath)
+            ? await _dialogOwner.StorageProvider.TryGetFolderFromPathAsync(
+                new Uri(Path.GetFullPath(lastPath)))
+            : null;
+    }
+
+    private static void RememberLastPath(IStorageItem storageItem)
+    {
+        try
+        {
+            string? directory = Path.GetDirectoryName(storageItem.Path.LocalPath);
+            if (!string.IsNullOrWhiteSpace(directory))
+            {
+                AppViewModel.Instance.SetSetting("app.lastpath", directory);
+            }
+        }
+        catch (Exception)
+        {
+            // Non-local storage providers do not expose a filesystem path.
+        }
+    }
+
+    private void RefreshMainLibrary()
+    {
+        if (_owner.DataContext is ViewModels.MainWindowViewModel mainWindowViewModel)
+        {
+            mainWindowViewModel.SelectedLibraryNode = null;
+            mainWindowViewModel.Library.RefreshNodes();
+        }
     }
 
     private async Task ShowDialogAsync(Window dialog)
@@ -557,4 +837,16 @@ internal sealed class DesktopMessageHandlers : IDisposable
     {
         AppViewModel.Instance.SaveUserConfig();
     }
+
+    private static readonly FilePickerFileType ConfigFileType =
+        new("Chordious Config")
+        {
+            Patterns = ["*.xml"]
+        };
+
+    private static readonly FilePickerFileType ChordLineFileType =
+        new("ChordLine")
+        {
+            Patterns = ["*.txt"]
+        };
 }

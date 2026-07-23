@@ -90,4 +90,26 @@ public class SvgRasterizerTest
         Assert.IsTrue(jpgCorner.Green >= 250);
         Assert.IsTrue(jpgCorner.Blue >= 250);
     }
+
+    [TestMethod]
+    public void RenderPng_AppliesConfiguredPreviewBackground()
+    {
+        const string svg = """
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="20">
+              <circle cx="20" cy="10" r="5" fill="#336699"/>
+            </svg>
+            """;
+
+        using SKBitmap none = SKBitmap.Decode(
+            SvgRasterizer.RenderPng(svg, 40, 20, PreviewBackground.None));
+        using SKBitmap white = SKBitmap.Decode(
+            SvgRasterizer.RenderPng(svg, 40, 20, PreviewBackground.White));
+        using SKBitmap transparency = SKBitmap.Decode(
+            SvgRasterizer.RenderPng(svg, 40, 20, PreviewBackground.Transparent));
+
+        Assert.AreEqual(0, none.GetPixel(0, 0).Alpha);
+        Assert.AreEqual(SKColors.White, white.GetPixel(0, 0));
+        Assert.AreEqual(new SKColor(255, 255, 255), transparency.GetPixel(0, 0));
+        Assert.AreEqual(new SKColor(224, 224, 224), transparency.GetPixel(16, 0));
+    }
 }

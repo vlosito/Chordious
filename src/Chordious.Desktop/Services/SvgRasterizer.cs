@@ -15,7 +15,16 @@ internal static class SvgRasterizer
 {
     public static byte[] RenderPng(string svgText, int width, int height)
     {
-        return RenderImage(svgText, width, height, RasterImageFormat.Png);
+        return RenderPng(svgText, width, height, PreviewBackground.None);
+    }
+
+    public static byte[] RenderPng(
+        string svgText,
+        int width,
+        int height,
+        PreviewBackground background)
+    {
+        return RenderImage(svgText, width, height, RasterImageFormat.Png, background);
     }
 
     public static byte[] RenderImage(
@@ -23,6 +32,19 @@ internal static class SvgRasterizer
         int width,
         int height,
         RasterImageFormat format)
+    {
+        PreviewBackground background = format == RasterImageFormat.Jpg
+            ? PreviewBackground.White
+            : PreviewBackground.None;
+        return RenderImage(svgText, width, height, format, background);
+    }
+
+    private static byte[] RenderImage(
+        string svgText,
+        int width,
+        int height,
+        RasterImageFormat format,
+        PreviewBackground background)
     {
         if (string.IsNullOrWhiteSpace(svgText))
         {
@@ -49,7 +71,7 @@ internal static class SvgRasterizer
             SKAlphaType.Premul));
 
         SKCanvas canvas = surface.Canvas;
-        canvas.Clear(format == RasterImageFormat.Jpg ? SKColors.White : SKColors.Transparent);
+        DrawBackground(canvas, width, height, background);
 
         float scale = Math.Min(width / source.Width, height / source.Height);
         float offsetX = (width - (source.Width * scale)) / 2f;
@@ -81,6 +103,37 @@ internal static class SvgRasterizer
         return data.ToArray();
     }
 
+    private static void DrawBackground(
+        SKCanvas canvas,
+        int width,
+        int height,
+        PreviewBackground background)
+    {
+        canvas.Clear(background == PreviewBackground.White
+            ? SKColors.White
+            : SKColors.Transparent);
+
+        if (background != PreviewBackground.Transparent)
+        {
+            return;
+        }
+
+        const int tileSize = 16;
+        using SKPaint light = new() { Color = new SKColor(255, 255, 255) };
+        using SKPaint dark = new() { Color = new SKColor(224, 224, 224) };
+
+        for (int y = 0; y < height; y += tileSize)
+        {
+            for (int x = 0; x < width; x += tileSize)
+            {
+                SKPaint paint = ((x / tileSize) + (y / tileSize)) % 2 == 0
+                    ? light
+                    : dark;
+                canvas.DrawRect(x, y, tileSize, tileSize, paint);
+            }
+        }
+    }
+
     private static byte[] EncodeGif(SKImage image)
     {
         using SKData pngData = image.Encode(SKEncodedImageFormat.Png, 100)
@@ -98,4 +151,11 @@ internal enum RasterImageFormat
     Png,
     Gif,
     Jpg
+}
+
+internal enum PreviewBackground
+{
+    None,
+    White,
+    Transparent
 }

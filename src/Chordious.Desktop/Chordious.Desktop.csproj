@@ -33,6 +33,8 @@
     <EmbeddedResource Include="..\Chordious.WPF\Chordious.WPF.xml"
                       Link="Resources\Chordious.Desktop.xml"
                       LogicalName="Chordious.Desktop.Chordious.Desktop.xml" />
+    <EmbeddedResource Include="Resources\ImageSharp.LICENSE.txt"
+                      LogicalName="Chordious.Desktop.Resources.ImageSharp.LICENSE.txt" />
     <InternalsVisibleTo Include="Chordious.DesktopTest" />
     <None Update="Info.plist">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

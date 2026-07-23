@@ -67,6 +67,8 @@
                 <TextBlock Text="✓ Instrumentos e afinações" />
                 <TextBlock Text="✓ Qualidades de acordes e intervalos" />
                 <TextBlock Text="✓ Escalas e intervalos" />
+                <TextBlock Text="✓ Preferências e configuração" />
+                <TextBlock Text="✓ Ajuda, website e licenças" />
               </StackPanel>
             </Border>
 
@@ -102,6 +104,30 @@
 
             <Button HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    Command="{Binding ShowOptions}"
+                    Content="{Binding ShowOptionsLabel}"
+                    ToolTip.Tip="{Binding ShowOptionsToolTip}" />
+
+            <Button HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding LaunchWebsite}"
+                    Content="{Binding LaunchWebsiteLabel}"
+                    ToolTip.Tip="{Binding LaunchWebsiteToolTip}" />
+
+            <Button HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding ShowHelp}"
+                    Content="{Binding ShowHelpLabel}"
+                    ToolTip.Tip="{Binding ShowHelpToolTip}" />
+
+            <Button HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding ShowLicenses}"
+                    Content="{Binding ShowLicensesLabel}"
+                    ToolTip.Tip="{Binding ShowLicensesToolTip}" />
+
+            <Button HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
                     Command="{Binding ExportPreviewSvgCommand}"
                     Content="Exportar preview como SVG" />
 
@@ -115,9 +141,9 @@
                     CornerRadius="8">
               <StackPanel Spacing="8">
                 <TextBlock FontWeight="SemiBold" Text="Próximos fluxos" />
-                <TextBlock Text="1. Preferências e configuração completa" />
+                <TextBlock Text="1. Diagram Editor completo" />
                 <TextBlock Text="2. Integrações de plataforma" />
-                <TextBlock Text="3. Distribuição assinada e notarizada" />
+                <TextBlock Text="3. Atualização e distribuição assinada" />
               </StackPanel>
             </Border>
           </StackPanel>

@@ -113,7 +113,15 @@ internal sealed class DesktopAppView : IAppView
 
     public object SvgTextToImage(string svgText, int width, int height, bool editMode)
     {
-        byte[] png = SvgRasterizer.RenderPng(svgText, width, height);
+        string settingKey = editMode
+            ? "diagrameditor.renderbackground"
+            : "app.renderbackground";
+        PreviewBackground background = Enum.TryParse(
+            AppViewModel.Instance.GetSetting(settingKey),
+            out PreviewBackground parsed)
+            ? parsed
+            : PreviewBackground.None;
+        byte[] png = SvgRasterizer.RenderPng(svgText, width, height, background);
         using MemoryStream stream = new(png);
         return new Bitmap(stream);
     }
