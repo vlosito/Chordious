@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<chordious version="Chordious.WPF 2.8.0" date="23/07/2026 21:10:30">
+  <settings>
+    <setting key="app.renderbackground" value="White" />
+    <setting key="diagrameditor.renderbackground" value="Transparent" />
+    <setting key="integration.enhancedcopy" value="True" />
+    <setting key="app.lastpath" value="C:\Users\Chordious\Documents" />
+  </settings>
+  <styles>
+    <style key="diagram.bordercolor" value="#1F4E79" />
+    <style key="diagram.borderthickness" value="1.5" />
+    <style key="grid.linecolor" value="#404040" />
+    <style key="title.fontfamily" value="Arial" />
+    <style key="title.textstyle" value="Bold" />
+  </styles>
+  <instruments>
+    <instrument name="Compatibility Lute" strings="5">
+      <tuning name="Open C" notes="C3;G3;C4;E4;G4" />
+    </instrument>
+  </instruments>
+  <qualities>
+    <quality name="Compatibility Major Seventh" steps="0;4;7;11" abbv="maj7" />
+  </qualities>
+  <scales>
+    <scale name="Compatibility Dorian" steps="0;2;3;5;7;9;10;12" />
+  </scales>
+  <library>
+    <diagrams name="Compatibility 2.8.0" path="/">
+      <style key="grid.nutvisible" value="True" />
+      <style key="mark.borderthickness" value="1.25" />
+      <diagram title="CΔ7 ♯" strings="6" frets="5">
+        <mark text="C" type="Root" string="2" fret="1">
+          <style key="rootmark.color" value="#268BD2" />
+          <style key="rootmark.textcolor" value="White" />
+        </mark>
+        <mark text="" type="Open" string="1" fret="0" />
+        <mark text="" type="Muted" string="6" fret="0" />
+        <barre text="" fret="3" start="2" end="5">
+          <style key="barre.arcratio" value="0.35" />
+          <style key="barre.linecolor" value="#B58900" />
+          <style key="barre.linethickness" value="2.5" />
+        </barre>
+        <fretlabel text="III" side="Left" fret="3">
+          <style key="fretlabel.textcolor" value="#DC322F" />
+          <style key="fretlabel.textstyle" value="Italic" />
+        </fretlabel>
+        <style key="diagram.color" value="#FDF6E3" />
+        <style key="diagram.opacity" value="0.85" />
+        <style key="fretlabel.textalignment" value="Right" />
+      </diagram>
+      <diagram title="Am / G" strings="4" frets="7">
+        <mark text="A" type="Normal" string="1" fret="2" />
+        <mark text="E" type="Normal" string="2" fret="2" />
+        <fretlabel text="V" side="Right" fret="1" />
+      </diagram>
+    </diagrams>
+  </library>
+</chordious>
